@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <modules>
+        <module>fc-data-warehouse-ear</module>
+        <module>fc-raw-data-war</module>
+        <module>fc-funcube-war</module>
+        <module>fc-dw-common-jar</module>
+        <module>fc-ukube-war</module>
+        <module>fc-nayif1-war</module>
+        <module>fc-eseo-war</module>
+        <module>fc-jy1sat-war</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.0.0.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <parent>
+        <groupId>com.badgersoft</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>1.0</version>
+    </parent>
+
+
+    <groupId>com.badgersoft.datawarehouse</groupId>
+    <artifactId>fc-data-warehouse</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>badgersoft-release</id>
+            <name>Badgersoft Release Repo</name>
+            <url>https://nexus.badgersoft.com/repository/badgersoft-release/</url>
+            <releases/>
+        </repository>
+        <repository>
+            <id>badgersoft-snapshot</id>
+            <name>Badgersoft Snapshot Repo</name>
+            <url>https://nexus.badgersoft.com/repository/badgersoft-snapshot/</url>
+            <snapshots/>
+        </repository>
+    </repositories>
+
+</project>
