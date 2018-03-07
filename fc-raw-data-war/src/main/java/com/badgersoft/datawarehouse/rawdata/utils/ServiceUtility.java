@@ -1,5 +1,7 @@
 package com.badgersoft.datawarehouse.rawdata.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,6 +9,20 @@ import java.security.NoSuchAlgorithmException;
 public class ServiceUtility {
 
     private static final int HEX_0X0F = 0x0F;
+
+
+
+    public static String convertHexBytePairToBinary(final String hexString) {
+        final StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < hexString.length(); i += 2) {
+            final String hexByte = hexString.substring(i, i + 2);
+            final int hexValue = Integer.parseInt(hexByte, 16);
+            sb.append(StringUtils.leftPad(Integer.toBinaryString(hexValue), 8,
+                    "0"));
+        }
+        return sb.toString();
+    }
 
     public static String calculateDigest(final String hexString,
                                          final String authCode, final Integer utf)
