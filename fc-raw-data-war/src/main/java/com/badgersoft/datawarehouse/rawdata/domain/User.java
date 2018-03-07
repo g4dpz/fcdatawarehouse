@@ -11,41 +11,57 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
 
-    private static final long serialVersionUID = -3954009339416898275L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column
     private String username;
+    @Column
     private String password;
+    @Column
     private String latitude;
+    @Column
     private String longitude;
+    @Column
     private String siteId;
+    @Column
     private boolean enabled;
+    @Column
     private boolean admin;
+    @Column
     private boolean expired;
+    @Column
     private boolean locked;
+    @Column
     private boolean credentialsExpired;
+    @Column
     private String authKey;
+    @Column
+    private boolean emailSent;
+    @Column
+    private Date createdDate;
+    @Column
+    private String registrationCode;
+    @Column
+    private boolean transferred;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private List<HexFrame> hexFrames = new ArrayList<HexFrame>();
+    private Set<HexFrame> hexFrames;
 
     public User() {
+        hexFrames = new HashSet<HexFrame>();
     }
 
-    public User(final String username, final String password, final String latitude, final String longitude,
-                final String siteId, final boolean enabled, final boolean admin, final boolean expired,
-                final boolean locked,
-                final boolean credentialsExpired, final String authKey) {
+    public User(final String username, final String password, final String latitude, final String longitude, final String siteId,
+                final boolean enabled, final boolean admin, final boolean expired, final boolean locked, final boolean credentialsExpired,
+                final String authKey, final boolean emailSent, final Date createdDate, final String registrationCode,
+                final boolean transferred) {
         this.username = username;
         this.password = password;
         this.latitude = latitude;
@@ -57,10 +73,12 @@ public class User implements UserDetails {
         this.locked = locked;
         this.credentialsExpired = credentialsExpired;
         this.authKey = authKey;
-    }
+        this.createdDate = createdDate;
+        this.registrationCode = registrationCode;
+        this.setEmailSent(emailSent);
+        this.transferred = transferred;
 
-    public User(String username2, String password2, List<GrantedAuthority> perms) {
-        // TODO Auto-generated constructor stub
+        hexFrames = new HashSet<HexFrame>();
     }
 
     public Long getId() {
@@ -71,10 +89,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
+    @Override
     public final String getUsername() {
         return username;
     }
 
+    @Override
     public final String getPassword() {
         return password;
     }
@@ -91,6 +111,7 @@ public class User implements UserDetails {
         return siteId;
     }
 
+    @Override
     public final boolean isEnabled() {
         return enabled;
     }
@@ -149,40 +170,28 @@ public class User implements UserDetails {
         this.enabled = state;
     }
 
-    public final void setUsername(String username) {
-        this.username = username;
+    public boolean isEmailSent() {
+        return emailSent;
     }
 
-    public final void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setEmailSent(boolean emailSent) {
+        this.emailSent = emailSent;
     }
 
-    public final void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public final Date getCreatedDate() {
+        return createdDate;
     }
 
-    public final void setSiteId(String siteId) {
-        this.siteId = siteId;
+    public final void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public final void setAdmin(boolean admin) {
-        this.admin = admin;
+    public final String getRegistrationCode() {
+        return registrationCode;
     }
 
-    public final void setExpired(boolean expired) {
-        this.expired = expired;
-    }
-
-    public final void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public final void setCredentialsExpired(boolean credentialsExpired) {
-        this.credentialsExpired = credentialsExpired;
-    }
-
-    public final void setAuthKey(String authKey) {
-        this.authKey = authKey;
+    public final void setRegistrationCode(String registrationCode) {
+        this.registrationCode = registrationCode;
     }
 
     public void addFrame(final HexFrame hexFrame) {
@@ -194,12 +203,23 @@ public class User implements UserDetails {
         }
     }
 
-    public List<HexFrame> getFrames() {
+    public Set<HexFrame> getFrames() {
         return hexFrames;
     }
 
-    public void setFrames(final List<HexFrame> frames) {
+    public void setFrames(final Set<HexFrame> frames) {
         this.hexFrames = frames;
     }
 
+    public boolean isTransferred() {
+        return transferred;
+    }
+
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
+    }
+
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
+    }
 }

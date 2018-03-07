@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
 @Component(value = "funcubeHFS")
 public class HexFrameServiceImpl extends AbstractHexFrameService implements HexFrameService {
 
+
 }

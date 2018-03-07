@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "HexFrame")
+@Table(name = "hex_frame")
 public class HexFrame {
 
     @Id
@@ -25,14 +25,17 @@ public class HexFrame {
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(name = "HexFrameUser",
-            joinColumns = @JoinColumn(name = "hexFrameId"),
-            inverseJoinColumns = @JoinColumn(name = "userId"))
-    private Set<User> users = new HashSet<User>();
+    @JoinTable(name = "hex_frame_user",
+            joinColumns = @JoinColumn(name = "hex_frame_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 
     private Long satelliteId;
     private Long sequenceNumber;
+
+    @Column(name = "hex_string", length = 1024)
     private String hexString;
+
     private Date createdDate;
     private boolean valid;
     private Long frameType;
@@ -167,48 +170,36 @@ public class HexFrame {
         this.satelliteTime = satelliteTime;
     }
 
-    /**
-     * @param eclipsed
-     */
-    public void setEclipsed(String eclipsed) {
-        this.eclipsed = eclipsed;
-    }
-
-    /**
-     * @param eclipseDepth
-     */
-    public void setEclipseDepth(String eclipseDepth) {
-        this.eclipseDepth = eclipseDepth;
-    }
-
-    /**
-     * @param latitude
-     */
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
-     * @param longitude
-     */
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
     public final String getEclipsed() {
         return eclipsed;
+    }
+
+    public void setEclipsed(String eclipsed) {
+        this.eclipsed = eclipsed;
     }
 
     public final String getEclipseDepth() {
         return eclipseDepth;
     }
 
+    public void setEclipseDepth(String eclipseDepth) {
+        this.eclipseDepth = eclipseDepth;
+    }
+
     public final String getLatitude() {
         return latitude;
     }
 
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
     public final String getLongitude() {
         return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public final Boolean isOutOfOrder() {
@@ -219,12 +210,12 @@ public class HexFrame {
         this.outOfOrder = outOfOrder;
     }
 
-    public void setDigest(final String digest) {
-        this.digest = digest;
-    }
-
     public final String getDigest() {
         return digest;
+    }
+
+    public void setDigest(final String digest) {
+        this.digest = digest;
     }
 
     public final boolean isRealtimeProcessed() {
@@ -235,4 +226,7 @@ public class HexFrame {
         this.realtimeProcessed = realtimeProcessed;
     }
 
+    public void addUser(User user) {
+        users.add(user);
+    }
 }
