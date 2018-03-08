@@ -8,9 +8,11 @@ import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.dao.EpochDao;
 import com.badgersoft.datawarehouse.rawdata.dao.HexFrameDao;
 import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
+import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
 import com.badgersoft.datawarehouse.rawdata.domain.Epoch;
 import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
+import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 import static com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility.convertHexBytePairToBinary;
@@ -35,6 +38,7 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private final UserDao userDao;
     private final EpochDao epochDao;
     private final Clock clock;
+    private final UserRankingDao userRankingDao;
 
     private static final Cache<String, String> USER_AUTH_KEYS = new Cache<String, String>(
             new UTCClock(), 50, 10);
@@ -45,11 +49,12 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private static final long TWO_DAYS_SEQ_COUNT = 1440;
 
     @Autowired
-    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, EpochDao epochDao) {
+    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, EpochDao epochDao, UserRankingDao userRankingDao) {
         this.hexFrameDao = hexFrameDao;
         this.userDao = userDao;
         this.clock = clock;
         this.epochDao = epochDao;
+        this.userRankingDao = userRankingDao;
     }
 
     public ResponseEntity processHexFrame(String siteId, String digest, String body) {
@@ -121,10 +126,10 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
         final Map<Long, Epoch> epochMap = new HashMap<Long, Epoch>();
 
-        final Iterator<Epoch> iterator = epochDao.findAll().iterator();
+        final Iterator<Epoch> epochIterator = epochDao.findAll().iterator();
 
-        while (iterator.hasNext()) {
-            final Epoch epoch = iterator.next();
+        while (epochIterator.hasNext()) {
+            final Epoch epoch = epochIterator.next();
             epochMap.put(epoch.getSatelliteId(), epoch);
         }
 
@@ -189,9 +194,88 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
         List<HexFrame> hexFrameEntities = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
 
+        if (hexFrameEntities.isEmpty()) {
+//            LOG.debug(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
+//            HexFrameEntity hexFrameEntity = new HexFrameEntity(satelliteId, frameType, sequenceNumber, hexString, createdDate,
+//                    true, new Timestamp(createdDate.getTime()));
+//            hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
+//            hexFrameEntity.addUser(user);
+//            incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
+//
+//            addSatellitePosition(hexFrameEntity);
+//
+//            hexFrameDao.save(hexFrameEntity);
+//
+//            if (satelliteId == 0 && sequenceNumber == 0 && firstByte == 0) {
+//                LOG.warn("--- RESET ---");
+//                return new ResponseEntity<String>("Satellite RESET", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            String queueName = getQueueNameFromSatelliteId((int) satelliteId, "frame_available");
+//
+//            Queue queue = new ActiveMQQueue(queueName);
+//            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+//                    hexFrameEntity.getSatelliteId(),
+//                    hexFrameEntity.getSequenceNumber(),
+//                    hexFrameEntity.getFrameType()));
+        }
+        else {
+            HexFrame hexFrameEntity = hexFrameEntities.get(0);
+            Iterator<User> userIterator = hexFrameEntity.getUsers().iterator();
+
+            boolean userFound = false;
+
+            while(userIterator.hasNext()) {
+                User userEntity = userIterator.next();
+                if (user.getSiteId().equals(userEntity.getSiteId())) {
+                    userFound = true;
+                    break;
+                }
+            }
+
+            if (userFound) {
+                LOG.debug(String.format("User %s has already saved %d %d %d", user.getSiteId(), satelliteId, sequenceNumber, frameType));
+                return new ResponseEntity<String>("Already Reported", HttpStatus.ALREADY_REPORTED);
+            }
+            else {
+                String siteId = user.getSiteId();
+                LOG.debug(String.format("Adding user %s to %d %d %d", siteId, satelliteId, sequenceNumber, frameType));
+                hexFrameEntity.addUser(user);
+                incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
+                hexFrameEntity = hexFrameDao.save(hexFrameEntity);
+            }
+        }
+
         return ResponseEntity.ok().build();
 
     }
+
+    private void incrementUploadRanking(long satelliteId, String siteId, Date createdDate) {
+        final Timestamp latestUploadDate = new Timestamp(createdDate.getTime());
+
+        final List<UserRanking> userRankings = userRankingDao
+                .findBySatelliteIdAndSiteId(satelliteId, siteId);
+
+        UserRanking userRanking;
+
+        if (userRankings.isEmpty()) {
+
+            userRanking = new UserRanking((long)satelliteId, siteId, 1L,
+                    latestUploadDate, latestUploadDate);
+        }
+        else {
+            userRanking = userRankings.get(0);
+            userRanking.setLatestUploadDate(latestUploadDate);
+            Long number = userRanking.getNumber();
+            number++;
+            userRanking.setNumber(number);
+        }
+
+        userRankingDao.save(userRanking);
+    }
+
+
+
 
     private static long getSequenceNumber(long satelliteId, String hexString) {
 
