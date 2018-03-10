@@ -4,12 +4,13 @@ import com.badgersoft.datawarehouse.common.services.HexFrameService;
 import com.badgersoft.datawarehouse.common.utils.Clock;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
+import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
-import com.badgersoft.datawarehouse.rawdata.dao.EpochDao;
+import com.badgersoft.datawarehouse.rawdata.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.rawdata.dao.HexFrameDao;
 import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
 import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
-import com.badgersoft.datawarehouse.rawdata.domain.Epoch;
+import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
 import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
 import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
@@ -41,8 +42,10 @@ public class HexFrameServiceImplTest {
     private UserDao mockUserDao;
     private HexFrameDao mockHexFrameDao;
     private Clock mockClock;
-    private EpochDao mockEpochDao;
+    private SatelliteStatusDao mockSatelliteStatusDao;
     private UserRankingDao mockUserRankingDao;
+    private JmsMessageSender mockJmsMessageSender;
+    private EnvConfig mockEnvConfig;
 
     private static String SITE_ID_1 = "g4dpz";
     private static String SITE_ID_2 = "g4fzn";
@@ -56,8 +59,8 @@ public class HexFrameServiceImplTest {
             "4104410D500F6206400DB8107D386B796A2687A2684104F101711";
     private User user1;
     private User user2;
-    private Epoch epoch;
-    private List<Epoch> epochs = new ArrayList<>();
+    private SatelliteStatus satelliteStatus;
+    private List<SatelliteStatus> satelliteStatuses = new ArrayList<>();
     private List<HexFrame> hexFrames1 = new ArrayList<>();
     private List<HexFrame> hexFrames2 = new ArrayList<>();
     private Set<User> users1 = new HashSet<>();
@@ -70,9 +73,11 @@ public class HexFrameServiceImplTest {
         mockUserDao = Mockito.mock(UserDao.class);
         mockHexFrameDao = Mockito.mock(HexFrameDao.class);
         mockClock = Mockito.mock(UTCClock.class);
-        mockEpochDao = Mockito.mock(EpochDao.class);
+        mockSatelliteStatusDao = Mockito.mock(SatelliteStatusDao.class);
         mockUserRankingDao = Mockito.mock(UserRankingDao.class);
-        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockEpochDao, mockUserRankingDao);
+        mockJmsMessageSender = Mockito.mock(JmsMessageSender.class);
+        mockEnvConfig = Mockito.mock(EnvConfig.class);
+        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao, mockUserRankingDao, mockJmsMessageSender, mockEnvConfig);
 
         user1 = new User();
         user1.setSiteId(SITE_ID_1);
@@ -84,12 +89,13 @@ public class HexFrameServiceImplTest {
         user2.setAuthKey("bar");
         users2.add(user2);
 
-        // an epoch for Funcube1
-        epoch = new Epoch();
-        epoch.setSatelliteId(2L);
-        epoch.setReferenceTime(new Timestamp(0));
-        epoch.setSequenceNumber(1L);
-        epochs.add(epoch);
+        // an satelliteStatus for Funcube1
+        satelliteStatus = new SatelliteStatus();
+        satelliteStatus.setSatelliteId(2L);
+        satelliteStatus.setEpochReferenceTime(new Timestamp(0));
+        satelliteStatus.setEpochSequenceNumber(1L);
+        satelliteStatus.setCatalogueNumber(39444L);
+        satelliteStatuses.add(satelliteStatus);
 
         HexFrame hexFrame = new HexFrame();
         hexFrame.setId(1L);
@@ -129,10 +135,10 @@ public class HexFrameServiceImplTest {
     }
 
     @Test
-    public void noValidEpoch() {
+    public void noValidSatelliteStatus() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(Collections.EMPTY_LIST);
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.BAD_REQUEST.value()), responseEntity.getStatusCode().value());
     }
@@ -141,7 +147,7 @@ public class HexFrameServiceImplTest {
     public void outOfBounds() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(epochs);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.getMaxSequenceNumber(2L)).thenReturn(new Long(1131283 + 1441));
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.ALREADY_REPORTED.value()), responseEntity.getStatusCode().value());
@@ -151,10 +157,11 @@ public class HexFrameServiceImplTest {
     public void processNewHexFrame() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(epochs);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(Collections.EMPTY_LIST);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user1.getSiteId())).thenReturn(Collections.EMPTY_LIST);
+        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
@@ -163,11 +170,12 @@ public class HexFrameServiceImplTest {
     public void processExistingHexFrameWithNewUser() {
         when(mockUserDao.findBySiteId(SITE_ID_2)).thenReturn(user2);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(epochs);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(hexFrames1);
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_2, DIGEST_2, HEX_FRAME_FC1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(Collections.EMPTY_LIST);
+        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
 
@@ -175,10 +183,12 @@ public class HexFrameServiceImplTest {
     public void processExistingHexFrameWithExistingUserNotReportedBefore() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(epochs);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(hexFrames2);
+        when(mockHexFrameDao.findBySatelliteIdAndSequenceNumber(2L, 1131283L)).thenReturn(hexFrames2);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
+        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
@@ -187,10 +197,11 @@ public class HexFrameServiceImplTest {
     public void processExistingHexFrameWithExistingUsereportedBefore() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
-        when(mockEpochDao.findAll()).thenReturn(epochs);
+        when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(hexFrames1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
+        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.ALREADY_REPORTED.value()), responseEntity.getStatusCode().value());
     }

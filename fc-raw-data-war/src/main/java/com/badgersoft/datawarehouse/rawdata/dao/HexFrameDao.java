@@ -13,4 +13,7 @@ public interface HexFrameDao extends JpaRepository<HexFrame, Long> {
 
     @Query("SELECT max(sequenceNumber) from HexFrame where satelliteId = ?1")
     Long getMaxSequenceNumber(long satelliteId);
+
+    @Query
+    List<HexFrame> findBySatelliteIdAndSequenceNumber(Long satelliteId, Long sequenceNumber);
 }

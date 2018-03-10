@@ -1,3 +1,0 @@
-/subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql,driver-module-name=com.mysql.driver,driver-class-name=com.mysql.jdbc.Driver)
-/subsystem=datasources:installed-drivers-list
-data-source add --name=fcdw-funcube_play --jndi-name=java:/fcdw/funcube_play --driver-name=mysql --connection-url=jdbc:mysql://docker.for.mac.host.internal:3306/funcube_play --user-name=funcube --password=funcube

@@ -5,15 +5,18 @@ import com.badgersoft.datawarehouse.common.services.HexFrameService;
 import com.badgersoft.datawarehouse.common.utils.Cache;
 import com.badgersoft.datawarehouse.common.utils.Clock;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
-import com.badgersoft.datawarehouse.rawdata.dao.EpochDao;
+import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.HexFrameDao;
+import com.badgersoft.datawarehouse.rawdata.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
 import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
-import com.badgersoft.datawarehouse.rawdata.domain.Epoch;
 import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
+import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
 import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
+import com.badgersoft.satpredict.dto.SatPosDTO;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -34,12 +38,6 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
     private static final Logger LOG = LoggerFactory.getLogger(HexFrameServiceImpl.class);
 
-    private final HexFrameDao hexFrameDao;
-    private final UserDao userDao;
-    private final EpochDao epochDao;
-    private final Clock clock;
-    private final UserRankingDao userRankingDao;
-
     private static final Cache<String, String> USER_AUTH_KEYS = new Cache<String, String>(
             new UTCClock(), 50, 10);
 
@@ -48,13 +46,37 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private static final String NOT_FOUND = "] not found";
     private static final long TWO_DAYS_SEQ_COUNT = 1440;
 
+    public HexFrameServiceImpl() {}
+
     @Autowired
-    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, EpochDao epochDao, UserRankingDao userRankingDao) {
+    EnvConfig envConfig;
+
+    @Autowired
+    private HexFrameDao hexFrameDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private Clock clock;
+
+    @Autowired
+    private SatelliteStatusDao satelliteStatusDao;
+
+    @Autowired
+    private UserRankingDao userRankingDao;
+
+    @Autowired
+    private JmsMessageSender jmsMessageSender;
+
+    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao, JmsMessageSender jmsMessageSender, EnvConfig envConfig) {
         this.hexFrameDao = hexFrameDao;
         this.userDao = userDao;
         this.clock = clock;
-        this.epochDao = epochDao;
+        this.satelliteStatusDao = satelliteStatusDao;
         this.userRankingDao = userRankingDao;
+        this.jmsMessageSender = jmsMessageSender;
+        this.envConfig = envConfig;
     }
 
     public ResponseEntity processHexFrame(String siteId, String digest, String body) {
@@ -82,6 +104,8 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
                     authKey = user.getAuthKey();
                     USER_AUTH_KEYS.put(siteId, authKey);
                 }
+
+                LOG.debug("Using authKey: " + authKey);
 
                 final String calculatedDigest = ServiceUtility.calculateDigest(hexString,
                         authKey, null);
@@ -124,13 +148,21 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
     private ResponseEntity processHexFrame(UserHexString userHexString) {
 
-        final Map<Long, Epoch> epochMap = new HashMap<Long, Epoch>();
+        final Map<Long, SatelliteStatus> satelliteStatusMap = new HashMap<Long, SatelliteStatus>();
 
-        final Iterator<Epoch> epochIterator = epochDao.findAll().iterator();
+        final List<SatelliteStatus> satelliteStatuses = satelliteStatusDao.findAll();
 
-        while (epochIterator.hasNext()) {
-            final Epoch epoch = epochIterator.next();
-            epochMap.put(epoch.getSatelliteId(), epoch);
+        for(SatelliteStatus satelliteStatus : satelliteStatuses) {
+            satelliteStatusMap.put(satelliteStatus.getSatelliteId(), satelliteStatus);
+        }
+
+        if (satelliteStatusMap.size() == 0) {
+            LOG.error("--- NO SatelliteStatuses Found ---");
+        }
+        else {
+            for(Long satelliteId : satelliteStatusMap.keySet()) {
+                LOG.debug("Fount satellite status for sateliteId: " + satelliteId);
+            }
         }
 
         final String hexString = userHexString.getHexString();
@@ -154,10 +186,10 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
         LOG.debug(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
 
-        if (!epochMap.containsKey(satelliteId)) {
-            final String noEpochFound = String.format("No epoch found for satellite %d", satelliteId);
-            LOG.error(noEpochFound);
-            return new ResponseEntity<String>(noEpochFound, HttpStatus.BAD_REQUEST);
+        if (!satelliteStatusMap.containsKey(satelliteId)) {
+            final String noSatelliteStatusFound = String.format("No satelliteStatus found for satellite %d", satelliteId);
+            LOG.error(noSatelliteStatusFound);
+            return new ResponseEntity<String>(noSatelliteStatusFound, HttpStatus.BAD_REQUEST);
         }
 
         /* ----------------------------------------
@@ -195,29 +227,29 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
         List<HexFrame> hexFrameEntities = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
 
         if (hexFrameEntities.isEmpty()) {
-//            LOG.debug(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
-//            HexFrameEntity hexFrameEntity = new HexFrameEntity(satelliteId, frameType, sequenceNumber, hexString, createdDate,
-//                    true, new Timestamp(createdDate.getTime()));
-//            hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
-//            hexFrameEntity.addUser(user);
-//            incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
-//
-//            addSatellitePosition(hexFrameEntity);
-//
-//            hexFrameDao.save(hexFrameEntity);
-//
-//            if (satelliteId == 0 && sequenceNumber == 0 && firstByte == 0) {
-//                LOG.warn("--- RESET ---");
-//                return new ResponseEntity<String>("Satellite RESET", HttpStatus.BAD_REQUEST);
-//            }
-//
-//            String queueName = getQueueNameFromSatelliteId((int) satelliteId, "frame_available");
-//
-//            Queue queue = new ActiveMQQueue(queueName);
-//            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
-//                    hexFrameEntity.getSatelliteId(),
-//                    hexFrameEntity.getSequenceNumber(),
-//                    hexFrameEntity.getFrameType()));
+            LOG.debug(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
+            HexFrame hexFrameEntity = new HexFrame(satelliteId, frameType, sequenceNumber, hexString, createdDate,
+                    true, new Timestamp(createdDate.getTime()));
+            hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
+            hexFrameEntity.addUser(user);
+            incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
+
+            addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+
+            hexFrameDao.save(hexFrameEntity);
+
+            if (satelliteId == 0 && sequenceNumber == 0 && firstByte == 0) {
+                LOG.warn("--- RESET ---");
+                return new ResponseEntity<String>("Satellite RESET", HttpStatus.BAD_REQUEST);
+            }
+
+            String queueName = "satellite_" + satelliteId + "_frame_available";
+
+            ActiveMQQueue queue = new ActiveMQQueue(queueName);
+            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+                    hexFrameEntity.getSatelliteId(),
+                    hexFrameEntity.getSequenceNumber(),
+                    hexFrameEntity.getFrameType()));
         }
         else {
             HexFrame hexFrameEntity = hexFrameEntities.get(0);
@@ -304,5 +336,42 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
                 return -1L;
         }
     }
+
+    private Boolean isOutOfOrder(HexFrame hexFrameEntity) {
+
+        boolean outOfOrder = false;
+
+        final List<HexFrame> existingFrames = hexFrameDao
+                .findBySatelliteIdAndSequenceNumber(hexFrameEntity.getSatelliteId(),
+                        hexFrameEntity.getSequenceNumber());
+
+        if (!existingFrames.isEmpty()) {
+            for (final HexFrame existingFrame : existingFrames) {
+                if (existingFrame.getCreatedDate().before(hexFrameEntity.getCreatedDate())
+                        && existingFrame.getFrameType() > hexFrameEntity.getFrameType()) {
+                    outOfOrder = true;
+                    break;
+                }
+            }
+        }
+
+        return outOfOrder;
+    }
+
+    private void addSatellitePosition(HexFrame hexFrameEntity, long catalogueNumber) {
+
+        String satPredictUrl = envConfig.satpredictURL() + "/satellite/position/" + catalogueNumber + "?latitude=0&longitude=0&altitude=0";
+
+        RestTemplate restTemplate = new RestTemplate();
+        SatPosDTO satpos = restTemplate.getForObject(satPredictUrl, SatPosDTO.class);
+
+        if (satpos != null) {
+            hexFrameEntity.setLatitude(satpos.getLatitude());
+            hexFrameEntity.setLongitude(satpos.getLongitude());
+        }
+
+        return;
+    }
+
 
 }

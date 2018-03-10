@@ -14,11 +14,16 @@ public class UserRanking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "satellite_id")
     private Long satelliteId;
+    @Column(name = "site_id")
     private String siteId;
     private Long number;
+    @Column(name = "latest_upload_date")
     private Timestamp latestUploadDate;
+    @Column(name = "site_alias")
     private String siteAlias;
+    @Column(name = "first_upload_date")
     private Timestamp firstUploadDate;
 
     public UserRanking() {

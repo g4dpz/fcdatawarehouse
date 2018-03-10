@@ -30,29 +30,40 @@ public class HexFrame {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
 
+    @Column(name = "satellite_id")
     private Long satelliteId;
+    @Column(name = "sequence_number")
     private Long sequenceNumber;
 
     @Column(name = "hex_string", length = 1024)
     private String hexString;
 
+    @Column(name = "created_date")
     private Date createdDate;
     private boolean valid;
+    @Column(name = "frame_type")
     private Long frameType;
+    @Column(name = "wod_processed")
     private boolean wodProcessed;
+    @Column(name = "fitter_processed")
     private boolean fitterProcessed;
+    @Column(name = "high_precision_processed")
     private boolean highPrecisionProcessed;
+    @Column(name = "realtime_processed")
     private boolean realtimeProcessed;
+    @Column(name = "satellite_time")
     private Timestamp satelliteTime;
 
     private String eclipsed;
 
+    @Column(name = "eclipse_depth")
     private String eclipseDepth;
 
     private String latitude;
 
     private String longitude;
 
+    @Column(name = "out_of_order")
     private Boolean outOfOrder;
 
     private String digest;
