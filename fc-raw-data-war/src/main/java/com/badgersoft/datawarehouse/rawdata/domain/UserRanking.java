@@ -18,6 +18,7 @@ public class UserRanking {
     private Long satelliteId;
     @Column(name = "site_id")
     private String siteId;
+    @Column
     private Long number;
     @Column(name = "latest_upload_date")
     private Timestamp latestUploadDate;

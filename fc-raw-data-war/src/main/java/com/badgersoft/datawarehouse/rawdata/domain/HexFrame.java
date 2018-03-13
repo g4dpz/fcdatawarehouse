@@ -8,6 +8,7 @@ package com.badgersoft.datawarehouse.rawdata.domain;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -32,6 +33,7 @@ public class HexFrame {
 
     @Column(name = "satellite_id")
     private Long satelliteId;
+
     @Column(name = "sequence_number")
     private Long sequenceNumber;
 
@@ -40,21 +42,29 @@ public class HexFrame {
 
     @Column(name = "created_date")
     private Date createdDate;
-    private boolean valid;
+
+    @Column(name = "valid")
+    private Boolean valid = false;
+
     @Column(name = "frame_type")
     private Long frameType;
+
     @Column(name = "wod_processed")
-    private boolean wodProcessed;
+    private Boolean wodProcessed = false;
+
     @Column(name = "fitter_processed")
-    private boolean fitterProcessed;
+    private Boolean fitterProcessed = false;
+
     @Column(name = "high_precision_processed")
-    private boolean highPrecisionProcessed;
+    private Boolean highPrecisionProcessed = false;
+
     @Column(name = "realtime_processed")
-    private boolean realtimeProcessed;
+    private Boolean realtimeProcessed = false;
+
     @Column(name = "satellite_time")
     private Timestamp satelliteTime;
 
-    private String eclipsed;
+    private Boolean eclipsed = false;
 
     @Column(name = "eclipse_depth")
     private String eclipseDepth;
@@ -64,7 +74,7 @@ public class HexFrame {
     private String longitude;
 
     @Column(name = "out_of_order")
-    private Boolean outOfOrder;
+    private Boolean outOfOrder = false;
 
     private String digest;
 
@@ -73,7 +83,7 @@ public class HexFrame {
 
     public HexFrame(
             final Long satelliteId, final Long frameType, final Long sequenceNumber,
-            final String hexString, final Date createdDate, final boolean valid,
+            final String hexString, final Date createdDate, final Boolean valid,
             final Timestamp satelliteTime) {
         this.satelliteId = satelliteId;
         this.frameType = frameType;
@@ -133,11 +143,11 @@ public class HexFrame {
         this.createdDate = createdDate;
     }
 
-    public boolean isValid() {
+    public Boolean isValid() {
         return valid;
     }
 
-    public void setValid(boolean valid) {
+    public void setValid(Boolean valid) {
         this.valid = valid;
     }
 
@@ -149,27 +159,27 @@ public class HexFrame {
         this.frameType = frameType;
     }
 
-    public boolean isWodProcessed() {
+    public Boolean isWodProcessed() {
         return wodProcessed;
     }
 
-    public void setWodProcessed(boolean wodProcessed) {
+    public void setWodProcessed(Boolean wodProcessed) {
         this.wodProcessed = wodProcessed;
     }
 
-    public boolean isFitterProcessed() {
+    public Boolean isFitterProcessed() {
         return fitterProcessed;
     }
 
-    public void setFitterProcessed(boolean fitterProcessed) {
+    public void setFitterProcessed(Boolean fitterProcessed) {
         this.fitterProcessed = fitterProcessed;
     }
 
-    public boolean isHighPrecisionProcessed() {
+    public Boolean isHighPrecisionProcessed() {
         return highPrecisionProcessed;
     }
 
-    public void setHighPrecisionProcessed(boolean highPrecisionProcessed) {
+    public void setHighPrecisionProcessed(Boolean highPrecisionProcessed) {
         this.highPrecisionProcessed = highPrecisionProcessed;
     }
 
@@ -181,11 +191,11 @@ public class HexFrame {
         this.satelliteTime = satelliteTime;
     }
 
-    public final String getEclipsed() {
+    public final Boolean getEclipsed() {
         return eclipsed;
     }
 
-    public void setEclipsed(String eclipsed) {
+    public void setEclipsed(Boolean eclipsed) {
         this.eclipsed = eclipsed;
     }
 
@@ -229,11 +239,11 @@ public class HexFrame {
         this.digest = digest;
     }
 
-    public final boolean isRealtimeProcessed() {
+    public final Boolean isRealtimeProcessed() {
         return realtimeProcessed;
     }
 
-    public final void setRealtimeProcessed(boolean realtimeProcessed) {
+    public final void setRealtimeProcessed(Boolean realtimeProcessed) {
         this.realtimeProcessed = realtimeProcessed;
     }
 

@@ -59,6 +59,7 @@ public class JpaConfig {
             {
                 setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
                 setProperty("hibernate.hbm2ddl.auto", "update");
+                setProperty("hibernate.show_sql", "true");
             }
         };
     }

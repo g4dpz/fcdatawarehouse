@@ -16,7 +16,6 @@ import com.badgersoft.datawarehouse.rawdata.domain.User;
 import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
 import com.badgersoft.satpredict.dto.SatPosDTO;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,18 +63,14 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private SatelliteStatusDao satelliteStatusDao;
 
     @Autowired
-    private UserRankingDao userRankingDao;
+    private UserRankingDao userRankingDao;;
 
-    @Autowired
-    private JmsMessageSender jmsMessageSender;
-
-    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao, JmsMessageSender jmsMessageSender, EnvConfig envConfig) {
+    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao, EnvConfig envConfig) {
         this.hexFrameDao = hexFrameDao;
         this.userDao = userDao;
         this.clock = clock;
         this.satelliteStatusDao = satelliteStatusDao;
         this.userRankingDao = userRankingDao;
-        this.jmsMessageSender = jmsMessageSender;
         this.envConfig = envConfig;
     }
 
@@ -122,6 +117,8 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
                     hexString = StringUtils.deleteWhitespace(hexString);
 
                     final Date now = new Date(5000 * (clock.currentDate().getTime() / 5000));
+
+                    LOG.info(calculatedDigest + " " + hexString);
 
                     return processHexFrame(new UserHexString(user,
                             StringUtils.deleteWhitespace(hexString), now));
@@ -232,6 +229,9 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
                     true, new Timestamp(createdDate.getTime()));
             hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
             hexFrameEntity.addUser(user);
+            hexFrameEntity.setFitterProcessed(false);
+            hexFrameEntity.setRealtimeProcessed(false);
+            hexFrameEntity.setHighPrecisionProcessed(false);
             incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
 
             addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
@@ -245,11 +245,11 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
             String queueName = "satellite_" + satelliteId + "_frame_available";
 
-            ActiveMQQueue queue = new ActiveMQQueue(queueName);
-            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
-                    hexFrameEntity.getSatelliteId(),
-                    hexFrameEntity.getSequenceNumber(),
-                    hexFrameEntity.getFrameType()));
+//            ActiveMQQueue queue = new ActiveMQQueue(queueName);
+//            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+//                    hexFrameEntity.getSatelliteId(),
+//                    hexFrameEntity.getSequenceNumber(),
+//                    hexFrameEntity.getFrameType()));
         }
         else {
             HexFrame hexFrameEntity = hexFrameEntities.get(0);

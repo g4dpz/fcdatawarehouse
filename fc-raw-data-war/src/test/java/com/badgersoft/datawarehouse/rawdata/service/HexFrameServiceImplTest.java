@@ -44,7 +44,6 @@ public class HexFrameServiceImplTest {
     private Clock mockClock;
     private SatelliteStatusDao mockSatelliteStatusDao;
     private UserRankingDao mockUserRankingDao;
-    private JmsMessageSender mockJmsMessageSender;
     private EnvConfig mockEnvConfig;
 
     private static String SITE_ID_1 = "g4dpz";
@@ -75,9 +74,8 @@ public class HexFrameServiceImplTest {
         mockClock = Mockito.mock(UTCClock.class);
         mockSatelliteStatusDao = Mockito.mock(SatelliteStatusDao.class);
         mockUserRankingDao = Mockito.mock(UserRankingDao.class);
-        mockJmsMessageSender = Mockito.mock(JmsMessageSender.class);
         mockEnvConfig = Mockito.mock(EnvConfig.class);
-        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao, mockUserRankingDao, mockJmsMessageSender, mockEnvConfig);
+        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao, mockUserRankingDao, mockEnvConfig);
 
         user1 = new User();
         user1.setSiteId(SITE_ID_1);
