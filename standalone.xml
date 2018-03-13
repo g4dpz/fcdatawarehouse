@@ -149,7 +149,7 @@
                     </security>
                 </datasource>
                 <datasource jndi-name="java:/fcdw/funcube_play" pool-name="fcdw-funcube_play">
-                    <connection-url>jdbc:mysql://docker.for.mac.host.internal:3306/funcube_play</connection-url>
+                    <connection-url>jdbc:mysql://docker.for.mac.host.internal:3306/funcube_play?autoReconnect=true</connection-url>
                     <driver>mysql</driver>
                     <security>
                         <user-name>funcube</user-name>
