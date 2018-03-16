@@ -8,13 +8,8 @@ USER root
 WORKDIR /opt
 
 # Add ActiveMQ RAR
-COPY activemq/activemq-rar-5.14.4.rar /root/
-RUN mkdir -p /opt/jboss/wildfly/modules/org/apache/activemq/ra/main && unzip /root/activemq-rar-5.14.4.rar -d /opt/jboss/wildfly/modules/org/apache/activemq/ra/main
-COPY activemq/module.xml /opt/jboss/wildfly/modules/org/apache/activemq/ra/main/
-RUN mkdir -p /opt/jboss/wildfly/modules/org/apache/activemq/ra/main/META-INF
-COPY activemq/ra.xml /opt/jboss/wildfly/modules/org/apache/activemq/ra/main/META-INF/
-
-
+RUN mkdir -p /opt/jboss/wildfly//modules/system/layers/base/org/apache/activemq
+COPY activemq/* /opt/jboss/wildfly//modules/system/layers/base/org/apache/activemq
 
 RUN mkdir -p /opt/jboss/wildfly/modules/system/layers/base/com/mysql/driver/main
 COPY mysql/* /opt/jboss/wildfly/modules/system/layers/base/com/mysql/driver/main/
