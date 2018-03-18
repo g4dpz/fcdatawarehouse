@@ -6,16 +6,12 @@ import com.badgersoft.datawarehouse.common.utils.Cache;
 import com.badgersoft.datawarehouse.common.utils.Clock;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
-import com.badgersoft.datawarehouse.rawdata.dao.HexFrameDao;
-import com.badgersoft.datawarehouse.rawdata.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
-import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
-import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
-import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
-import com.badgersoft.datawarehouse.rawdata.domain.User;
-import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
+import com.badgersoft.datawarehouse.rawdata.dao.*;
+import com.badgersoft.datawarehouse.rawdata.domain.*;
+import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
 import com.badgersoft.satpredict.dto.SatPosDTO;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +30,8 @@ import static com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility.convertH
 @Service
 @Component(value = "rawdataHFS")
 public class HexFrameServiceImpl extends AbstractHexFrameService implements HexFrameService {
+
+
 
     private static final Logger LOG = LoggerFactory.getLogger(HexFrameServiceImpl.class);
 
@@ -54,6 +52,9 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private HexFrameDao hexFrameDao;
 
     @Autowired
+    private PayloadDao payloadDao;
+
+    @Autowired
     private UserDao userDao;
 
     @Autowired
@@ -63,15 +64,23 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private SatelliteStatusDao satelliteStatusDao;
 
     @Autowired
-    private UserRankingDao userRankingDao;;
+    private UserRankingDao userRankingDao;
 
-    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock, SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao, EnvConfig envConfig) {
+    @Autowired
+    JmsMessageSender jmsMessageSender;
+
+    public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock,
+                               SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao,
+                               EnvConfig envConfig, JmsMessageSender jmsMessageSender,
+                               PayloadDao payloadDao) {
         this.hexFrameDao = hexFrameDao;
         this.userDao = userDao;
         this.clock = clock;
         this.satelliteStatusDao = satelliteStatusDao;
         this.userRankingDao = userRankingDao;
         this.envConfig = envConfig;
+        this.jmsMessageSender = jmsMessageSender;
+        this.payloadDao = payloadDao;
     }
 
     public ResponseEntity processHexFrame(String siteId, String digest, String body) {
@@ -154,11 +163,11 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
         }
 
         if (satelliteStatusMap.size() == 0) {
-            LOG.error("--- NO SatelliteStatuses Found ---");
+            LOG.error("--- NO Satellite Statuses Found ---");
         }
         else {
             for(Long satelliteId : satelliteStatusMap.keySet()) {
-                LOG.debug("Fount satellite status for sateliteId: " + satelliteId);
+                LOG.debug("Found satellite status for sateliteId: " + satelliteId);
             }
         }
 
@@ -181,7 +190,7 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
         final long sequenceNumber = getSequenceNumber(satelliteId, hexString);
 
-        LOG.debug(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
+        LOG.info(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
 
         if (!satelliteStatusMap.containsKey(satelliteId)) {
             final String noSatelliteStatusFound = String.format("No satelliteStatus found for satellite %d", satelliteId);
@@ -224,14 +233,28 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
         List<HexFrame> hexFrameEntities = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
 
         if (hexFrameEntities.isEmpty()) {
-            LOG.debug(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
-            HexFrame hexFrameEntity = new HexFrame(satelliteId, frameType, sequenceNumber, hexString, createdDate,
-                    true, new Timestamp(createdDate.getTime()));
+
+            String payloadText = hexString.substring(112);
+            String preamble = hexString.substring(0, 112);
+
+            Payload payload = payloadDao.findByHexText(payloadText);
+
+            if (payload == null) {
+                payload = new Payload();
+                payload.setHexText(payloadText);
+                payload.setCreatedDate(new Date(System.currentTimeMillis()));
+                payloadDao.save(payload);
+            }
+
+            LOG.info(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
+            HexFrame hexFrameEntity = new HexFrame(satelliteId, frameType, sequenceNumber, preamble, createdDate,
+                    true, new Timestamp(createdDate.getTime()), payload);
             hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
             hexFrameEntity.addUser(user);
             hexFrameEntity.setFitterProcessed(false);
             hexFrameEntity.setRealtimeProcessed(false);
             hexFrameEntity.setHighPrecisionProcessed(false);
+            hexFrameEntity.setPayload(payload);
             incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
 
             addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
@@ -245,11 +268,11 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
             String queueName = "satellite_" + satelliteId + "_frame_available";
 
-//            ActiveMQQueue queue = new ActiveMQQueue(queueName);
-//            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
-//                    hexFrameEntity.getSatelliteId(),
-//                    hexFrameEntity.getSequenceNumber(),
-//                    hexFrameEntity.getFrameType()));
+            ActiveMQQueue queue = new ActiveMQQueue(queueName);
+            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+                    hexFrameEntity.getSatelliteId(),
+                    hexFrameEntity.getSequenceNumber(),
+                    hexFrameEntity.getFrameType()));
         }
         else {
             HexFrame hexFrameEntity = hexFrameEntities.get(0);
@@ -266,12 +289,12 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
             }
 
             if (userFound) {
-                LOG.debug(String.format("User %s has already saved %d %d %d", user.getSiteId(), satelliteId, sequenceNumber, frameType));
+                LOG.info(String.format("User %s has already saved %d %d %d", user.getSiteId(), satelliteId, sequenceNumber, frameType));
                 return new ResponseEntity<String>("Already Reported", HttpStatus.ALREADY_REPORTED);
             }
             else {
                 String siteId = user.getSiteId();
-                LOG.debug(String.format("Adding user %s to %d %d %d", siteId, satelliteId, sequenceNumber, frameType));
+                LOG.info(String.format("Adding user %s to %d %d %d", siteId, satelliteId, sequenceNumber, frameType));
                 hexFrameEntity.addUser(user);
                 incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
                 hexFrameEntity = hexFrameDao.save(hexFrameEntity);

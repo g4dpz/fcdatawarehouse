@@ -37,7 +37,7 @@ public class HexFrame {
     @Column(name = "sequence_number")
     private Long sequenceNumber;
 
-    @Column(name = "hex_string", length = 1024)
+    @Column(name = "hex_string", length = 112)
     private String hexString;
 
     @Column(name = "created_date")
@@ -76,6 +76,9 @@ public class HexFrame {
     @Column(name = "out_of_order")
     private Boolean outOfOrder = false;
 
+    @ManyToOne(targetEntity = Payload.class)
+    private Payload payload;
+
     private String digest;
 
     public HexFrame() {
@@ -84,7 +87,7 @@ public class HexFrame {
     public HexFrame(
             final Long satelliteId, final Long frameType, final Long sequenceNumber,
             final String hexString, final Date createdDate, final Boolean valid,
-            final Timestamp satelliteTime) {
+            final Timestamp satelliteTime, final Payload payload) {
         this.satelliteId = satelliteId;
         this.frameType = frameType;
         this.sequenceNumber = sequenceNumber;
@@ -93,6 +96,7 @@ public class HexFrame {
         this.valid = valid;
         this.satelliteTime = satelliteTime;
         this.outOfOrder = false;
+        this.payload = payload;
     }
 
     public Long getId() {
@@ -249,5 +253,13 @@ public class HexFrame {
 
     public void addUser(User user) {
         users.add(user);
+    }
+
+    public Payload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Payload payload) {
+        this.payload = payload;
     }
 }

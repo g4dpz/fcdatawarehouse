@@ -6,14 +6,13 @@ import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
 import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
-import com.badgersoft.datawarehouse.rawdata.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.rawdata.dao.HexFrameDao;
-import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
-import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
-import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
+import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
+import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
 import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
+import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,19 +21,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={AppConfig.class, TestJpaConfig.class},
-        loader = AnnotationConfigContextLoader.class)
-
+        loader = AnnotationConfigWebContextLoader.class)
+@WebAppConfiguration
 @Transactional
 public class HexFrameServiceImplTest {
 
@@ -45,17 +46,22 @@ public class HexFrameServiceImplTest {
     private SatelliteStatusDao mockSatelliteStatusDao;
     private UserRankingDao mockUserRankingDao;
     private EnvConfig mockEnvConfig;
+    private JmsMessageSender mockJmsMessageSender;
+    private PayloadDao mockPayloadDao;
 
     private static String SITE_ID_1 = "g4dpz";
     private static String SITE_ID_2 = "g4fzn";
     private static String DIGEST_1 = "b9bfc7692f901e306acd56cca80bb65a";
     private static String DIGEST_2 = "2885ef478b00f45d20927b7aaf0da119";
-    private static String HEX_FRAME_FC1 = "8010A9109D10870113206400DB040700001918191800000301F4C853CE93A228EA23332" +
-            "233A9EB6C329321852D772BF9393F114313000FE487483983D7ABA5295A5A93112F1183110D00C7205A00D78608228967" +
+    private static String PREAMBLE = "8010A9109D10870113206400DB040700001918191800000301F4C853CE93A228EA23332" +
+            "233A9EB6C329321852D772BF9393F114313000FE4";
+    private static String PAYLOAD = "87483983D7ABA5295A5A93112F1183110D00C7205A00D78608228967" +
             "C7A428FA4E8C110210AE11930103206400D78398048A87C1A328DA2E8C110210E610F100F9205A00DB83B7FB86879FA26" +
             "8AA3287112F110D111E00E8206400DB8458057EF784A328FA468C104F105A104A00F8206400D787681D7B376CA568FA66" +
             "8C10F11060106600F9206400D7853811808782A468DA568910AE109210A300FB206400D78397E4847787A4287A3A8710B" +
             "4104410D500F6206400DB8107D386B796A2687A2684104F101711";
+
+    private String HEX_FRAME_FC1 = PREAMBLE + PAYLOAD;
     private User user1;
     private User user2;
     private SatelliteStatus satelliteStatus;
@@ -65,6 +71,7 @@ public class HexFrameServiceImplTest {
     private Set<User> users1 = new HashSet<>();
     private Set<User> users2 = new HashSet<>();
     private List<UserRanking> rankings = new ArrayList<>();
+    private ActiveMQQueue queue = new ActiveMQQueue("satellite_2_frame_available");
 
 
     @Before
@@ -75,7 +82,10 @@ public class HexFrameServiceImplTest {
         mockSatelliteStatusDao = Mockito.mock(SatelliteStatusDao.class);
         mockUserRankingDao = Mockito.mock(UserRankingDao.class);
         mockEnvConfig = Mockito.mock(EnvConfig.class);
-        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao, mockUserRankingDao, mockEnvConfig);
+        mockJmsMessageSender = Mockito.mock(JmsMessageSender.class);
+        mockPayloadDao = Mockito.mock(PayloadDao.class);
+        hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao,
+                mockUserRankingDao, mockEnvConfig, mockJmsMessageSender, mockPayloadDao);
 
         user1 = new User();
         user1.setSiteId(SITE_ID_1);
@@ -161,6 +171,8 @@ public class HexFrameServiceImplTest {
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user1.getSiteId())).thenReturn(Collections.EMPTY_LIST);
         when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        verify(mockJmsMessageSender).send(queue,"rt,2,1131283,0");
+        verify(mockPayloadDao).findByHexText(PAYLOAD);
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
 
