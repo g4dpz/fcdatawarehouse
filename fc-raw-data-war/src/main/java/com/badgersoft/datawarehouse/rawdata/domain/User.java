@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String latitude;
     @Column
     private String longitude;
-    @Column
+    @Column(name = "site_id")
     private String siteId;
     @Column
     private boolean enabled;
@@ -38,15 +38,15 @@ public class User implements UserDetails {
     private boolean expired;
     @Column
     private boolean locked;
-    @Column
+    @Column(name = "credentials_expired")
     private boolean credentialsExpired;
-    @Column
+    @Column(name = "auth_key")
     private String authKey;
-    @Column
+    @Column(name = "email_sent")
     private boolean emailSent;
-    @Column
+    @Column(name = "created_date")
     private Date createdDate;
-    @Column
+    @Column(name = "registrationcode")
     private String registrationCode;
     @Column
     private boolean transferred;

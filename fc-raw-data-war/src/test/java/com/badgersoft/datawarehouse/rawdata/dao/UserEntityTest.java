@@ -4,7 +4,6 @@ import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
 import com.badgersoft.datawarehouse.rawdata.config.MessagingConfig;
 import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
 import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
-import com.badgersoft.datawarehouse.rawdata.domain.Payload;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +30,6 @@ public class UserEntityTest {
     private UserDao userDao;
     @Resource
     private HexFrameDao hexFrameDao;
-    @Resource
-    private PayloadDao payloadDao;
 
     @Test
     public void create() {
@@ -50,13 +47,8 @@ public class UserEntityTest {
         User user1 = new User();
         user1 = userDao.save(user1);
 
-        Payload payload = new Payload();
-        payload.setHexText("00");
-        payload = payloadDao.save(payload);
-
         HexFrame hexFrame1 = new HexFrame();
         hexFrame1 = hexFrameDao.save(hexFrame1);
-        hexFrame1.setPayload(payload);
 
         user1.addFrame(hexFrame1);
         user1 = userDao.save(user1);
@@ -65,7 +57,6 @@ public class UserEntityTest {
 
         assertTrue(!frames.isEmpty());
         assertTrue(frames.get(0).getUsers().contains(user1));
-        assertTrue(frames.get(0).getPayload().getHexText().equals("00"));
 
 
     }

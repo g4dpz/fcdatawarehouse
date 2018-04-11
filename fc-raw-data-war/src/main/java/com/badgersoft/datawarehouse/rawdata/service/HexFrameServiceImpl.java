@@ -52,9 +52,6 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
     private HexFrameDao hexFrameDao;
 
     @Autowired
-    private PayloadDao payloadDao;
-
-    @Autowired
     private UserDao userDao;
 
     @Autowired
@@ -68,6 +65,9 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
     @Autowired
     JmsMessageSender jmsMessageSender;
+
+    @Autowired
+    private PayloadDao payloadDao;
 
     public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock,
                                SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao,
@@ -243,12 +243,12 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
                 payload = new Payload();
                 payload.setHexText(payloadText);
                 payload.setCreatedDate(new Date(System.currentTimeMillis()));
-                payloadDao.save(payload);
+                payload = payloadDao.save(payload);
             }
 
             LOG.info(String.format("Saving %d %d %d for %s", satelliteId, sequenceNumber, frameType, user.getSiteId()));
             HexFrame hexFrameEntity = new HexFrame(satelliteId, frameType, sequenceNumber, preamble, createdDate,
-                    true, new Timestamp(createdDate.getTime()), payload);
+                    true, new Timestamp(createdDate.getTime()));
             hexFrameEntity.setOutOfOrder(isOutOfOrder(hexFrameEntity));
             hexFrameEntity.addUser(user);
             hexFrameEntity.setFitterProcessed(false);
@@ -290,7 +290,7 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
 
             if (userFound) {
                 LOG.info(String.format("User %s has already saved %d %d %d", user.getSiteId(), satelliteId, sequenceNumber, frameType));
-                return new ResponseEntity<String>("Already Reported", HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<String>("Already Reported", HttpStatus.OK);
             }
             else {
                 String siteId = user.getSiteId();

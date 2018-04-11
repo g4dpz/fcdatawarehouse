@@ -1,39 +1,25 @@
-// FUNcube Data Warehouse
-// Copyright 2013 (c) David A.Johnson, G4DPZ, AMSAT-UK
-// This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-// To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter
-// to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
-
 package com.badgersoft.datawarehouse.rawdata.domain;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "payload")
-public class Payload {
+public class Payload implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "hex_text", length = 400)
+    @Column(name = "hex_text")
     private String hexText;
 
     @Column(name = "created_date")
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    public Payload() {
-    }
-
-    public Payload(String hexText, final Date createdDate) {
-        this.hexText = hexText;
-        this.createdDate = createdDate;
-    }
+    public Payload() {}
 
     public Long getId() {
         return id;

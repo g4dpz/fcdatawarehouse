@@ -8,6 +8,4 @@ public interface PayloadDao extends JpaRepository<Payload, Long> {
 
     @Query
     Payload findByHexText(String hexText);
-
-
 }

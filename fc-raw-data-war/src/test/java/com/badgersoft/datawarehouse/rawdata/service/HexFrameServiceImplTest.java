@@ -7,10 +7,7 @@ import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
 import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
-import com.badgersoft.datawarehouse.rawdata.domain.HexFrame;
-import com.badgersoft.datawarehouse.rawdata.domain.SatelliteStatus;
-import com.badgersoft.datawarehouse.rawdata.domain.User;
-import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
+import com.badgersoft.datawarehouse.rawdata.domain.*;
 import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Before;
@@ -105,19 +102,26 @@ public class HexFrameServiceImplTest {
         satelliteStatus.setCatalogueNumber(39444L);
         satelliteStatuses.add(satelliteStatus);
 
+        Payload payload = new Payload();
+        payload.setId(1L);
+        payload.setHexText(PAYLOAD);
+        payload.setCreatedDate(new Date(System.currentTimeMillis()));
+
         HexFrame hexFrame = new HexFrame();
         hexFrame.setId(1L);
         hexFrame.setUsers(users1);
         hexFrame.setCreatedDate(Calendar.getInstance().getTime());
         hexFrame.setFrameType(0L);
         hexFrame.setSequenceNumber(1131283L);
-        hexFrame.setHexString(HEX_FRAME_FC1);
+        hexFrame.setHexString(PREAMBLE);
+        hexFrame.setPayload(payload);
         user1.addFrame(hexFrame);
         hexFrames1.add(hexFrame);
 
         UserRanking userRanking = new UserRanking();
         userRanking.setSiteId(user1.getSiteId());
         rankings.add(userRanking);
+
     }
 
     @Test
@@ -213,6 +217,6 @@ public class HexFrameServiceImplTest {
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
         when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals((HttpStatus.ALREADY_REPORTED.value()), responseEntity.getStatusCode().value());
+        assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
 }

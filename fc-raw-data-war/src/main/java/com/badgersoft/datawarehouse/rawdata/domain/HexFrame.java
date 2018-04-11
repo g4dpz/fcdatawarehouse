@@ -87,7 +87,7 @@ public class HexFrame {
     public HexFrame(
             final Long satelliteId, final Long frameType, final Long sequenceNumber,
             final String hexString, final Date createdDate, final Boolean valid,
-            final Timestamp satelliteTime, final Payload payload) {
+            final Timestamp satelliteTime) {
         this.satelliteId = satelliteId;
         this.frameType = frameType;
         this.sequenceNumber = sequenceNumber;
@@ -96,7 +96,6 @@ public class HexFrame {
         this.valid = valid;
         this.satelliteTime = satelliteTime;
         this.outOfOrder = false;
-        this.payload = payload;
     }
 
     public Long getId() {

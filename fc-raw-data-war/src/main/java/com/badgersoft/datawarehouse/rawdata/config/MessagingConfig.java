@@ -4,7 +4,7 @@ import com.badgersoft.datawarehouse.common.services.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.service.HexFrameServiceImpl;
 import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.spring.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -29,6 +29,7 @@ public class MessagingConfig {
 
     @Bean
     ActiveMQConnectionFactory amqConnectionFactory() {
+
         final ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
         activeMQConnectionFactory.setBrokerURL("tcp://localhost:61616");
         return activeMQConnectionFactory;

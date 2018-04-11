@@ -1,0 +1,20 @@
+package com.badgersoft.datawarehouse.jy1sat.dao;
+
+import com.badgersoft.datawarehouse.jy1sat.domain.WholeOrbitDataEntity;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+/**
+ * Created by davidjohnson on 18/09/2016.
+ */
+public interface WholeOrbitDataDAO extends PagingAndSortingRepository<WholeOrbitDataEntity, Long> {
+
+    @Query
+    WholeOrbitDataEntity findById(Long id);
+
+    @Query("select fm from WholeOrbitDataEntity fm where satellite_time >= ?1")
+    List<WholeOrbitDataEntity> findAfterSatTime(Timestamp from);
+}
