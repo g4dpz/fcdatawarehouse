@@ -1,14 +1,16 @@
-package com.badgersoft.datawarehouse.nayf1.controller.rest;
+package com.badgersoft.datawarehouse.rawdata.controller.rest;
 
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
-import com.badgersoft.datawarehouse.nayif1.config.AppConfig;
-import com.badgersoft.datawarehouse.nayif1.service.HexFrameServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
+import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
+import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
+import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,9 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfig.class})
+@ContextConfiguration(classes={AppConfig.class, TestJpaConfig.class},
+        loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration
-public class HexFrameControllerRestTest {
+public class SatelliteControllerRestTest {
 
     private MockMvc mockMvc;
 

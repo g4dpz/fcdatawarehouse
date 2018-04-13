@@ -1,6 +1,7 @@
 package com.badgersoft.datawarehouse.jy1sat.service;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
+import com.badgersoft.datawarehouse.common.services.AbstractSatelliteService;
 import com.badgersoft.datawarehouse.common.services.SatelliteService;
 import com.badgersoft.datawarehouse.jy1sat.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.jy1sat.domain.SatelliteStatusEntity;
@@ -12,9 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,8 @@ import java.util.Calendar;
  * Created by davidjohnson on 14/08/2016.
  */
 @Service
-public class SatelliteServiceImpl implements SatelliteService {
+@Component(value = "jy1satSatelliteService")
+public class SatelliteServiceImpl extends AbstractSatelliteService implements SatelliteService {
 
     @Autowired
     FitterMessageProcessor fitterMessageProcessor;
@@ -48,14 +50,11 @@ public class SatelliteServiceImpl implements SatelliteService {
     @Autowired
     JmsMessageSender jmsMessageSender;
 
-    @Value("${satellite.name}")
-    String satelliteName;
+    private static String SATELLITE_NAME = "JY1Sat";
 
-    @Value("${satellite.id}")
-    String satelliteIdent;
+    private static String SATELLITE_ID = "15";
 
-    @Value("${warehouse.port}")
-    String warehousePort;
+    private static String WAREHOUSE_PORT = "8080";
 
     @Override
     public String ping() {
@@ -78,15 +77,15 @@ public class SatelliteServiceImpl implements SatelliteService {
         String[] messageElements = StringUtils.split(message, ",");
         int msgLength = messageElements.length;
         if (msgLength < 3 || msgLength > 4) {
-            String errorMsg = String.format("Message for %s was incorrect: %s", satelliteName, message);
+            String errorMsg = String.format("Message for %s was incorrect: %s", SATELLITE_NAME, message);
             LOG.error(errorMsg);
             return "Error: " + errorMsg;
         }
 
         // belt and braces check
         String satelliteId = messageElements[1];
-        if (!satelliteId.equals(satelliteIdent)) {
-            String errorMsg = String.format("Message was not for %s: %s", satelliteName, message);
+        if (!satelliteId.equals(SATELLITE_ID)) {
+            String errorMsg = String.format("Message was not for %s: %s", SATELLITE_NAME, message);
             LOG.error(errorMsg);
             return "Error: " + errorMsg;
         }
@@ -98,14 +97,14 @@ public class SatelliteServiceImpl implements SatelliteService {
 
             String frameTypeId = messageElements[3];
 
-            LOG.debug(String.format("%s %s available for processing: %s", satelliteName, frameTypeName, message));
+            LOG.debug(String.format("%s %s available for processing: %s", SATELLITE_NAME, frameTypeName, message));
 
             RestTemplate restTemplate = new RestTemplate();
 
             long then = Calendar.getInstance().getTime().getTime();
 
 
-            final String url = "http://localhost:" + warehousePort + "/warehouse/api/data/frame/" +
+            final String url = "http://localhost:" + WAREHOUSE_PORT + "/api/data/frame/" +
                     satelliteId + "/" +
                     sequenceNumber + "/" +
                     frameTypeId;
@@ -116,14 +115,14 @@ public class SatelliteServiceImpl implements SatelliteService {
             try {
 
                 long timeTaken = Calendar.getInstance().getTime().getTime() - then;
-                LOG.debug(String.format("Received %s hexFrame %s in %d mS", satelliteName, message, timeTaken));
+                LOG.debug(String.format("Received %s hexFrame %s in %d mS", SATELLITE_NAME, message, timeTaken));
 
                 if (frameTypeName.equals("rt")) {
                     realtimeProcessor.process(hexFrameDTO);
                 };
             }
             catch (Exception e) {
-                String errorMsg = String.format("Could not process realtime data for %s: %s", satelliteName, e.getMessage());
+                String errorMsg = String.format("Could not process realtime data for %s: %s", SATELLITE_NAME, e.getMessage());
                 LOG.error(errorMsg);
                 return "Error: " + errorMsg;
             }
@@ -143,7 +142,7 @@ public class SatelliteServiceImpl implements SatelliteService {
             return processFrames("fitter", message, satelliteId, sequenceNumber);
 
         } else {
-            String errorMessage = String.format("Error: unknown message type [%s] for %s", message, satelliteName);
+            String errorMessage = String.format("Error: unknown message type [%s] for %s", message, SATELLITE_NAME);
             LOG.error(errorMessage);
             return errorMessage;
         }
@@ -157,7 +156,7 @@ public class SatelliteServiceImpl implements SatelliteService {
         int msgLength = messageElements.length;
 
         if (msgLength != 5) {
-            String errorMsg = String.format("Message for %s was incorrect: %s", satelliteName, message);
+            String errorMsg = String.format("Message for %s was incorrect: %s", SATELLITE_NAME, message);
             LOG.error(errorMsg);
         }
 
@@ -168,8 +167,8 @@ public class SatelliteServiceImpl implements SatelliteService {
         String siteId = messageElements[4];
 
         // belt and braces check
-        if (!(frameTypeName.equals("hfu") && satelliteId.equals(satelliteIdent)) ) {
-            String errorMsg = String.format("User Message was not for %s: %s", satelliteName, message);
+        if (!(frameTypeName.equals("hfu") && satelliteId.equals(SATELLITE_ID)) ) {
+            String errorMsg = String.format("User Message was not for %s: %s", SATELLITE_NAME, message);
             LOG.error(errorMsg);
         }
         else {
@@ -185,7 +184,7 @@ public class SatelliteServiceImpl implements SatelliteService {
     }
 
     private String processFrames(String frameTypeName, String message, String satelliteId, String sequenceNumber) {
-        LOG.debug(String.format("%s %s available for processing: %s", satelliteName, frameTypeName, message));
+        LOG.debug(String.format("%s %s available for processing: %s", SATELLITE_NAME, frameTypeName, message));
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -193,13 +192,13 @@ public class SatelliteServiceImpl implements SatelliteService {
 
         HexFrameDTO[] frames
                 = restTemplate.getForObject(
-                "http://localhost:" + warehousePort + "warehouse/api/data/" + frameTypeName + "/" +
+                "http://localhost:" + WAREHOUSE_PORT + "warehouse/api/data/" + frameTypeName + "/" +
                         satelliteId + "/" +
                         sequenceNumber, HexFrameDTO[].class);
 
         long timeTaken = Calendar.getInstance().getTime().getTime() - then;
         LOG.debug(String.format("Received %s %s %s in %s mS",
-                satelliteName, frameTypeName, message, timeTaken));
+                SATELLITE_NAME, frameTypeName, message, timeTaken));
 
         if (frameTypeName.equals("wod")) {
 

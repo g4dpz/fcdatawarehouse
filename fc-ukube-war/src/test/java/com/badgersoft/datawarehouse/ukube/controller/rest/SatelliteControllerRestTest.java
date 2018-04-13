@@ -1,8 +1,8 @@
-package com.badgersoft.datawarehouse.eseo.controller.rest;
+package com.badgersoft.datawarehouse.ukube.controller.rest;
 
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
-import com.badgersoft.datawarehouse.eseo.config.AppConfig;
-import com.badgersoft.datawarehouse.eseo.service.HexFrameServiceImpl;
+import com.badgersoft.datawarehouse.common.services.SatelliteService;
+import com.badgersoft.datawarehouse.ukube.config.AppConfig;
+import com.badgersoft.datawarehouse.ukube.service.SatelliteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,27 +23,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 @WebAppConfiguration
-public class HexFrameControllerRestTest {
+public class SatelliteControllerRestTest {
 
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    private HexFrameService mockHexFrameService;
+    private SatelliteService mockSatelliteService;
 
     @Before
     public void setUp() throws Exception {
-        mockHexFrameService = mock(HexFrameServiceImpl.class);
+        mockSatelliteService = mock(SatelliteServiceImpl.class);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
     public void ping() throws Exception {
-        when(mockHexFrameService.ping()).thenReturn("OK");
+        when(mockSatelliteService.ping()).thenReturn("Hello");
         mockMvc.perform(get("/ping"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("OK"));
+                .andExpect(content().string("Hello"));
     }
 
 

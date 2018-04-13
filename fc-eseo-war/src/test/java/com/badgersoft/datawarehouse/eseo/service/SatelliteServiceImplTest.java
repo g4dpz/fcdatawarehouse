@@ -1,6 +1,6 @@
-package com.badgersoft.datawarehouse.funcube.service;
+package com.badgersoft.datawarehouse.eseo.service;
 
-import com.badgersoft.datawarehouse.funcube.config.AppConfig;
+import com.badgersoft.datawarehouse.eseo.config.AppConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,12 +9,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={AppConfig.class})
-public class HexFrameServiceImplTest {
+@ContextConfiguration(classes = {AppConfig.class})
+public class SatelliteServiceImplTest {
 
     @Test
     public void ping() {
-        HexFrameServiceImpl service = new HexFrameServiceImpl();
+        SatelliteServiceImpl service = new SatelliteServiceImpl();
         assertTrue("Hello not received", "Hello".equals(service.ping()));
     }
 }

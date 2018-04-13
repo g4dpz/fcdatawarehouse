@@ -1,5 +1,5 @@
 package com.badgersoft.datawarehouse.common.controller;
 
-public interface HexFrameControllerRest {
+public interface SatelliteControllerRest {
 
 }

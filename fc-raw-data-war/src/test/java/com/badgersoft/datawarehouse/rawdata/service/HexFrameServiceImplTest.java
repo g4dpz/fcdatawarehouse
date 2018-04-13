@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.rawdata.service;
 
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
 import com.badgersoft.datawarehouse.common.utils.Clock;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.AppConfig;
@@ -9,6 +8,7 @@ import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.*;
 import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
+import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Before;
 import org.junit.Test;

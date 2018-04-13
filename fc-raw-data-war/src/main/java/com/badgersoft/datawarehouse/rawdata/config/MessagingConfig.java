@@ -1,8 +1,8 @@
 package com.badgersoft.datawarehouse.rawdata.config;
 
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
+import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
-import com.badgersoft.datawarehouse.rawdata.service.HexFrameServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;

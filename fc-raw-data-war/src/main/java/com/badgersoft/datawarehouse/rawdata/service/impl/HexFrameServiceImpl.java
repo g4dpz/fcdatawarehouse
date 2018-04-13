@@ -1,7 +1,6 @@
-package com.badgersoft.datawarehouse.rawdata.service;
+package com.badgersoft.datawarehouse.rawdata.service.impl;
 
-import com.badgersoft.datawarehouse.common.services.AbstractHexFrameService;
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
+import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
 import com.badgersoft.datawarehouse.common.utils.Cache;
 import com.badgersoft.datawarehouse.common.utils.Clock;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
@@ -9,6 +8,8 @@ import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.*;
 import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
+import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
+import com.badgersoft.datawarehouse.rawdata.service.UserHexString;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
 import com.badgersoft.satpredict.dto.SatPosDTO;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -18,8 +19,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
@@ -28,8 +32,7 @@ import java.util.*;
 import static com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility.convertHexBytePairToBinary;
 
 @Service
-@Component(value = "rawdataHFS")
-public class HexFrameServiceImpl extends AbstractHexFrameService implements HexFrameService {
+public class HexFrameServiceImpl implements HexFrameService {
 
 
 
@@ -81,6 +84,11 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
         this.envConfig = envConfig;
         this.jmsMessageSender = jmsMessageSender;
         this.payloadDao = payloadDao;
+    }
+
+    @Override
+    public String ping() {
+        return "Hello";
     }
 
     public ResponseEntity processHexFrame(String siteId, String digest, String body) {
@@ -396,5 +404,46 @@ public class HexFrameServiceImpl extends AbstractHexFrameService implements HexF
         return;
     }
 
+    @Override
+    @JmsListener(destination = "frame_processed")
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage(final String message) {
+        LOG.info("Message received: " + message);
+    }
 
+    public HexFrameDTO getFrame(long satelliteId, long sequenceNumber, long frameType) {
+
+        final List<HexFrame> hexFrameList = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
+
+        if (hexFrameList.isEmpty()) {
+            LOG.warn(String.format("No frames found for %d %d %d", satelliteId, sequenceNumber, frameType));
+            return null;
+        }
+
+        HexFrame hfe = hexFrameList.get(0);
+        HexFrameDTO hexFrameDTO = new HexFrameDTO();
+        hexFrameDTO.setSatelliteId(hfe.getSatelliteId());
+        hexFrameDTO.setSequenceNumber(hfe.getSequenceNumber());
+        hexFrameDTO.setFrameType(hfe.getFrameType());
+        hexFrameDTO.setHexString(hfe.getHexString());
+        hexFrameDTO.setCreatedDate(hfe.getCreatedDate());
+        hexFrameDTO.setLatitude(hfe.getLatitude());
+        hexFrameDTO.setLongitude(hfe.getLongitude());
+        hexFrameDTO.setSatelliteTime(hfe.getSatelliteTime());
+
+        Set<User> users = hfe.getUsers();
+
+        List<String> contributors = new ArrayList(users.size());
+
+        for (User user : users) {
+            contributors.add(user.getSiteId());
+        }
+
+        Collections.sort(contributors);
+
+        hexFrameDTO.setContributors(contributors);
+
+        return hexFrameDTO;
+
+    }
 }

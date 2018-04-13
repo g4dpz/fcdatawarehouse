@@ -1,6 +1,6 @@
-package com.badgersoft.datawarehouse.eseo.service;
+package com.badgersoft.datawarehouse.ukube.service;
 
-import com.badgersoft.datawarehouse.eseo.config.AppConfig;
+import com.badgersoft.datawarehouse.ukube.config.AppConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,11 +10,11 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
-public class HexFrameServiceImplTest {
+public class SatelliteServiceImplTest {
 
     @Test
     public void ping() {
-        HexFrameServiceImpl service = new HexFrameServiceImpl();
+        SatelliteServiceImpl service = new SatelliteServiceImpl();
         assertTrue("Hello not received", "Hello".equals(service.ping()));
     }
 }

@@ -1,8 +1,8 @@
 package com.badgersoft.datawarehouse.rawdata.config;
 
-import com.badgersoft.datawarehouse.common.services.HexFrameService;
+import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
-import com.badgersoft.datawarehouse.rawdata.service.HexFrameServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
