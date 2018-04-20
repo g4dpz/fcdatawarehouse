@@ -13,6 +13,8 @@
         <module>fc-nayif1-war</module>
         <module>fc-eseo-war</module>
         <module>fc-jy1sat-war</module>
+        <module>satpredict</module>
+        <module>satpredict-client</module>
     </modules>
 
     <dependencyManagement>
