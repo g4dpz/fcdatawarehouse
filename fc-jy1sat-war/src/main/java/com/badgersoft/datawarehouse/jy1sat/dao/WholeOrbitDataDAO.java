@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by davidjohnson on 18/09/2016.
@@ -13,7 +14,7 @@ import java.util.List;
 public interface WholeOrbitDataDAO extends PagingAndSortingRepository<WholeOrbitDataEntity, Long> {
 
     @Query
-    WholeOrbitDataEntity findById(Long id);
+    Optional<WholeOrbitDataEntity> findById(Long id);
 
     @Query("select fm from WholeOrbitDataEntity fm where satellite_time >= ?1")
     List<WholeOrbitDataEntity> findAfterSatTime(Timestamp from);

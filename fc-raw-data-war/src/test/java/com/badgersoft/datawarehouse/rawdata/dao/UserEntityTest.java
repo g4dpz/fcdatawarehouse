@@ -37,7 +37,7 @@ public class UserEntityTest {
         user.setId(1L);
         userDao.save(user);
 
-        User user2 = userDao.findOne(1L);
+        User user2 = userDao.findById(1L).get();
         assertEquals(1L, user2.getId().longValue());
     }
 

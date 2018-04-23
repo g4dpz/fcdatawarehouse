@@ -13,8 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>5.0.0.RELEASE</version>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>

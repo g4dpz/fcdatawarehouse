@@ -57,7 +57,7 @@ public class WodProcessorImpl extends AbstractProcessor implements WodProcessor 
 
             final long id = sequenceNumber * 2 + i;
 
-            WholeOrbitDataEntity wholeOrbitDataEntity = wholeOrbitDataDAO.findById(id);
+            WholeOrbitDataEntity wholeOrbitDataEntity = wholeOrbitDataDAO.findById(id).get();
 
             if (wholeOrbitDataEntity == null) {
                 int offset = (int) (i * 200);

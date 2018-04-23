@@ -11,7 +11,9 @@ import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.service.UserHexString;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
-import com.badgersoft.satpredict.dto.SatPosDTO;
+import com.badgersoft.satpredict.client.SatPredictClient;
+import com.badgersoft.satpredict.client.dto.SatPosDTO;
+import com.badgersoft.satpredict.client.impl.SatPredictClientImpl;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -71,6 +72,8 @@ public class HexFrameServiceImpl implements HexFrameService {
 
     @Autowired
     private PayloadDao payloadDao;
+
+    private SatPredictClient satPredictClient = null;
 
     public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock,
                                SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao,
@@ -391,10 +394,11 @@ public class HexFrameServiceImpl implements HexFrameService {
 
     private void addSatellitePosition(HexFrame hexFrameEntity, long catalogueNumber) {
 
-        String satPredictUrl = envConfig.satpredictURL() + "/satellite/position/" + catalogueNumber + "?latitude=0&longitude=0&altitude=0";
+        if (satPredictClient == null) {
+            satPredictClient = new SatPredictClientImpl(envConfig.satpredictURL());
+        }
 
-        RestTemplate restTemplate = new RestTemplate();
-        SatPosDTO satpos = restTemplate.getForObject(satPredictUrl, SatPosDTO.class);
+        SatPosDTO satpos = satPredictClient.getPosition(catalogueNumber, 0.0,0.0,0.0);
 
         if (satpos != null) {
             hexFrameEntity.setLatitude(satpos.getLatitude());

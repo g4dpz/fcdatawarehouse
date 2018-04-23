@@ -173,7 +173,7 @@ public class HexFrameServiceImplTest {
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(Collections.EMPTY_LIST);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user1.getSiteId())).thenReturn(Collections.EMPTY_LIST);
-        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
+        when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         verify(mockJmsMessageSender).send(queue,"rt,2,1131283,0");
         verify(mockPayloadDao).findByHexText(PAYLOAD);
@@ -189,7 +189,7 @@ public class HexFrameServiceImplTest {
                 .thenReturn(hexFrames1);
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_2, DIGEST_2, HEX_FRAME_FC1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(Collections.EMPTY_LIST);
-        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
+        when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
 
@@ -202,7 +202,7 @@ public class HexFrameServiceImplTest {
                 .thenReturn(hexFrames2);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumber(2L, 1131283L)).thenReturn(hexFrames2);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
-        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
+        when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
@@ -215,7 +215,7 @@ public class HexFrameServiceImplTest {
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(hexFrames1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
-        when(mockEnvConfig.satpredictURL()).thenReturn("http://satpredict.badgersoft.com");
+        when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
         final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
     }
