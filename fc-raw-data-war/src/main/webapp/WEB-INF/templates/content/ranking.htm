@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/page}">
+<head>
+    <title>Satellites</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Ranking</h1>
+            <!--<div class="btn-toolbar">-->
+            <!--<button class="btn btn-sm btn-primary">Save changes</button>-->
+            <!--</div>-->
+        </div>
+
+        <div class="DashSection mt-0">
+            <div class="row">
+                <table id="example" class="display" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Site ID</th>
+                        <th>Total</th>
+                        <th>Satellite1</th>
+                        <th>Satellite2</th>
+                        <th>Satellite3</th>
+                        <th>satellite4</th>
+                        <th>Satellite5</th>
+                        <th>satellite6</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Site ID</th>
+                        <th>Total</th>
+                        <th>Satellite1</th>
+                        <th>Satellite2</th>
+                        <th>Satellite3</th>
+                        <th>satellite4</th>
+                        <th>Satellite5</th>
+                        <th>satellite6</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(document).ready(function() {
+        $('#example').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "/api/data/ranking",
+                "type": "POST"
+            },
+            "columns": [
+                { "data": "siteId" },
+                { "data": "total" },
+                { "data": "satellite1" },
+                { "data": "satellite2" },
+                { "data": "satellite3" },
+                { "data": "satellite4" },
+                { "data": "satellite5" },
+                { "data": "satellite6" }
+            ]
+        } );
+    } );
+</script>
+
+</body>
+</html>

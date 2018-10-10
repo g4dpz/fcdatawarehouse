@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/page}">
+<head>
+    <title>Satellites</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Satellites</h1>
+            <!--<div class="btn-toolbar">-->
+            <!--<button class="btn btn-sm btn-primary">Save changes</button>-->
+            <!--</div>-->
+        </div>
+
+        <div class="DashSection mt-0">
+            <div class="row">
+
+                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-4" th:each="satellite : ${allSatellites}">
+                    <div class="card text-center mt-32">
+                        <div class="card-body">
+                            <div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">
+                                <img th:src="${'/images/' + satellite.imageUrl}" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">
+                            </div>
+                            <a href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
+                            <!--<strong class="text-success"><i class="far fa-check-circle"></i> Everything looks okay</strong>-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(function () {
+
+        Feedgen.platforms.init();
+
+    });
+
+</script>
+
+</body>
+</html>

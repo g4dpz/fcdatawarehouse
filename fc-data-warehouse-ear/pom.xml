@@ -68,7 +68,7 @@
                         <webModule>
                             <groupId>com.badgersoft.datawarehouse</groupId>
                             <artifactId>fc-raw-data-war</artifactId>
-                            <contextRoot>/api</contextRoot>
+                            <contextRoot>/</contextRoot>
                         </webModule>
                         <webModule>
                             <groupId>com.badgersoft.datawarehouse</groupId>

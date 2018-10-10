@@ -435,11 +435,11 @@ public class HexFrameServiceImpl implements HexFrameService {
         hexFrameDTO.setLongitude(hfe.getLongitude());
         hexFrameDTO.setSatelliteTime(hfe.getSatelliteTime());
 
-        Set<User> users = hfe.getUsers();
+        Set<User> userEntities = hfe.getUsers();
 
-        List<String> contributors = new ArrayList(users.size());
+        List<String> contributors = new ArrayList(userEntities.size());
 
-        for (User user : users) {
+        for (User user : userEntities) {
             contributors.add(user.getSiteId());
         }
 

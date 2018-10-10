@@ -37,7 +37,7 @@
             <security-realm name="ManagementRealm">
                 <authentication>
                     <local default-user="$local" skip-group-loading="true"/>
-                    <properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/>
+                    <properties path="mgmt-userEntities.properties" relative-to="jboss.server.config.dir"/>
                 </authentication>
                 <authorization map-groups-to-roles="false">
                     <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
@@ -50,8 +50,8 @@
                     </ssl>
                 </server-identities>
                 <authentication>
-                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
-                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                    <local default-user="$local" allowed-userEntities="*" skip-group-loading="true"/>
+                    <properties path="application-userEntities.properties" relative-to="jboss.server.config.dir"/>
                 </authentication>
                 <authorization>
                     <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
@@ -149,7 +149,7 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:/fcdw/funcube_play" pool-name="fcdw-funcube_play">
+                <datasource jndi-name="java:/fcdw/raw_data" pool-name="raw_data">
                     <connection-url>jdbc:mysql://localhost:3306/funcube_play?autoReconnect=true</connection-url>
                     <driver>mysql</driver>
                     <security>
@@ -304,11 +304,11 @@
             <security-realms>
                 <identity-realm name="local" identity="$local"/>
                 <properties-realm name="ApplicationRealm">
-                    <users-properties path="application-users.properties" relative-to="jboss.server.config.dir" digest-realm-name="ApplicationRealm"/>
+                    <userEntities-properties path="application-userEntities.properties" relative-to="jboss.server.config.dir" digest-realm-name="ApplicationRealm"/>
                     <groups-properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </properties-realm>
                 <properties-realm name="ManagementRealm">
-                    <users-properties path="mgmt-users.properties" relative-to="jboss.server.config.dir" digest-realm-name="ManagementRealm"/>
+                    <userEntities-properties path="mgmt-userEntities.properties" relative-to="jboss.server.config.dir" digest-realm-name="ManagementRealm"/>
                     <groups-properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
                 </properties-realm>
             </security-realms>

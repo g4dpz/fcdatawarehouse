@@ -8,7 +8,6 @@ package com.badgersoft.datawarehouse.rawdata.domain;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -110,8 +109,8 @@ public class HexFrame {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setUsers(Set<User> userEntities) {
+        this.users = userEntities;
     }
 
     public Long getSatelliteId() {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingController {
 
-    @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
+    @GetMapping(value = "/api/ping", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> ping() {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }

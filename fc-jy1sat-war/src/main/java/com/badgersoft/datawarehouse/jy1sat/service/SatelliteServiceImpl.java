@@ -18,6 +18,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,7 +53,7 @@ public class SatelliteServiceImpl extends AbstractSatelliteService implements Sa
 
     private static String SATELLITE_NAME = "JY1Sat";
 
-    private static String SATELLITE_ID = "15";
+    private static String SATELLITE_ID = "19";
 
     private static String WAREHOUSE_PORT = "8080";
 
@@ -62,9 +63,9 @@ public class SatelliteServiceImpl extends AbstractSatelliteService implements Sa
     }
 
     @Override
-    @JmsListener(destination = "satellite_15_frame_available")
+    @JmsListener(destination = "satellite_19_frame_available")
     @SendTo(value = "frame_processed")
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
     public String handleFrameMessage(final String message) {
 
         // we do not process this immediately as we give several G/S the opportunity to 'score'
