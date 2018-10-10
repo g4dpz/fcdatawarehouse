@@ -29,8 +29,8 @@
                             <div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">
                                 <img th:src="${'/images/' + satellite.imageUrl}" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">
                             </div>
-                            <a href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
-                            <!--<strong class="text-success"><i class="far fa-check-circle"></i> Everything looks okay</strong>-->
+                            <a th:if="${satellite.active}" href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
+                            <span th:unless="${satellite.active}" th:text="${satellite.name}">Something else</span>
                         </div>
                     </div>
                 </div>
