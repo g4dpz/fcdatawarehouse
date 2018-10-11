@@ -20,21 +20,50 @@
         <div class="DashSection mt-0">
             <p>This page shows the latest value of all the housekeeping parameters in the spacecraft.
             <br>The data has been collected by one or more of the ground stations who are submitting this data from all around the world.</br></p>
-            <!--<div class="row">-->
+            <div class="row">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tab-eps">EPS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-amac">AMAC</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-rf">RF</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-pa">PA</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-sw">SW</a>
+                    </li>
+                </ul>
 
-                <!--<div class="col-sm-6 col-md-12 col-lg-6 col-xl-4" th:each="satellite : ${allSatellites}">-->
-                    <!--<div class="card text-center mt-32">-->
-                        <!--<div class="card-body">-->
-                            <!--<div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">-->
-                                <!--<img th:src="${'/images/' + satellite.imageUrl}" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">-->
-                            <!--</div>-->
-                            <!--<a href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>-->
-                            <!--&lt;!&ndash;<strong class="text-success"><i class="far fa-check-circle"></i> Everything looks okay</strong>&ndash;&gt;-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-            <!--</div>-->
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="tab-eps" class="container tab-pane active"><br>
+                        <h3>Electrical Power Subsystem</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    <div id="tab-amac" class="container tab-pane"><br>
+                        <h3>Attitude Control Subsystem</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    <div id="tab-rf" class="container tab-pane"><br>
+                        <h3>Communication Subsystem</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    <div id="tab-pa" class="container tab-pane"><br>
+                        <h3>RF Power Amplifier</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    <div id="tab-sw" class="container tab-pane"><br>
+                        <h3>Software State</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
