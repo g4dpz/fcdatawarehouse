@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/ukube1/page}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" th:href="@{/images/favicon-16x16.png}" sizes="16x16">
-    <link rel="icon" type="image/png" th:href="@{/images/favicon-24x24.png}" sizes="24x24">
-    <link rel="icon" type="image/png" th:href="@{/images/favicon-32x32.png}" sizes="32x32">
-    <link rel="icon" type="image/png" th:href="@{/images/favicon-64x64.png}" sizes="64x64">
-    <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/bundle.min.css}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.css"/>
-    <title layout:title-pattern="$CONTENT_TITLE &middot; $LAYOUT_TITLE">AMSAT-UK Data Warehouse</title>
+    <title>Satellites</title>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container-fluid">
-    <div class="row flex-xl-nowrap">
+<main id="main" role="main">
+    <div layout:fragment="main">
 
-        <div th:replace="fragments/ukube1/sidebar :: default"></div>
 
-        <div class="d-block px-24 px-md-32 DashMainWrapper">
-            <main role="main" class="DashMain">
-                <div layout:fragment="main"></div>
-            </main>
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">UKube-1 Realtime Data</h1>
         </div>
 
-    </div>
-</div>
+        <div class="DashSection mt-0">
+            <p>This page shows the latest value of all the housekeeping parameters in the spacecraft.
+            <br>The data has been collected by one or more of the ground stations who are submitting this data from all around the world.</br></p>
+            <!--<div class="row">-->
 
-<script src="/js/bundle.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
-<script layout:fragment="script"></script>
+                <!--<div class="col-sm-6 col-md-12 col-lg-6 col-xl-4" th:each="satellite : ${allSatellites}">-->
+                    <!--<div class="card text-center mt-32">-->
+                        <!--<div class="card-body">-->
+                            <!--<div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">-->
+                                <!--<img th:src="${'/images/' + satellite.imageUrl}" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">-->
+                            <!--</div>-->
+                            <!--<a href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>-->
+                            <!--&lt;!&ndash;<strong class="text-success"><i class="far fa-check-circle"></i> Everything looks okay</strong>&ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(function () {
+
+        Feedgen.platforms.init();
+
+    });
+
+</script>
 
 </body>
 </html>
