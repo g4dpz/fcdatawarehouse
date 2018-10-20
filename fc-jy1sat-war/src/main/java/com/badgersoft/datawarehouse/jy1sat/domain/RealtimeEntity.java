@@ -23,10 +23,18 @@ public class RealtimeEntity extends TelemetryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "sequence_number")
     Long sequenceNumber;
+
+    @Column(name = "frame_type")
     Long frameType;
+
+    @Column(name = "created_date")
     Date createdDate;
+
+    @Column(name = "satellite_time")
     Date satelliteTime;
+
     String latitude;
     String longitude;
     private long c1;

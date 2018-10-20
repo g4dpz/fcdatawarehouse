@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/deepspace/page}">
+<head>
+    <title>Satellites</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">ESA - Deep Space Gateway</h1>
+        </div>
+
+        <div class="DashSection mt-0">
+
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(function () {
+
+        Feedgen.platforms.init();
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -29,7 +29,7 @@ public class JpaConfig {
 
     @Bean
     public DataSource dataSource() throws NamingException {
-        return (DataSource) new JndiTemplate().lookup("fcdw/jy1sat_em");
+        return (DataSource) new JndiTemplate().lookup("fcdw/jy1sat_fm");
     }
 
     @Bean

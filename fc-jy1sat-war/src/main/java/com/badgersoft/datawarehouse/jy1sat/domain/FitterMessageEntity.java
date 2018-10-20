@@ -15,12 +15,16 @@ public class FitterMessageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "message_text")
     private String messageText;
 
+    @Column(name = "last_received")
     private Date lastReceived;
 
+    @Column(name = "created_date")
     private Date createdDate;
 
+    @Column(name = "satellite_id")
     private Long satelliteId;
 
     private Boolean debug;

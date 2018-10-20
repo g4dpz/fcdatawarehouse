@@ -27,7 +27,9 @@ public class SenderConfig {
 
     @Bean
     public JmsTemplate jmsTemplate() {
-        return new JmsTemplate(cachingConnectionFactory());
+        final JmsTemplate jmsTemplate = new JmsTemplate(cachingConnectionFactory());
+        jmsTemplate.setDefaultDestinationName("frame_processed");
+        return jmsTemplate;
     }
 
     @Bean

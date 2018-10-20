@@ -42,14 +42,18 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         return hexFrameService.processHexFrame(siteId, digest, body);
     }
 
-    @GetMapping(value = "/api/frame/{satelliteId}/{sequenceNumber}/{frameType}")
+    @GetMapping(value = "/api/data/frame/{satelliteId}/{sequenceNumber}/{frameType}")
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public HexFrameDTO getHexFrame(
             @PathVariable(value = "satelliteId") final String satelliteId,
             @PathVariable(value = "sequenceNumber") final String sequenceNumber,
             @PathVariable(value = "frameType") final String frameType,
             HttpServletRequest request, HttpServletResponse response) {
-        HexFrameDTO frame = hexFrameService.getFrame(Long.parseLong(satelliteId), Long.parseLong(sequenceNumber), Long.parseLong(frameType));
+        final long seqNo = Long.parseLong(sequenceNumber);
+        final long fType = Long.parseLong(frameType);
+        HexFrameDTO frame = hexFrameService.getFrame(Long.parseLong(satelliteId), seqNo, fType);
+        frame.setSequenceNumber(seqNo);
+        frame.setFrameType(fType);
         if (frame != null) {
             return frame;
         }

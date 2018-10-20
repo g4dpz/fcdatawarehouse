@@ -3,10 +3,7 @@ package com.badgersoft.datawarehouse.jy1sat.domain;
 /**
  * Created by davidjohnson on 25/09/2016.
  */
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,28 +11,47 @@ import java.util.Date;
 public class SatelliteStatusEntity {
 
     @Id
+    @Column(name = "satellite_id")
     private Long satelliteId;
 
+    @Column(name = "sequence_number")
     private Long sequenceNumber;
+    @Column(name = "eclipse_mode_forced")
     private Boolean eclipseModeForced;
     private Boolean eclipsed;
+    @Column(name = "last_updated")
     private Date lastUpdated;
+    @Column(name = "eclipse_depth")
     private Double eclipseDepth;
+    @Column(name = "eclipse_switch")
     private Boolean eclipseSwitch;
+    @Column(name = "last_wod_dump")
     private Date lastWodDump;
+    @Column(name = "last_reset_notification")
     private Date lastResetNotification;
+    @Column(name = "last_no_show_notification")
     private Date lastNoShowNotification;
+    @Column(name = "epoch_sequence_number")
     private Long epochSequenceNumber;
+    @Column(name = "epoch_reference_time")
     private Date epochReferenceTime;
+    @Column(name = "packet_count")
     private Long packetCount;
     private String latitude;
     private String longitude;
     private String contributors;
+    @Column(name = "last_wod_time")
     private Date lastWodTime;
+    @Column(name = "last_highres_time")
     private Date lastHighresTime;
+    @Column(name = "last_realime_time")
     private Date lastRealtimeTime;
+    @Column(name = "last_fitter_time")
     private Date lastFitterTime;
+    @Column(name = "frame_type")
     private Long frameType;
+    @Column(name = "catalogue_number")
+    private Long catalogueNumber;
 
     public SatelliteStatusEntity() {
     }

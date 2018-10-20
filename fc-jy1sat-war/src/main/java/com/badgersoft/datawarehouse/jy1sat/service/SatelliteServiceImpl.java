@@ -105,7 +105,7 @@ public class SatelliteServiceImpl extends AbstractSatelliteService implements Sa
             long then = Calendar.getInstance().getTime().getTime();
 
 
-            final String url = "http://localhost:" + WAREHOUSE_PORT + "/api/data/frame/" +
+            final String url = "http://localhost:8080/api/data/frame/" +
                     satelliteId + "/" +
                     sequenceNumber + "/" +
                     frameTypeId;

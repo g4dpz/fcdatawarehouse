@@ -17,12 +17,15 @@ public class JmsMessageSender {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-
     /**
      * send text to default destination
      * @param text
      */
     public void send(final String text) {
+
+        Destination destination = new ActiveMQQueue("frame_processed");
+        this.jmsTemplate.setDefaultDestination(destination);
+        this.jmsTemplate.setDefaultDestinationName("frame_processed");
 
         this.jmsTemplate.send(new MessageCreator() {
             @Override
@@ -48,6 +51,10 @@ public class JmsMessageSender {
      * @param text
      */
     public void send(final Destination dest, final String text) {
+
+        Destination destination = new ActiveMQQueue("frame_processed");
+        this.jmsTemplate.setDefaultDestination(destination);
+        this.jmsTemplate.setDefaultDestinationName("frame_processed");
 
         this.jmsTemplate.send(dest,new MessageCreator() {
             @Override
