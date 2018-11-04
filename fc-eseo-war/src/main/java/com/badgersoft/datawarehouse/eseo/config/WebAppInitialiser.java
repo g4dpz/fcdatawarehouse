@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.eseo.config;
 
-import com.badgersoft.datawarehouse.eseo.config.AppConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebAppInitialiser extends AbstractAnnotationConfigDispatcherServletInitializer {

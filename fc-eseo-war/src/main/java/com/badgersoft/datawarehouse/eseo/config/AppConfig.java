@@ -1,12 +1,38 @@
 package com.badgersoft.datawarehouse.eseo.config;
 
+import com.badgersoft.datawarehouse.common.services.SatelliteService;
+import com.badgersoft.datawarehouse.eseo.processor.RealtimeOneProcessorImpl;
+import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessor;
+import com.badgersoft.datawarehouse.eseo.processor.RealtimeTwoProcessorImpl;
+import com.badgersoft.datawarehouse.eseo.service.SatelliteServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScans(value = { @ComponentScan("com.badgersoft.datawarehouse.eseo.controller"),
-        @ComponentScan("com.badgersoft.datawarehouse.eseo.service") })
+@ComponentScan(basePackages = "com.badgersoft.datawarehouse.eseo")
 public class AppConfig {
+
+    @Value("${satellite.queue}")
+    String satelliteQueue;
+
+    @Value("${broker.address}")
+    String brokerAddress;
+
+    @Bean
+    SatelliteService eseoRealtimeService() { return new SatelliteServiceImpl(); }
+
+//    @Bean
+//    WodProcessor wodProcessor() { return new WodProcessorImpl(); }
+//
+//    @Bean
+//    FitterMessageProcessor fitterMessageProcessor() { return new FitterMessageProcessorImpl(); }
+
+    @Bean
+    RealtimeProcessor realtimeOneProcessor() { return new RealtimeOneProcessorImpl(); }
+
+    @Bean
+    RealtimeProcessor realtimeTwoProcessor() { return new RealtimeTwoProcessorImpl(); }
 
 }
