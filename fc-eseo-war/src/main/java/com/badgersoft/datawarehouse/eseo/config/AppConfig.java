@@ -1,10 +1,8 @@
 package com.badgersoft.datawarehouse.eseo.config;
 
-import com.badgersoft.datawarehouse.common.services.SatelliteService;
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeOneProcessorImpl;
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessor;
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeTwoProcessorImpl;
-import com.badgersoft.datawarehouse.eseo.service.SatelliteServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,9 +17,6 @@ public class AppConfig {
 
     @Value("${broker.address}")
     String brokerAddress;
-
-    @Bean
-    SatelliteService eseoRealtimeService() { return new SatelliteServiceImpl(); }
 
 //    @Bean
 //    WodProcessor wodProcessor() { return new WodProcessorImpl(); }

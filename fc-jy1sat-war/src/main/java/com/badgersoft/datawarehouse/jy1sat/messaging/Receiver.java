@@ -7,7 +7,6 @@ import com.badgersoft.datawarehouse.jy1sat.processor.HighResProcessor;
 import com.badgersoft.datawarehouse.jy1sat.processor.RealtimeProcessor;
 import com.badgersoft.datawarehouse.jy1sat.processor.WodProcessor;
 import com.badgersoft.datawarehouse.jy1sat.service.JmsMessageSender;
-import com.badgersoft.datawarehouse.jy1sat.service.SatelliteServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class Receiver {
     @Autowired
     SatelliteStatusDao statusDao;
 
-    private static Logger LOG = LoggerFactory.getLogger(SatelliteServiceImpl.class.getName());
+    private static Logger LOG = LoggerFactory.getLogger(Receiver.class.getName());
 
     @Autowired
     JmsMessageSender jmsMessageSender;
@@ -49,8 +48,6 @@ public class Receiver {
     private static String SATELLITE_ID = "19";
 
     private static String WAREHOUSE_PORT = "8080";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
     private CountDownLatch latch = new CountDownLatch(1);
 
@@ -62,7 +59,7 @@ public class Receiver {
     @SendTo(value = "frame_processed")
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
     public void receive(String message) {
-        LOGGER.info("received message='{}'", message);
+        LOG.info("received message='{}'", message);
 
 
 

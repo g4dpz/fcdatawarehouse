@@ -7,7 +7,6 @@ import com.badgersoft.datawarehouse.funcube.processor.HighResProcessor;
 import com.badgersoft.datawarehouse.funcube.processor.RealtimeProcessor;
 import com.badgersoft.datawarehouse.funcube.processor.WodProcessor;
 import com.badgersoft.datawarehouse.funcube.service.JmsMessageSender;
-import com.badgersoft.datawarehouse.funcube.service.SatelliteServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class Receiver {
     @Autowired
     SatelliteStatusDao statusDao;
 
-    private static Logger LOG = LoggerFactory.getLogger(SatelliteServiceImpl.class.getName());
+    private static Logger LOG = LoggerFactory.getLogger(Receiver.class.getName());
 
     @Autowired
     JmsMessageSender jmsMessageSender;
