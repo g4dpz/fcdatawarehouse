@@ -19,11 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 public class SatelliteControllerRestImpl implements SatelliteControllerRest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SatelliteControllerRestImpl.class);
+
+    private final Lock lock = new ReentrantLock();
 
     private final HexFrameService hexFrameService;
 
@@ -39,7 +43,15 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
                                        @RequestBody String body) {
 
         LOG.info("Raw hex frame received from: " + siteId);
-        return hexFrameService.processHexFrame(siteId, digest, body);
+
+        lock.lock();
+
+        try {
+            return hexFrameService.processHexFrame(siteId, digest, body);
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
     @GetMapping(value = "/api/data/frame/{satelliteId}/{sequenceNumber}/{frameType}")

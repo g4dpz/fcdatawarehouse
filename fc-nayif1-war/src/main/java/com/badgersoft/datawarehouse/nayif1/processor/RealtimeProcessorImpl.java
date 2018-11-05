@@ -48,7 +48,7 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = false,
             propagation = Propagation.REQUIRES_NEW)
-    public void process(HexFrameDTO hexFrameDTO) throws Exception {
+    public void process(HexFrameDTO hexFrameDTO) {
 
         long then = Calendar.getInstance().getTime().getTime();
 

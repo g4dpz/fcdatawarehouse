@@ -20,7 +20,7 @@ public class MinMaxEntity {
 	private Long channel;
 	private Double minimum;
 	private Double maximum;
-	@Column(name = "ref__date")
+	@Column(name = "ref_date")
 	private Date refDate;
 	private Boolean enabled;
 	
