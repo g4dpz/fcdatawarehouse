@@ -85,15 +85,15 @@ public class RealtimeEntity extends TelemetryEntity {
     // ANTS
     private double c37;
     private double c38;
-    private double c39;
+    private boolean c39;
     private boolean c40;
     private boolean c41;
     private boolean c42;
-    private boolean c43;
 
     // SW
+    private long c43;
     private long c44;
-    private long c45;
+    private boolean c45;
     private boolean c46;
     private boolean c47;
     private boolean c48;
@@ -106,7 +106,6 @@ public class RealtimeEntity extends TelemetryEntity {
     private boolean c55;
     private boolean c56;
     private boolean c57;
-    private boolean c58;
 
 
     public RealtimeEntity() {}
@@ -455,11 +454,11 @@ public class RealtimeEntity extends TelemetryEntity {
         this.c38 = c38;
     }
 
-    public double getC39() {
+    public boolean getC39() {
         return c39;
     }
 
-    public void setC39(double c39) {
+    public void setC39(boolean c39) {
         this.c39 = c39;
     }
 
@@ -487,11 +486,11 @@ public class RealtimeEntity extends TelemetryEntity {
         this.c42 = c42;
     }
 
-    public boolean getC43() {
+    public long getC43() {
         return c43;
     }
 
-    public void setC43(boolean c43) {
+    public void setC43(long c43) {
         this.c43 = c43;
     }
 
@@ -503,11 +502,11 @@ public class RealtimeEntity extends TelemetryEntity {
         this.c44 = c44;
     }
 
-    public long getC45() {
+    public boolean getC45() {
         return c45;
     }
 
-    public void setC45(long c45) {
+    public void setC45(boolean c45) {
         this.c45 = c45;
     }
 
@@ -607,14 +606,6 @@ public class RealtimeEntity extends TelemetryEntity {
         this.c57 = c57;
     }
 
-    public boolean getC58() {
-        return c58;
-    }
-
-    public void setC58(boolean c58) {
-        this.c58 = c58;
-    }
-
     @Transient
     private int stringPos = 0;
 
@@ -685,70 +676,70 @@ public class RealtimeEntity extends TelemetryEntity {
         // Receiver Temperature
         c29 = scale(getBitsAsULong(8, binaryString), -0.857, 193.672);
         // Receive current
-        c31 = getBitsAsULong(8, binaryString);
+        c30 = getBitsAsULong(8, binaryString);
         // Transmit current 3.3V bus
-        c32 = getBitsAsULong(8, binaryString);
+        c31 = getBitsAsULong(8, binaryString);
         // Transmit current 5.0V bus
-        c33 = getBitsAsULong(8, binaryString);
+        c32 = getBitsAsULong(8, binaryString);
 
         // --- PA Section
         // Reverse power
-        c34 = (0.005 * Math.pow(getBitsAsULong(8, binaryString), 2.0629));
+        c33 = (0.005 * Math.pow(getBitsAsULong(8, binaryString), 2.0629));
         // Forward power
-        c35 = (0.005 * Math.pow(getBitsAsULong(8, binaryString), 2.0629));
+        c34 = (0.005 * Math.pow(getBitsAsULong(8, binaryString), 2.0629));
         // Transmitter Board temperature
-        c36 = PA_TEMPS_256[(int) getBitsAsULong(8, binaryString)];
+        c35 = PA_TEMPS_256[(int) getBitsAsULong(8, binaryString)];
         // Transmitter Board current
-        c37 = scale(getBitsAsULong(8, binaryString), 0.5496, 2.5425);
+        c36 = scale(getBitsAsULong(8, binaryString), 0.5496, 2.5425);
 
 
         // Antenna temp 0
-        c38 = ANTS_TEMPS[(int) getBitsAsULong(8, binaryString)];
+        c37 = ANTS_TEMPS[(int) getBitsAsULong(8, binaryString)];
         // Antenna temp 1
-        c39 = ANTS_TEMPS[(int) getBitsAsULong(8, binaryString)];
+        c38 = ANTS_TEMPS[(int) getBitsAsULong(8, binaryString)];
 
         // Antenna deployment 0
-        c40 = getBooleanBit(binaryString);
+        c39 = getBooleanBit(binaryString);
         // Antenna deployment 1
-        c41 = getBooleanBit(binaryString);
+        c40 = getBooleanBit(binaryString);
         // Antenna deployment 2
-        c42 = getBooleanBit(binaryString);
+        c41 = getBooleanBit(binaryString);
         // Antenna deployment 3
-        c43 = getBooleanBit(binaryString);
+        c42 = getBooleanBit(binaryString);
         // sequence number (we already know)
         getBitsAsULong(24, binaryString);
 
         // DTMF command count
-        c44 = getBitsAsULong(6, binaryString);
+        c43 = getBitsAsULong(6, binaryString);
         // DTMF last command
-        c45 = getBitsAsULong(5, binaryString);
+        c44 = getBitsAsULong(5, binaryString);
 
         // DTMF command success
-        c46 = getBooleanBit(binaryString);
+        c45 = getBooleanBit(binaryString);
         // Data valid ASIB
-        c47 = getBooleanBit(binaryString);
+        c46 = getBooleanBit(binaryString);
         // Data valid EPS
-        c48 = getBooleanBit(binaryString);
+        c47 = getBooleanBit(binaryString);
         // Data valid PA
-        c49 = getBooleanBit(binaryString);
+        c48 = getBooleanBit(binaryString);
         // Data valid RF
-        c50 = getBooleanBit(binaryString);
+        c49 = getBooleanBit(binaryString);
         // Data valid iMTQ
-        c51 = getBooleanBit(binaryString);
+        c50 = getBooleanBit(binaryString);
         // Data valid ANTS bus-B
-        c52 = getBooleanBit(binaryString);
+        c51 = getBooleanBit(binaryString);
         // Data valid ANTS bus-A
-        c53 = getBooleanBit(binaryString);
+        c52 = getBooleanBit(binaryString);
         // In eclipse mode
-        c54 = getBooleanBit(binaryString);
+        c53 = getBooleanBit(binaryString);
         // In safe mode
-        c55 = getBooleanBit(binaryString);
+        c54 = getBooleanBit(binaryString);
         // Hardware ABF On/Off
-        c56 = getBooleanBit(binaryString);
+        c55 = getBooleanBit(binaryString);
         // Software ABF On/Off
-        c57 = getBooleanBit(binaryString);
+        c56 = getBooleanBit(binaryString);
         // Deployment wait at next boot
-        c58 = getBooleanBit(binaryString);
+        c57 = getBooleanBit(binaryString);
     }
 
     public String getLatitude() {

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RealtimeProcessorImpl extends AbstractProcessor implements RealtimeProcessor {
 
-    public static final int MIN_MAX_VALUE_COUNT = 43;
+    public static final int MIN_MAX_VALUE_COUNT = 48;
     private static final long SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000;
     private static Logger LOG = LoggerFactory.getLogger(RealtimeProcessorImpl.class.getName());
 
@@ -98,7 +98,7 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                 satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
                 satelliteStatus.setContributors(StringUtils.join(hexFrameDTO.getContributors().toArray(), ","));
                 satelliteStatus.setPacketCount(realtimeDAO.count());
-                satelliteStatus.setEclipsed(realtimeEntity.getC58());
+                satelliteStatus.setEclipsed(realtimeEntity.getC53());
 
                 LOG.debug("Saving realtime entity");
                 realtimeDAO.save(realtimeEntity);
@@ -252,8 +252,6 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                 return Double.valueOf(realtimeEntity.getC37());
             case 38:
                 return Double.valueOf(realtimeEntity.getC38());
-            case 39:
-                return Double.valueOf(realtimeEntity.getC39());
             default:
                 return 0.0;
         }
