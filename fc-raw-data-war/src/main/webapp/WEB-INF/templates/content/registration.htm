@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/page}">
 <head>
-    <title>Satellites</title>
+    <title>Registration</title>
 </head>
 <body>
 
@@ -23,21 +23,79 @@
         <div class="DashSection mt-0">
             <p>In order to be able to upload data to the warehouse from the FUNcube Dashboard program, you will need to register some details.
             <br>As part of the registration process, we will send an 'authorisation code' to the email address you have entered.</br></p>
-            <!--<div class="row">-->
 
-                <!--<div class="col-sm-6 col-md-12 col-lg-6 col-xl-4" th:each="satellite : ${allSatellites}">-->
-                    <!--<div class="card text-center mt-32">-->
-                        <!--<div class="card-body">-->
-                            <!--<div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">-->
-                                <!--<img th:src="${'/images/' + satellite.imageUrl}" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">-->
-                            <!--</div>-->
-                            <!--<a href="#" th:href="@{'/content/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>-->
-                            <!--&lt;!&ndash;<strong class="text-success"><i class="far fa-check-circle"></i> Everything looks okay</strong>&ndash;&gt;-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <div class="row">
 
-            <!--</div>-->
+                <form id="registerUserRequest" action="/registration" method="post">
+                    <table>
+                        <tr>
+                            <td>
+                                <label>Callsign/School/Name:</label>
+                            </td>
+                            <td>
+                                <input id="siteNameInput" name="siteName" title="E.g.: My_School_Name" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Email:</label>
+                            </td>
+                            <td>
+                                <input id="email1Input" name="email1" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Email (again):</label>
+                            </td>
+                            <td>
+                                <input id="email2Input" name="email2" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Latitude (decimal) N(+) S(-):</label>
+                            </td>
+                            <td>
+                                <input id="latitudeInput" name="latitude" title="E.g.: 52.4670" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Longitude (decimal) E(+) W(-):</label>
+                            </td>
+                            <td>
+                                <input id="longitudeInput" name="longitude" title="E.g.: -2.022" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" value="Submit" style="width: 100px" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
+
+
+            </div>
         </div>
 
 
