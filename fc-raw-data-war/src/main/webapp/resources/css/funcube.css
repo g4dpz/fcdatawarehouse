@@ -1,0 +1,11 @@
+input[type="submit"] {
+    background: #5cb85c;
+    color: #fff;
+    transition: background 600ms;
+    cursor: pointer;
+}
+
+input[type="submit"]:disabled {
+    background: #555;
+    cursor: not-allowed;
+}

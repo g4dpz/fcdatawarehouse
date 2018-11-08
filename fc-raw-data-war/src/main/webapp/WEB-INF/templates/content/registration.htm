@@ -27,6 +27,15 @@
             <div class="row">
 
                 <form id="registerUserRequest" action="/registration" method="post">
+
+                    <div th:if="${errors}">
+                        <div th:each="error: ${errors}">
+                            <div class="alert alert-danger" role="alert">
+                                <span th:text="${error}"></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <table>
                         <tr>
                             <td>
@@ -87,7 +96,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input type="submit" value="Submit" style="width: 100px" />
+                                <input id="registerSubmit" type="submit" value="Submit" style="width: 100px" disabled="disabled" />
                             </td>
                             <td></td>
                         </tr>

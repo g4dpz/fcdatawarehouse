@@ -12,8 +12,15 @@
     <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/bundle.min.css}">
+    <link rel="stylesheet" th:href="@{/css/funcube.css}">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.css"/>
     <title layout:title-pattern="$CONTENT_TITLE &middot; $LAYOUT_TITLE">AMSAT-UK Data Warehouse</title>
+
+    <script th:src="@{/js/bundle.min.js}"  src="/js/bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
+    <script layout:fragment="script"></script>
+    <script  th:src="@{/js/funcube.js}" src="/js/funcube.js"></script>
+
 </head>
 <body class="bg-light">
 
@@ -30,10 +37,6 @@
 
     </div>
 </div>
-
-<script src="/js/bundle.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
-<script layout:fragment="script"></script>
 
 </body>
 </html>

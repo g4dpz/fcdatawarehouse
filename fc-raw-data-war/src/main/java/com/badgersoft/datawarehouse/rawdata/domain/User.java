@@ -46,7 +46,7 @@ public class User implements UserDetails {
     private boolean emailSent;
     @Column(name = "created_date")
     private Date createdDate;
-    @Column(name = "registrationcode")
+    @Column(name = "registration_code")
     private String registrationCode;
     @Column
     private boolean transferred;
