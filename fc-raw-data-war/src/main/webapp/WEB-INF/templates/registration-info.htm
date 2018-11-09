@@ -1,3 +1,50 @@
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Sending Email with Thymeleaf HTML Template Example</title>
 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+        <!-- use the font -->
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+        <div>
+            <p th:text="'Thank you for registering ' + (${siteName}) + ' to take part in the data upload for the FUNcube projects.'"></p>
+
+            <p th:text="'Your authorisation code is: ' + ${authKey}"></p>
+
+            <p>Please click on the link below (or paste it into a browser) to activate vour account to enable you to upload data to the warehouse.</p>
+
+            <p th:text="'http://data.badgersoft.com/authemail.html?s=' + ${siteName} + '&r=' + ${registrationCode}"></p>
+
+            <p>To upload data to the Warehouse, please go to the FUNcube Dashboard on you PC and enter in the:</p>
+
+            <p>File -> Settings -> Warehouse menu</p>
+
+            <ul>
+                <li th:text="'Site Id: enter ' + ${siteName}">[Site Id: goes here]</li>
+                <li th:text="'Auth Code: enter ' + ${authKey}">[Auth Code: goes here]</li>
+                <li>URL: enter http://data.funcube.org.uk</li>
+                <li>Stream data to warehouse: check the box</li>
+            </ul>
+
+            <p>If you have any queries or problems please check the http://forum.funcube.org.uk site.</p>
+
+            <p>THANK YOU for supporting the FUNcube project!</p>
+
+            <p>Regards</p>
+
+            <p>The FUNcube Team</p>
+        </div>
+    </body>
 </html>
