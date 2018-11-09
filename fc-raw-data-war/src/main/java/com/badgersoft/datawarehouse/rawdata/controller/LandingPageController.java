@@ -11,6 +11,6 @@ public class LandingPageController {
 
     @GetMapping
     public ModelAndView index() {
-        return new ModelAndView("redirect:satellites");
+        return new ModelAndView("redirect:missions");
     }
 }

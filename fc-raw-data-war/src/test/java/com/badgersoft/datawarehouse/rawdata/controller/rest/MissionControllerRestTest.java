@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes={AppConfig.class, TestJpaConfig.class},
         loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration
-public class SatelliteControllerRestTest {
+public class MissionControllerRestTest {
 
     private MockMvc mockMvc;
 

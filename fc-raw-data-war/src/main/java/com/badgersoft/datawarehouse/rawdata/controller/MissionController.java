@@ -10,16 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-public class SatelliteController {
+public class MissionController {
 
     private final SatelliteListService satelliteListService;
 
     @Autowired
-    public SatelliteController(SatelliteListService satelliteListService) {
+    public MissionController(SatelliteListService satelliteListService) {
         this.satelliteListService = satelliteListService;
     }
 
-    @GetMapping("satellites")
+    @GetMapping("missions")
     public ModelAndView listSatellites() {
         List<Satellite> allSatellites = satelliteListService.findAllSatellites();
 
