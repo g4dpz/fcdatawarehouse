@@ -18,10 +18,18 @@ abstract class BaseRealtimeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "sequence_number")
     private Long sequenceNumber;
+
+    @Column(name = "frame_type")
     private Long frameType;
+
+    @Column(name = "created_date")
     private Date createdDate;
+
+    @Column(name = "satellite_time")
     private Date satelliteTime;
+
     private String latitude;
     private String longitude;
 
@@ -391,7 +399,8 @@ abstract class BaseRealtimeEntity implements Serializable {
         c22 = getBitsAsULong(24, binaryString);
         c23 = getBitsAsULong(8, binaryString);
 
-        c24 = new RFModeTelemetryValue(getBitsAsULong(3, binaryString)).getValueAsString();
+        final long c24Value = getBitsAsULong(3, binaryString);
+        c24 = new RFModeTelemetryValue(c24Value).getValueAsString();
         c25 = new SatDataModeTelemetryValue(getBitsAsULong(2, binaryString)).getValueAsString();
 
         c26 = getBooleanBit(binaryString);

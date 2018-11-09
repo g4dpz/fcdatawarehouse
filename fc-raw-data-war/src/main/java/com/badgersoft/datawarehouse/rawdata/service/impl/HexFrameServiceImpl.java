@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -410,7 +409,7 @@ public class HexFrameServiceImpl implements HexFrameService {
 
     @Override
     @JmsListener(destination = "frame_processed")
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void handleMessage(final String message) {
         LOG.info("Message received: " + message);
     }

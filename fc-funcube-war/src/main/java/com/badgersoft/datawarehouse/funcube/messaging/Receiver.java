@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -59,7 +58,7 @@ public class Receiver {
 
     @JmsListener(destination = "satellite_2_frame_available")
     @SendTo(value = "frame_processed")
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
 

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class Receiver {
     }
 
     @JmsListener(destination = "frame_processed")
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
 

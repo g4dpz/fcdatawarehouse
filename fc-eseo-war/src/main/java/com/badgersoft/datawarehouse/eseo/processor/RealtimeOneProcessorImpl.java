@@ -8,9 +8,6 @@ import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -34,8 +31,6 @@ public class RealtimeOneProcessorImpl extends AbstractProcessor implements Realt
     SatelliteStatusDao satelliteStatusDAO;
 
     @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = false,
-            propagation = Propagation.REQUIRES_NEW)
     public void process(HexFrameDTO hexFrameDTO) throws Exception {
 
         long then = Calendar.getInstance().getTime().getTime();
