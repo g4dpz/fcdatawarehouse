@@ -24,9 +24,16 @@ public class UserRankingServiceImpl implements UserRankingService {
     }
 
     @Override
-    public Ranking getRanking(int draw, int sort, int start, int length) {
+    public Ranking getRanking(int draw, int sort, int start, int length, String search) {
 
-        final List<UserRanking> userRankings = userRankingDao.findAll();
+        List<UserRanking> userRankings;
+
+        if (search != null) {
+            userRankings = userRankingDao.findBySiteIdContainingIgnoreCase(search);
+        }
+        else {
+            userRankings = userRankingDao.findAll();
+        }
 
         Table<String, Long, Long> rankings = HashBasedTable.create();
         Set<String> sites = new HashSet<>();

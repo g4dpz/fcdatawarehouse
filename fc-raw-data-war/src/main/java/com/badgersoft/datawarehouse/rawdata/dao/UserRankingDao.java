@@ -10,4 +10,7 @@ public interface UserRankingDao extends JpaRepository<UserRanking, Long> {
 
     @Query
     List<UserRanking> findBySatelliteIdAndSiteId(Long satelliteId, String siteId);
+
+    @Query
+    List<UserRanking> findBySiteIdContainingIgnoreCase(String search);
 }

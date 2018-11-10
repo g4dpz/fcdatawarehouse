@@ -80,10 +80,11 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         int sort = Integer.parseInt(request.getParameter("order[0][column]"));
         int start = Integer.parseInt(request.getParameter("start"));
         int length = Integer.parseInt(request.getParameter("length"));
+        String search = request.getParameter("search[value]");
 
         sort *= request.getParameter("order[0][dir]").equals("asc") ? 1 : -1;
 
-        Ranking ranking = userRankingService.getRanking(draw, sort, start, length);
+        Ranking ranking = userRankingService.getRanking(draw, sort, start, length, search);
 
         return ranking;
     }
