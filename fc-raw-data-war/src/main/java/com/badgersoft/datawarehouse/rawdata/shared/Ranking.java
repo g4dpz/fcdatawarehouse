@@ -15,11 +15,11 @@ public class Ranking {
     public Ranking() {
     }
 
-    public Ranking(int draw, List<Data> data, int columnToSortAndDirection) {
+    public Ranking(int draw, List<Data> data, int columnToSortAndDirection, int recordsTotal, int recordsFiltered) {
         this.draw = draw;
         this.data = data;
-        this.recordsTotal = data.size();
-        this.recordsFiltered = data.size();
+        this.recordsTotal = recordsTotal;
+        this.recordsFiltered = recordsFiltered;
         this.columnToSortAndDirection = columnToSortAndDirection;
     }
 

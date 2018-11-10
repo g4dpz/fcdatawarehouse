@@ -5,9 +5,11 @@ import com.badgersoft.datawarehouse.rawdata.security.ReasonablePasswordGenerator
 import com.badgersoft.datawarehouse.rawdata.service.EmailService;
 import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.service.SatelliteListService;
+import com.badgersoft.datawarehouse.rawdata.service.UserRankingService;
 import com.badgersoft.datawarehouse.rawdata.service.impl.EmailServiceImpl;
 import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
 import com.badgersoft.datawarehouse.rawdata.service.impl.SatelliteListServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.impl.UserRankingServiceImpl;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -64,5 +66,8 @@ public class AppConfig {
 
     @Bean
     VelocityEngine velocityEngine() { return new VelocityEngine(); }
+
+    @Bean
+    UserRankingService userRankingService() { return new UserRankingServiceImpl(); }
 
 }
