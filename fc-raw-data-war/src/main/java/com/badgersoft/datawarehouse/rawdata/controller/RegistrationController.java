@@ -2,7 +2,9 @@ package com.badgersoft.datawarehouse.rawdata.controller;
 
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.dao.UserDao;
+import com.badgersoft.datawarehouse.rawdata.dao.UserRankingDao;
 import com.badgersoft.datawarehouse.rawdata.domain.User;
+import com.badgersoft.datawarehouse.rawdata.domain.UserRanking;
 import com.badgersoft.datawarehouse.rawdata.messaging.Mail;
 import com.badgersoft.datawarehouse.rawdata.security.ReasonablePasswordGenerator;
 import com.badgersoft.datawarehouse.rawdata.service.EmailService;
@@ -44,6 +46,9 @@ public class RegistrationController {
 
     @Autowired
     UTCClock clock;
+
+    @Autowired
+    UserRankingDao userRankingDao;
 
     private final SatelliteListService satelliteListService;
 
@@ -91,6 +96,13 @@ public class RegistrationController {
         model.put("registrationCode", registrationCode);
 
         userDao.save(newUser);
+
+        UserRanking userRanking = new UserRanking();
+        userRanking.setSiteId(registerUserRequest.getSiteName());
+        userRanking.setSatelliteId(2L);
+        userRanking.setNumber(0);
+
+        userRankingDao.save(userRanking);
 
         Mail mail
                 = new Mail("operations@funcube.org.uk",
