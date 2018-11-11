@@ -35,5 +35,179 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
 <script layout:fragment="script"></script>
 
+<script>
+    $(document).ready(function(){
+        refreshRealime();
+        setInterval(refreshRealime, 5000);
+    });
+</script>
+
+<script>
+    function refreshRealime(){
+
+        var url = "/jy1sat/data/realtime";
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            accepts : "application/json",
+            dataType: "jsonp",
+            crossDomain: true,
+            cache: false,
+            success : handleRealtime
+        });
+    }
+</script>
+
+<script>
+    var handleRealtime = function(data) {
+
+
+        $("#eps_sol_volts_x_value").text(data.data.epsDTO.panelVolts1 + " mV");
+        $("#eps_sol_volts_x_min").text(data.data.minima[0]);
+        $("#eps_sol_volts_x_max").text(data.data.maxima[0]);
+        $("#eps_sol_volts_y_value").text(data.data.epsDTO.panelVolts2 + " mV");
+        $("#eps_sol_volts_y_min").text(data.data.minima[1]);
+        $("#eps_sol_volts_y_max").text(data.data.maxima[1]);
+        $("#eps_sol_volts_z_value").text(data.data.epsDTO.panelVolts3 + " mV");
+        $("#eps_sol_volts_z_min").text(data.data.minima[2]);
+        $("#eps_sol_volts_z_max").text(data.data.maxima[2]);
+        $("#eps_battery_volts_value").text(data.data.epsDTO.batteryVolts + " mV");
+        $("#eps_battery_volts_min").text(data.data.minima[3]);
+        $("#eps_battery_volts_max").text(data.data.maxima[3]);
+        $("#eps_sol_curr_x_value").text(data.data.epsDTO.panelCurr1 + " mA");
+        $("#eps_sol_curr_x_min").text(data.data.minima[4]);
+        $("#eps_sol_curr_x_max").text(data.data.maxima[4]);
+        $("#eps_sol_curr_y_value").text(data.data.epsDTO.panelCurr2 + " mA");
+        $("#eps_sol_curr_y_min").text(data.data.minima[5]);
+        $("#eps_sol_curr_y_max").text(data.data.maxima[5]);
+        $("#eps_sol_curr_z_value").text(data.data.epsDTO.panelCurr3 + " mA");
+        $("#eps_sol_curr_z_min").text(data.data.minima[6]);
+        $("#eps_sol_curr_z_max").text(data.data.maxima[6]);
+        $("#eps_total_photo_current_value").text(data.data.epsDTO.totPhotoCurr + " mA");
+        $("#eps_total_photo_current_min").text(data.data.minima[7]);
+        $("#eps_total_photo_current_max").text(data.data.maxima[7]);
+        $("#eps_total_system_current_value").text(data.data.epsDTO.totSystemCurr + " mA");
+        $("#eps_total_system_current_min").text(data.data.minima[8]);
+        $("#eps_total_system_current_max").text(data.data.maxima[8]);
+        $("#eps_reboot_count_value").text(data.data.epsDTO.rebootCount);
+
+        $("#eps_boost_temp_x_value").text(data.data.epsDTO.boostTemp1 + " C");
+        $("#eps_boost_temp_x_min").text(data.data.minima[10]);
+        $("#eps_boost_temp_x_max").text(data.data.maxima[10]);
+        $("#eps_boost_temp_y_value").text(data.data.epsDTO.boostTemp2 + " C");
+        $("#eps_boost_temp_y_min").text(data.data.minima[11]);
+        $("#eps_boost_temp_y_max").text(data.data.maxima[11]);
+        $("#eps_boost_temp_z_value").text(data.data.epsDTO.boostTemp3 + " C");
+        $("#eps_boost_temp_z_min").text(data.data.minima[12]);
+        $("#eps_boost_temp_z_max").text(data.data.maxima[12]);
+        $("#eps_battery_temp_value").text(data.data.epsDTO.batteryTemp + " C");
+        $("#eps_battery_temp_min").text(data.data.minima[13]);
+        $("#eps_battery_temp_max").text(data.data.maxima[13]);
+
+        $("#eps_latch_up_5_value").text(data.data.epsDTO.latchUpCount5v);
+        $("#eps_curr_5_value").text(data.data.epsDTO.channelCurren5V);
+        $("#eps_curr_5_min").text(data.data.minima[15]);
+        $("#eps_curr_5_max").text(data.data.maxima[15]);
+        $("#eps_reset_cause_value").text(data.data.epsDTO.resetCause);
+        $("#eps_ppt_mode_value").text(data.data.epsDTO.pptMode);
+
+        $("#imtq_mode").text(data.data.imtqDTO.imtqMode);
+        $("#imtq_error_code").text(data.data.imtqDTO.imtqErrorCode);
+        $("#imtq_config").text(data.data.imtqDTO.imtqConfigSet);
+        $("#imtq_temp").text(data.data.imtqDTO.imtqMcuTemp);
+        $("#imtq_temp_min").text(data.data.minima[21]);
+        $("#imtq_temp_max").text(data.data.maxima[21]);
+        $("#imtq_uptime").text(data.data.asibDTO.imtqUptime);
+
+        $("#asib_sun_sensor_x_plus_value").text(data.data.asibDTO.solXPlus);
+        $("#asib_sun_sensor_x_plus_min").text(data.data.minima[22]);
+        $("#asib_sun_sensor_x_plus_max").text(data.data.maxima[22]);
+        $("#asib_sun_sensor_x_minus_value").text(data.data.asibDTO.solXMinus);
+        $("#asib_sun_sensor_x_minus_min").text(data.data.minima[23]);
+        $("#asib_sun_sensor_x_minus_max").text(data.data.maxima[23]);
+        $("#asib_sun_sensor_y_plus_value").text(data.data.asibDTO.solYPlus);
+        $("#asib_sun_sensor_y_plus_min").text(data.data.minima[24]);
+        $("#asib_sun_sensor_y_plus_max").text(data.data.maxima[24]);
+        $("#asib_sun_sensor_y_minus_value").text(data.data.asibDTO.solYMinus);
+        $("#asib_sun_sensor_y_minus_min").text(data.data.minima[25]);
+        $("#asib_sun_sensor_y_minus_max").text(data.data.maxima[25]);
+        $("#asib_sun_sensor_z_plus_value").text(data.data.asibDTO.solZPlus);
+        $("#asib_sun_sensor_z_plus_min").text(data.data.minima[26]);
+        $("#asib_sun_sensor_z_plus_max").text(data.data.maxima[26]);
+        $("#asib_sun_sensor_z_minus_value").text(data.data.asibDTO.solZMinus);
+        $("#asib_sun_sensor_z_minus_min").text(data.data.minima[27]);
+        $("#asib_sun_sensor_z_minus_max").text(data.data.maxima[27]);
+        $("#asib_bus_volts_three_value").text(data.data.asibDTO.busVolts3v3 + " mV");
+        $("#asib_bus_volts_three_min").text(data.data.minima[28]);
+        $("#asib_bus_volts_three_max").text(data.data.maxima[28]);
+        $("#asib_bus_volts_five_value").text(data.data.asibDTO.busVolts5 + " mV");
+        $("#asib_bus_volts_five_min").text(data.data.minima[30]);
+        $("#asib_bus_volts_five_max").text(data.data.maxima[30]);
+
+
+        $("#rf_receive_doppler_value").text(data.data.rfDTO.rxDoppler);
+        $("#rf_receive_doppler_min").text(data.data.minima[31]);
+        $("#rf_receive_doppler_max").text(data.data.maxima[31]);
+        $("#rf_receive_rssi_value").text(data.data.rfDTO.rxRSSI);
+        $("#rf_receive_rssi_min").text(data.data.minima[32]);
+        $("#rf_receive_rssi_max").text(data.data.maxima[32]);
+        $("#rf_temperature_value").text(data.data.rfDTO.rxTemp + " C");
+        $("#rf_temperature_min").text(data.data.minima[33]);
+        $("#rf_temperature_max").text(data.data.maxima[33]);
+        $("#rf_receive_current_value").text(data.data.rfDTO.rxCurr + " mA");
+        $("#rf_receive_current_min").text(data.data.minima[34]);
+        $("#rf_receive_current_max").text(data.data.maxima[34]);
+        $("#rf_transmit_current_three_value").text(data.data.rfDTO.txBusCurr3v3 + " mA");
+        $("#rf_transmit_current_three_min").text(data.data.minima[35]);
+        $("#rf_transmit_current_three_max").text(data.data.maxima[35]);
+        $("#rf_transmit_current_five_value").text(data.data.rfDTO.txBusCurr5v + " mA");
+        $("#rf_transmit_current_five_min").text(data.data.minima[36]);
+        $("#rf_transmit_current_five_max").text(data.data.maxima[36]);
+
+        $("#pa_forward_power_value").text(data.data.paDTO.txFwdPwr + " mW");
+        $("#pa_forward_power_min").text(data.data.minima[38]);
+        $("#pa_forward_power_max").text(data.data.maxima[38]);
+        $("#pa_reverse_power_value").text(data.data.paDTO.txRevPwr + " mW");
+        $("#pa_reverse_power_min").text(data.data.minima[37]);
+        $("#pa_reverse_power_max").text(data.data.maxima[37]);
+
+        $("#pa_device_temperature_value").text(data.data.paDTO.txTemp + " C");
+        $("#pa_device_temperature_min").text(data.data.minima[39]);
+        $("#pa_device_temperature_max").text(data.data.maxima[39]);
+        $("#pa_bus_current_value").text(data.data.paDTO.txCurr + " mA");
+        $("#pa_bus_current_min").text(data.data.minima[40]);
+        $("#pa_bus_current_max").text(data.data.maxima[40]);
+
+        $("#ants_temp_zero_value").text(data.data.antsDTO.antTemp0 + " C");
+        $("#ants_temp_zero_min").text(data.data.minima[41]);
+        $("#ants_temp_zero_max").text(data.data.maxima[41]);
+        $("#ants_temp_one_value").text(data.data.antsDTO.antTemp1 + " C");
+        $("#ants_temp_one_min").text(data.data.minima[42]);
+        $("#ants_temp_one_max").text(data.data.maxima[42]);
+        $("#ants_deployment_vhf_a_value").text(data.data.antsDTO.antDepl0);
+        $("#ants_deployment_uhf_a_value").text(data.data.antsDTO.antDepl1);
+        $("#ants_deployment_vhf_b_value").text(data.data.antsDTO.antDepl2);
+        $("#ants_deployment_uhf_b_value").text(data.data.antsDTO.antDepl3);
+
+        $("#sw_command_count_value").text(data.data.swDTO.dtmfCmdCount);
+        $("#sw_last_command_value").text(data.data.swDTO.dtmfLastCmd);
+        $("#sw_command_success_value").text(data.data.swDTO.dtmfCmdSuccess);
+        $("#sw_valid_asib_value").text(data.data.swDTO.dataValidASIB);
+        $("#sw_valid_eps_value").text(data.data.swDTO.dataValidEPS);
+        $("#sw_valid_pa_value").text(data.data.swDTO.dataValidPA);
+        $("#sw_valid_rf_value").text(data.data.swDTO.dataValidRF);
+        $("#sw_valid_imtq_value").text(data.data.swDTO.dataValidiMTQ);
+        $("#sw_valid_ants_bus_a_value").text(data.data.swDTO.dataValidAntsBusA);
+        $("#sw_valid_ants_bus_b_value").text(data.data.swDTO.dataValidAntsBusB);
+        $("#sw_eclipse_mode_value").text(data.data.swDTO.inEclipseMode);
+        $("#sw_safe_mode_value").text(data.data.swDTO.inSafeMode);
+        $("#sw_hardware_abf_value").text(data.data.swDTO.hardwareABFOnOff);
+        $("#sw_software_abf_value").text(data.data.swDTO.softwareABFOnOff);
+        $("#sw_deployment_wait_value").text(data.data.swDTO.deploymentWait);
+    }
+</script>
+
 </body>
 </html>

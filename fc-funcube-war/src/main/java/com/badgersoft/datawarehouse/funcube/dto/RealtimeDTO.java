@@ -60,37 +60,37 @@ public class RealtimeDTO implements Serializable {
         );
 
         this.asibDTO = new AsibDTO(
-                entity.getC17(),
-                entity.getC18(),
-                entity.getC19(),
-                entity.getC20(),
-                entity.getC21(),
-                entity.getC22(),
-                entity.getC23(),
-                entity.getC24(),
-                entity.getC25(),
-                entity.getC26()
+                formatOneDP(entity.getC17()),
+                formatOneDP(entity.getC18()),
+                formatOneDP(entity.getC19()),
+                formatOneDP(entity.getC20()),
+                formatOneDP(entity.getC21()),
+                formatOneDP(entity.getC22()),
+                formatOneDP(entity.getC23()),
+                formatOneDP(entity.getC24()),
+                formatOneDP(entity.getC25()),
+                formatOneDP(entity.getC26())
         );
 
         this.rfDTO = new RfDTO(
                 entity.getC27(),
                 entity.getC28(),
-                entity.getC29(),
+                formatOneDP(entity.getC29()),
                 entity.getC30(),
                 entity.getC31(),
                 entity.getC32()
         );
 
         this.paDTO = new PaDTO(
-                entity.getC33(),
-                entity.getC34(),
-                entity.getC35(),
-                entity.getC36()
+                formatOneDP(entity.getC33()),
+                formatOneDP(entity.getC34()),
+                formatOneDP(entity.getC35()),
+                formatOneDP(entity.getC36())
         );
 
         this.antsDTO = new AntsDTO(
-                entity.getC37(),
-                entity.getC38(),
+                formatOneDP(entity.getC37()),
+                formatOneDP(entity.getC38()),
                 entity.getC39() ? "Deployed" : "Undeployed",
                 entity.getC40() ? "Deployed" : "Undeployed",
                 entity.getC41() ? "Deployed" : "Undeployed",

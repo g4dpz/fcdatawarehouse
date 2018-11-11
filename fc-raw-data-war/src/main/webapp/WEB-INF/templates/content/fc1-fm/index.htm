@@ -43,31 +43,568 @@
                     </li>
                 </ul>
 
+                <div class="w-100"></div>
+
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div id="tab-eps" class="container tab-pane active"><br>
                         <h3>Electrical Power Subsystem</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                                <td style="text-align: center; white-space: nowrap;">Min.</td>
+                                <td style="text-align: center; white-space: nowrap;">Max.</td>
+                            </tr>
+                            <tr>
+                                <td id="eps_sol_volts_x_name" style="text-align: center;">Solar Panel Voltage X</td>
+                                <td id="eps_sol_volts_x_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_x_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_x_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="eps_sol_volts_y_name" style="text-align: center;">Solar Panel Voltage Y</td>
+                                <td id="eps_sol_volts_y_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_y_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_y_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_sol_volts_z_name" style="text-align: center;">Solar Panel Voltage Z	</td>
+                                <td id="eps_sol_volts_z_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_z_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_sol_volts_z_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_total_photo_current_name" style="text-align: center;">Total Photo Current</td>
+                                <td id="eps_total_photo_current_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_total_photo_current_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_total_photo_current_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_battery_volts_name" style="text-align: center;">Battery Voltage</td>
+                                <td id="eps_battery_volts_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_battery_volts_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_battery_volts_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_total_system_current_name" style="text-align: center;">Total System Current</td>
+                                <td id="eps_total_system_current_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_total_system_current_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_total_system_current_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_reboot_count_name" style="text-align: center;">Reboot Count</td>
+                                <td id="eps_reboot_count_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_reboot_count_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_reboot_count_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_software_errors_name" style="text-align: center;">EPS Software Errors</td>
+                                <td id="eps_software_errors_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_software_errors_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_software_errors_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_boost_temp_x_name" style="text-align: center;">Boost Converter Temp X</td>
+                                <td id="eps_boost_temp_x_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_x_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_x_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_boost_temp_y_name" style="text-align: center;">Boost Converter Temp Y</td>
+                                <td id="eps_boost_temp_y_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_y_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_y_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_boost_temp_z_name" style="text-align: center;">Boost Converter Temp Z</td>
+                                <td id="eps_boost_temp_z_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_z_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_boost_temp_z_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_battery_temp_name" style="text-align: center;">Battery Temp</td>
+                                <td id="eps_battery_temp_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_battery_temp_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_battery_temp_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_latch_up_5_name" style="text-align: center;">Latch Up Count 5v</td>
+                                <td id="eps_latch_up_5_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_latch_up_5_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_latch_up_5_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_latch_up_3_name" style="text-align: center;">Latch Up Count 3.3v</td>
+                                <td id="eps_latch_up_3_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_latch_up_3_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_latch_up_3_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_reset_cause_name" style="text-align: center;">Reset Cause</td>
+                                <td id="eps_reset_cause_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_reset_cause_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_reset_cause_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="eps_ppt_mode_name" style="text-align: center;">Power Point Tracking Mode</td>
+                                <td id="eps_ppt_mode_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_ppt_mode_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="eps_ppt_mode_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                        </table>
                     </div>
                     <div id="tab-asib" class="container tab-pane"><br>
                         <h3>Sensor Subsystem</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                                <td style="text-align: center; white-space: nowrap;">Min.</td>
+                                <td style="text-align: center; white-space: nowrap;">Max.</td>
+                            </tr>
+                            <tr>
+                                <td id="asib_sun_sensor_x_name" style="text-align: center;">Sun Sensor X+</td>
+                                <td id="asib_sun_sensor_x_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_x_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_x_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="asib_sun_sensor_y_name" style="text-align: center;">Sun Sensor Y+</td>
+                                <td id="asib_sun_sensor_y_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_y_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_y_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_sun_sensor_z_name" style="text-align: center;">Sun Sensor Z+</td>
+                                <td id="asib_sun_sensor_z_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_z_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sun_sensor_z_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_sol_temp_x_plus_name" style="text-align: center;">Solar Panel Temp X+</td>
+                                <td id="asib_sol_temp_x_plus_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_x_plus_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_x_plus_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_sol_temp_x_minus_name" style="text-align: center;">Solar Panel Temp X-</td>
+                                <td id="asib_sol_temp_x_minus_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_x_minus_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_x_minus_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_sol_temp_y_plus_name" style="text-align: center;">Solar Panel Temp Y+</td>
+                                <td id="asib_sol_temp_y_plus_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_y_plus_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_y_plus_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_sol_temp_y_minus_name" style="text-align: center;">Solar Panel Temp Y-</td>
+                                <td id="asib_sol_temp_y_minus_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_y_minus_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_sol_temp_y_minus_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_bus_volts_three_name" style="text-align: center;">3.3 Bus Voltage</td>
+                                <td id="asib_bus_volts_three_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_volts_three_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_volts_three_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_bus_current_three_name" style="text-align: center;">3.3 Bus Current</td>
+                                <td id="asib_bus_current_three_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_current_three_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_current_three_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="asib_bus_volts_five_name" style="text-align: center;">5.0 Bus voltage</td>
+                                <td id="asib_bus_volts_five_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_volts_five_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="asib_bus_volts_five_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                        </table>
                     </div>
                     <div id="tab-rf" class="container tab-pane"><br>
                         <h3>Communication Subsystem</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                                <td style="text-align: center; white-space: nowrap;">Min.</td>
+                                <td style="text-align: center; white-space: nowrap;">Max.</td>
+                            </tr>
+                            <tr>
+                                <td id="rf_receive_doppler_name" style="text-align: center;">Receiver Doppler</td>
+                                <td id="rf_receive_doppler_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_doppler_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_doppler_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="rf_receive_rssi_name" style="text-align: center;">Receiver RSSI</td>
+                                <td id="rf_receive_rssi_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_rssi_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_rssi_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="rf_temperature_name" style="text-align: center;">Temperature</td>
+                                <td id="rf_temperature_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_temperature_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_temperature_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="rf_receive_current_name" style="text-align: center;">Receive Current</td>
+                                <td id="rf_receive_current_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_current_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_receive_current_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="rf_transmit_current_three_name" style="text-align: center;">Transmit Current 3.3V bus</td>
+                                <td id="rf_transmit_current_three_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_transmit_current_three_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_transmit_current_three_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="rf_transmit_current_five_name" style="text-align: center;">Transmit Current 5.0V bus&nbsp;</td>
+                                <td id="rf_transmit_current_five_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_transmit_current_five_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="rf_transmit_current_five_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                        </table>
                     </div>
                     <div id="tab-pa" class="container tab-pane"><br>
                         <h3>RF Power Amplifier</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                                <td style="text-align: center; white-space: nowrap;">Min.</td>
+                                <td style="text-align: center; white-space: nowrap;">Max.</td>
+                            </tr>
+                            <tr>
+                                <td id="pa_forward_power_name" style="text-align: center;">Forward Power</td>
+                                <td id="pa_forward_power_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_forward_power_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_forward_power_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="pa_reverse_power_name" style="text-align: center;">Reverse Power&nbsp;</td>
+                                <td id="pa_reverse_power_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_reverse_power_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_reverse_power_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="pa_device_temperature_name" style="text-align: center;">Device Temperature&nbsp;</td>
+                                <td id="pa_device_temperature_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_device_temperature_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_device_temperature_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="pa_bus_current_name" style="text-align: center;">Bus Current</td>
+                                <td id="pa_bus_current_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_bus_current_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="pa_bus_current_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                        </table>
                     </div>
                     <div id="tab-ants" class="container tab-pane"><br>
                         <h3>Antenna Subsystem</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                                <td style="text-align: center; white-space: nowrap;">Min</td>
+                                <td style="text-align: center; white-space: nowrap;">Max</td>
+                            </tr>
+                            <tr>
+                                <td id="ants_temp_zero_name" style="text-align: center;">Antenna Temp 0</td>
+                                <td id="ants_temp_zero_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="ants_temp_zero_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="ants_temp_zero_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="ants_temp_one_name" style="text-align: center;">Antenna Temp 1</td>
+                                <td id="ants_temp_one_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="ants_temp_one_min"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td id="ants_temp_one_max"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="ants_deployment_vhf_a_name" style="text-align: center;">Antenna Deployment VHF-A</td>
+                                <td id="ants_deployment_vhf_a_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                            </tr>
+
+                            <tr>
+                                <td id="ants_deployment_vhf_b_name" style="text-align: center;">Antenna Deployment VHF-B</td>
+                                <td id="ants_deployment_vhf_b_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                            </tr>
+
+                            <tr>
+                                <td id="ants_deployment_uhf_a_name" style="text-align: center;">Antenna Deployment UHF-A</td>
+                                <td id="ants_deployment_uhf_a_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                            </tr>
+
+                            <tr>
+                                <td id="ants_deployment_uhf_b_name" style="text-align: center;">Antenna Deployment UHF-B</td>
+                                <td id="ants_deployment_uhf_b_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                                <td style="text-align: center; white-space: nowrap;"></td>
+                            </tr>
+                        </table>
                     </div>
                     <div id="tab-sw" class="container tab-pane"><br>
                         <h3>Software State</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: center;">Name</td>
+                                <td style="text-align: center; white-space: nowrap;">Value</td>
+                            </tr>
+                            <tr>
+                                <td id="sw_sequence_number_name" style="text-align: center;">Sequence Number</td>
+                                <td id="sw_sequence_number_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+
+                            <tr>
+                                <td id="sw_command_count_name" style="text-align: center;">Command Count</td>
+                                <td id="sw_command_count_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_last_command_name" style="text-align: center;">Last Command</td>
+                                <td id="sw_last_command_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_command_success_name" style="text-align: center;">Command Success</td>
+                                <td id="sw_command_success_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_valid_asib_name" style="text-align: center;">Data Valid ASIB</td>
+                                <td id="sw_valid_asib_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_valid_eps_name" style="text-align: center;">Data Valid EPS</td>
+                                <td id="sw_valid_eps_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="sw_valid_pa_name" style="text-align: center;">Data Valid PA</td>
+                                <td id="sw_valid_pa_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="sw_valid_rf_name" style="text-align: center;">Data Valid RF</td>
+                                <td id="sw_valid_rf_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_valid_mse_name" style="text-align: center;">Data Valid MSE</td>
+                                <td id="sw_valid_mse_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_valid_ants_bus_a_name" style="text-align: center;">Data Valid ANTS Bus-A</td>
+                                <td id="sw_valid_ants_bus_a_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_valid_ants_bus_b_name" style="text-align: center;">Data Valid ANTS Bus-B</td>
+                                <td id="sw_valid_ants_bus_b_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_eclipse_mode_name" style="text-align: center;">In Eclipse Mode</td>
+                                <td id="sw_eclipse_mode_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="sw_safe_mode_name" style="text-align: center;">In Safe Mode</td>
+                                <td id="sw_safe_mode_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="sw_hardware_abf_name" style="text-align: center;">Hardware ABF</td>
+                                <td id="sw_hardware_abf_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_software_abf_name" style="text-align: center;">Software ABF</td>
+                                <td id="sw_software_abf_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td id="sw_deployment_wait_name" style="text-align: center;">Deployment Wait At Next Boot</td>
+                                <td id="sw_deployment_wait_value"
+                                    style="text-align: center; white-space: nowrap;">&nbsp;</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -9,14 +9,14 @@ public class RfDTO implements Serializable {
 
     private long rxDoppler;
     private long rxRSSI;
-    private double rxTemp;
+    private String rxTemp;
     private long rxCurr;
     private long txBusCurr3v3;
     private long txBusCurr5v;
 
     public RfDTO() {}
 
-    public RfDTO(long rxDoppler, long rxRSSI, double rxTemp, long rxCurr, long txBusCurr3v3, long txBusCurr5v) {
+    public RfDTO(long rxDoppler, long rxRSSI, String rxTemp, long rxCurr, long txBusCurr3v3, long txBusCurr5v) {
         this.rxDoppler = rxDoppler;
         this.rxRSSI = rxRSSI;
         this.rxTemp = rxTemp;
@@ -33,7 +33,7 @@ public class RfDTO implements Serializable {
         return rxRSSI;
     }
 
-    public double getRxTemp() {
+    public String getRxTemp() {
         return rxTemp;
     }
 

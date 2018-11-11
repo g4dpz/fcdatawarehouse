@@ -8,33 +8,33 @@ import java.io.Serializable;
 public class PaDTO implements Serializable {
 
     
-    private double txRevPwr;
-    private double txFwdPwr;
-    private double txTemp;
-    private double txCurr;
+    private String txRevPwr;
+    private String txFwdPwr;
+    private String txTemp;
+    private String txCurr;
 
     public PaDTO() {}
 
-    public PaDTO(double txRevPwr, double txFwdPwr, double txTemp, double txCurr) {
+    public PaDTO(String txRevPwr, String txFwdPwr, String txTemp, String txCurr) {
         this.txTemp = txTemp;
         this.txCurr = txCurr;
         this.txRevPwr = txRevPwr;
         this.txFwdPwr = txFwdPwr;
     }
 
-    public double getTxTemp() {
+    public String getTxTemp() {
         return txTemp;
     }
 
-    public double getTxCurr() {
+    public String getTxCurr() {
         return txCurr;
     }
 
-    public double getTxRevPwr() {
+    public String getTxRevPwr() {
         return txRevPwr;
     }
 
-    public double getTxFwdPwr() {
+    public String getTxFwdPwr() {
         return txFwdPwr;
     }
 }

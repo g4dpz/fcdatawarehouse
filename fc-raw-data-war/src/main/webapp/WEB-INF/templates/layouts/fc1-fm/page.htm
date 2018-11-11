@@ -35,5 +35,121 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
 <script layout:fragment="script"></script>
 
+<script>
+    $(document).ready(function(){
+        refreshDiv();
+        setInterval(refreshDiv, 10000);
+    });
+</script>
+
+<script>
+    var handleRealtime = function (data) {
+        $("#info_seqno").text("Seq. No.: " + data.sequenceNumber);
+        $("#info_packet_count").text("Packets: " + data.packetCount);
+        $("#info_satellite_mode").text("Mode switching: " + data.satelliteMode);
+        $("#info_transponder_state").text("Transponder state: " + data.transponderState);
+        $("#eps_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#eps_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#eps_sol_volts_x_value").text(data.data.epsDTO.panelVolts1);
+        $("#eps_sol_volts_y_value").text(data.data.epsDTO.panelVolts2);
+        $("#eps_sol_volts_z_value").text(data.data.epsDTO.panelVolts3);
+        $("#eps_total_photo_current_value").text(data.data.epsDTO.totPhotoCurr);
+        $("#eps_battery_volts_value").text(data.data.epsDTO.batteryVolts);
+        $("#eps_total_system_current_value").text(data.data.epsDTO.totSystemCurr);
+        $("#eps_reboot_count_value").text(data.data.epsDTO.rebootCount);
+        $("#eps_software_errors_value").text(data.data.epsDTO.epsSwErrors);
+        $("#eps_boost_temp_x_value").text(data.data.epsDTO.boostTemp1);
+        $("#eps_boost_temp_y_value").text(data.data.epsDTO.boostTemp2);
+        $("#eps_boost_temp_z_value").text(data.data.epsDTO.boostTemp3);
+        $("#eps_battery_temp_value").text(data.data.epsDTO.batteryTemp);
+        $("#eps_latch_up_5_value").text(data.data.epsDTO.latchUpCount5v);
+        $("#eps_latch_up_3_value").text(data.data.epsDTO.latchUpCount3v3);
+        $("#eps_reset_cause_value").text(data.data.epsDTO.resetCause);
+        $("#eps_ppt_mode_value").text(data.data.epsDTO.pptMode);
+
+        $("#asib_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#asib_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#asib_sun_sensor_x_value").text(data.data.asibDTO.sunSensorX);
+        $("#asib_sun_sensor_y_value").text(data.data.asibDTO.sunSensorY);
+        $("#asib_sun_sensor_z_value").text(data.data.asibDTO.sunSensorZ);
+        $("#asib_sol_temp_x_plus_value").text(data.data.asibDTO.solXPlus);
+        $("#asib_sol_temp_x_minus_value").text(data.data.asibDTO.solXMinus);
+        $("#asib_sol_temp_y_plus_value").text(data.data.asibDTO.solYPlus);
+        $("#asib_sol_temp_y_minus_value").text(data.data.asibDTO.solYMinus);
+        $("#asib_bus_volts_three_value").text(data.data.asibDTO.busVolts3v3);
+        $("#asib_bus_current_three_value").text(data.data.asibDTO.busCurr3v3);
+        $("#asib_bus_volts_five_value").text(data.data.asibDTO.busVolts5);
+
+        $("#rf_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#rf_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#rf_receive_doppler_value").text(data.data.rfDTO.rxDoppler);
+        $("#rf_receive_rssi_value").text(data.data.rfDTO.rxRSSI);
+        $("#rf_temperature_value").text(data.data.rfDTO.rxTemp);
+        $("#rf_receive_current_value").text(data.data.rfDTO.rxCurr);
+        $("#rf_transmit_current_three_value").text(data.data.rfDTO.txBusCurr3v3);
+        $("#rf_transmit_current_five_value").text(data.data.rfDTO.txBusCurr5v);
+
+        $("#pa_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#pa_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#pa_forward_power_value").text(data.data.paDTO.txRevPwr);
+        $("#pa_reverse_power_value").text(data.data.paDTO.txFwdPwr);
+        $("#pa_device_temperature_value").text(data.data.paDTO.txTemp);
+        $("#pa_bus_current_value").text(data.data.paDTO.txCurr);
+
+        $("#ants_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#ants_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#ants_temp_zero_value").text(data.data.antsDTO.antTemp0);
+        $("#ants_temp_one_value").text(data.data.antsDTO.antTemp1);
+        $("#ants_deployment_vhf_a_value").text(data.data.antsDTO.antDepl0);
+        $("#ants_deployment_uhf_a_value").text(data.data.antsDTO.antDepl1);
+        $("#ants_deployment_vhf_b_value").text(data.data.antsDTO.antDepl2);
+        $("#ants_deployment_uhf_b_value").text(data.data.antsDTO.antDepl3);
+
+        $("#sw_created_date").text("Uploaded at: " + data.lastUpdated + ", MinMax from: " + data.minmaxReset);
+        $("#sw_lat_long").text("Satellite Latitude: " + data.latitude + ", Longitude: " + data.longitude);
+        $("#sw_sequence_number_value").text(data.data.sequenceNumber);
+        $("#sw_command_count_value").text(data.data.swDTO.dtmfCmdCount);
+        $("#sw_last_command_value").text(data.data.swDTO.dtmfLastCmd);
+        $("#sw_command_success_value").text(data.data.swDTO.dtmfCmdSuccess);
+        $("#sw_valid_asib_value").text(data.data.swDTO.dataValidASIB);
+        $("#sw_valid_eps_value").text(data.data.swDTO.dataValidEPS);
+        $("#sw_valid_pa_value").text(data.data.swDTO.dataValidPA);
+        $("#sw_valid_rf_value").text(data.data.swDTO.dataValidRF);
+        $("#sw_valid_mse_value").text(data.data.swDTO.dataValidiMTQ);
+        $("#sw_valid_ants_bus_b_value").text(data.data.swDTO.dataValidAntsBusB);
+        $("#sw_valid_ants_bus_a_value").text(data.data.swDTO.dataValidAntsBusA);
+        $("#sw_eclipse_mode_value").text(data.data.swDTO.inEclipseMode);
+        $("#sw_safe_mode_value").text(data.data.swDTO.inSafeMode);
+        $("#sw_hardware_abf_value").text(data.data.swDTO.hardwareABFOnOff);
+        $("#sw_software_abf_value").text(data.data.swDTO.softwareABFOnOff);
+        $("#sw_deployment_wait_value").text(data.data.swDTO.deploymentWait);
+
+        $("#site_list").html('');
+        var items = [];
+        $.each(data.data.siteList, function (id, site) {
+            items.push('<li>' + site + '</li>');
+        });
+        $("#site_list").append(items.join(''));
+
+
+    }
+
+    function refreshDiv(){
+
+        var url = "/funcube/data/realtime";
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            accepts : "application/json",
+            dataType: "jsonp",
+            crossDomain: true,
+            cache: false,
+            success : handleRealtime
+        });
+    }
+</script>
+
 </body>
 </html>

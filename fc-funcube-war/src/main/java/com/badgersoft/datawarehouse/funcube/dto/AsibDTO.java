@@ -7,21 +7,21 @@ import java.io.Serializable;
  */
 public class AsibDTO implements Serializable {
 
-    private double sunSensorX;
-    private double sunSensorY;
-    private double sunSensorZ;
-    private double solXPlus;
-    private double solXMinus;
-    private double solYPlus;
-    private double solYMinus;
-    private double busVolts3v3;
-    private double busCurr3v3;
-    private double busVolts5;
+    private String sunSensorX;
+    private String sunSensorY;
+    private String sunSensorZ;
+    private String solXPlus;
+    private String solXMinus;
+    private String solYPlus;
+    private String solYMinus;
+    private String busVolts3v3;
+    private String busCurr3v3;
+    private String busVolts5;
 
     public AsibDTO() {
     }
 
-    public AsibDTO(double sunSensorX, double sunSensorY, double sunSensorZ, double solXPlus, double solXMinus, double solYPlus, double solYMinus, double busVolts3v3, double busCurr3v3, double busVolts5) {
+    public AsibDTO(String sunSensorX, String sunSensorY, String sunSensorZ, String solXPlus, String solXMinus, String solYPlus, String solYMinus, String busVolts3v3, String busCurr3v3, String busVolts5) {
         this.sunSensorX = sunSensorX;
         this.sunSensorY = sunSensorY;
         this.sunSensorZ = sunSensorZ;
@@ -34,83 +34,83 @@ public class AsibDTO implements Serializable {
         this.busVolts5 = busVolts5;
     }
 
-    public double getSunSensorX() {
+    public String getSunSensorX() {
         return sunSensorX;
     }
 
-    public void setSunSensorX(double sunSensorX) {
+    public void setSunSensorX(String sunSensorX) {
         this.sunSensorX = sunSensorX;
     }
 
-    public double getSunSensorY() {
+    public String getSunSensorY() {
         return sunSensorY;
     }
 
-    public void setSunSensorY(double sunSensorY) {
+    public void setSunSensorY(String sunSensorY) {
         this.sunSensorY = sunSensorY;
     }
 
-    public double getSunSensorZ() {
+    public String getSunSensorZ() {
         return sunSensorZ;
     }
 
-    public void setSunSensorZ(double sunSensorZ) {
+    public void setSunSensorZ(String sunSensorZ) {
         this.sunSensorZ = sunSensorZ;
     }
 
-    public double getSolXPlus() {
+    public String getSolXPlus() {
         return solXPlus;
     }
 
-    public void setSolXPlus(double solXPlus) {
+    public void setSolXPlus(String solXPlus) {
         this.solXPlus = solXPlus;
     }
 
-    public double getSolXMinus() {
+    public String getSolXMinus() {
         return solXMinus;
     }
 
-    public void setSolXMinus(double solXMinus) {
+    public void setSolXMinus(String solXMinus) {
         this.solXMinus = solXMinus;
     }
 
-    public double getSolYPlus() {
+    public String getSolYPlus() {
         return solYPlus;
     }
 
-    public void setSolYPlus(double solYPlus) {
+    public void setSolYPlus(String solYPlus) {
         this.solYPlus = solYPlus;
     }
 
-    public double getSolYMinus() {
+    public String getSolYMinus() {
         return solYMinus;
     }
 
-    public void setSolYMinus(double solYMinus) {
+    public void setSolYMinus(String solYMinus) {
         this.solYMinus = solYMinus;
     }
 
-    public double getBusVolts3v3() {
+    public String getBusVolts3v3() {
         return busVolts3v3;
     }
 
-    public void setBusVolts3v3(double busVolts3v3) {
+    public void setBusVolts3v3(String busVolts3v3) {
         this.busVolts3v3 = busVolts3v3;
     }
 
-    public double getBusCurr3v3() {
+    public String getBusCurr3v3() {
         return busCurr3v3;
     }
 
-    public void setBusCurr3v3(double busCurr3v3) {
+    public void setBusCurr3v3(String busCurr3v3) {
         this.busCurr3v3 = busCurr3v3;
     }
 
-    public double getBusVolts5() {
+    public String getBusVolts5() {
         return busVolts5;
     }
 
-    public void setBusVolts5(double busVolts5) {
+    public void setBusVolts5(String busVolts5) {
         this.busVolts5 = busVolts5;
     }
 }

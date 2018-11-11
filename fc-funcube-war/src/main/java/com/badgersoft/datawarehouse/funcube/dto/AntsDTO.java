@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class AntsDTO implements Serializable {
 
-    private double antTemp0;
-    private double antTemp1;
+    private String antTemp0;
+    private String antTemp1;
     private String antDepl0;
     private String antDepl1;
     private String antDepl2;
@@ -16,7 +16,7 @@ public class AntsDTO implements Serializable {
 
     public AntsDTO() {}
 
-    public AntsDTO(double antTemp0, double antTemp1, String antDepl0, String antDepl1, String antDepl2, String antDepl3) {
+    public AntsDTO(String antTemp0, String antTemp1, String antDepl0, String antDepl1, String antDepl2, String antDepl3) {
         this.antTemp0 = antTemp0;
         this.antTemp1 = antTemp1;
         this.antDepl0 = antDepl0;
@@ -25,11 +25,11 @@ public class AntsDTO implements Serializable {
         this.antDepl3 = antDepl3;
     }
 
-    public double getAntTemp0() {
+    public String getAntTemp0() {
         return antTemp0;
     }
 
-    public double getAntTemp1() {
+    public String getAntTemp1() {
         return antTemp1;
     }
 
