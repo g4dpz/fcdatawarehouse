@@ -62,13 +62,13 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         final long seqNo = Long.parseLong(sequenceNumber);
         final long fType = Long.parseLong(frameType);
         HexFrameDTO frame = hexFrameService.getFrame(Long.parseLong(satelliteId), seqNo, fType);
-        frame.setSequenceNumber(seqNo);
-        frame.setFrameType(fType);
         if (frame != null) {
+            frame.setSequenceNumber(seqNo);
+            frame.setFrameType(fType);
             return frame;
         }
         else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
     }

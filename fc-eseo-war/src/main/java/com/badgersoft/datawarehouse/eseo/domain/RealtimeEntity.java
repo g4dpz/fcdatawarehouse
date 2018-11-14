@@ -8,8 +8,9 @@ import java.util.Date;
 /**
  * Created by davidjohnson on 17/10/2016.
  */
-@MappedSuperclass
-abstract class BaseRealtimeEntity implements Serializable {
+@Entity
+@Table(name = "realtime", catalog = "eseo")
+public class RealtimeEntity implements Serializable {
 
     @Transient
     protected int stringPos = 0;
@@ -369,7 +370,7 @@ abstract class BaseRealtimeEntity implements Serializable {
         this.c31 = c31;
     }
 
-    protected void readBinary(String binaryString) {
+    public void readBinary(String binaryString) {
 
         // AMSAT DATA
         c1 = new VoltageMultiplierTelemetryValue(0.07242, getBitsAsULong(8, binaryString)).calculate();
@@ -448,4 +449,47 @@ abstract class BaseRealtimeEntity implements Serializable {
         return (getBitsAsULong(15, binaryString) * multiplier);
     }
 
+    @Override
+    public String toString() {
+        return "RealtimeEntity{" +
+                "id=" + id +
+                ", sequenceNumber=" + sequenceNumber +
+                ", frameType=" + frameType +
+                ", createdDate=" + createdDate +
+                ", satelliteTime=" + satelliteTime +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", c1=" + c1 +
+                ", c2=" + c2 +
+                ", c3=" + c3 +
+                ", c4=" + c4 +
+                ", c5=" + c5 +
+                ", c6=" + c6 +
+                ", c7=" + c7 +
+                ", c8=" + c8 +
+                ", c9=" + c9 +
+                ", c10=" + c10 +
+                ", c11=" + c11 +
+                ", c12=" + c12 +
+                ", c13=" + c13 +
+                ", c14=" + c14 +
+                ", c15=" + c15 +
+                ", c16=" + c16 +
+                ", c17=" + c17 +
+                ", c18=" + c18 +
+                ", c19=" + c19 +
+                ", c20=" + c20 +
+                ", c21=" + c21 +
+                ", c22=" + c22 +
+                ", c23=" + c23 +
+                ", c24='" + c24 + '\'' +
+                ", c25='" + c25 + '\'' +
+                ", c26=" + c26 +
+                ", c27=" + c27 +
+                ", c28=" + c28 +
+                ", c29=" + c29 +
+                ", c30=" + c30 +
+                ", c31=" + c31 +
+                '}';
+    }
 }

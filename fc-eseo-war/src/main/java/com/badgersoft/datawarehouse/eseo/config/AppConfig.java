@@ -1,8 +1,7 @@
 package com.badgersoft.datawarehouse.eseo.config;
 
-import com.badgersoft.datawarehouse.eseo.processor.RealtimeOneProcessorImpl;
+import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessorImpl;
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessor;
-import com.badgersoft.datawarehouse.eseo.processor.RealtimeTwoProcessorImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,9 +24,6 @@ public class AppConfig {
 //    FitterMessageProcessor fitterMessageProcessor() { return new FitterMessageProcessorImpl(); }
 
     @Bean
-    RealtimeProcessor realtimeOneProcessor() { return new RealtimeOneProcessorImpl(); }
-
-    @Bean
-    RealtimeProcessor realtimeTwoProcessor() { return new RealtimeTwoProcessorImpl(); }
+    RealtimeProcessor realtimeProcessor() { return new RealtimeProcessorImpl(); }
 
 }

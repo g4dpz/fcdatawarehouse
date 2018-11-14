@@ -29,7 +29,6 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
     public static final int MIN_MAX_VALUE_COUNT = 43;
     private static final long SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000;
     private static Logger LOG = LoggerFactory.getLogger(RealtimeProcessorImpl.class.getName());
-
     private static AtomicLong channelValue = new AtomicLong(0L);
 
     @Autowired

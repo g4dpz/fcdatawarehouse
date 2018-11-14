@@ -26,10 +26,7 @@ public class Receiver {
 //    WodProcessor wodProcessor;
 
     @Autowired
-    RealtimeProcessor realtimeOneProcessor;
-
-    @Autowired
-    RealtimeProcessor realtimeTwoProcessor;
+    RealtimeProcessor realtimeProcessor;
 
     @Autowired
     SatelliteStatusDao statusDao;
@@ -110,13 +107,8 @@ public class Receiver {
                 LOG.debug(String.format("Received %s hexFrame %s in %d mS", SATELLITE_NAME, message, timeTaken));
 
                 if (frameTypeName.equals("rt")) {
-                    if (hexFrameDTO.getFrameType() %2 == 0) {
-                        realtimeTwoProcessor.process(hexFrameDTO);
-                    }
-                    else {
-                        realtimeOneProcessor.process(hexFrameDTO);
-                    }
-                };
+                    realtimeProcessor.process(hexFrameDTO);
+                }
 
                 jmsMessageSender.send("rt," + satelliteId + "," + sequenceNumber + "," + frameTypeId);
             }

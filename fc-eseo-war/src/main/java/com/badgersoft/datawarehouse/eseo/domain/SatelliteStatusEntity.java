@@ -3,37 +3,58 @@ package com.badgersoft.datawarehouse.eseo.domain;
 /**
  * Created by davidjohnson on 25/09/2016.
  */
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "satellite_status")
 public class SatelliteStatusEntity {
 
-    static final SimpleDateFormat SDTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
-
     @Id
+    @Column(name = "satellite_id")
     private Long satelliteId;
 
-    private Long sequenceNumberOne;
-    private Long sequenceNumberTwo;
-    private Long frameTypeOne;
-    private Long frameTypeTwo;
+    @Column(name = "sequence_number")
+    private Long sequenceNumber;
+    @Column(name = "eclipse_mode_forced")
     private Boolean eclipseModeForced;
     private Boolean eclipsed;
-    private Timestamp lastUpdated;
-    private Timestamp lastUpdatedRealtimeTwo;
+    @Column(name = "last_updated")
+    private Date lastUpdated;
+    @Column(name = "eclipse_depth")
     private Double eclipseDepth;
+    @Column(name = "eclipse_switch")
     private Boolean eclipseSwitch;
-    private Timestamp lastWodDump;
-    private Timestamp lastResetNotification;
-    private Timestamp lastNoShowNotification;
+    @Column(name = "last_wod_dump")
+    private Date lastWodDump;
+    @Column(name = "last_reset_notification")
+    private Date lastResetNotification;
+    @Column(name = "last_no_show_notification")
+    private Date lastNoShowNotification;
+    @Column(name = "epoch_sequence_number")
     private Long epochSequenceNumber;
-    private Timestamp epochReferenceTime;
+    @Column(name = "epoch_reference_time")
+    private Date epochReferenceTime;
+    @Column(name = "packet_count")
+    private Long packetCount;
+    private String latitude;
+    private String longitude;
+    private String contributors;
+    @Column(name = "last_wod_time")
+    private Date lastWodTime;
+    @Column(name = "last_highres_time")
+    private Date lastHighresTime;
+    @Column(name = "last_realime_time")
+    private Date lastRealtimeTime;
+    @Column(name = "last_fitter_time")
+    private Date lastFitterTime;
+    @Column(name = "frame_type")
+    private Long frameType;
+    @Column(name = "catalogue_number")
+    private Long catalogueNumber;
+    @Column(name="satellite_time")
+    private Date satelliteTime;
 
     public SatelliteStatusEntity() {
     }
@@ -46,20 +67,12 @@ public class SatelliteStatusEntity {
         this.satelliteId = satelliteId;
     }
 
-    public final Long getSequenceNumberOne() {
-        return sequenceNumberOne;
+    public final Long getSequenceNumber() {
+        return sequenceNumber;
     }
 
-    public final void setSequenceNumberOne(Long sequenceNumberOne) {
-        this.sequenceNumberOne = sequenceNumberOne;
-    }
-
-    public final Long getSequenceNumberTwo() {
-        return sequenceNumberTwo;
-    }
-
-    public final void setSequenceNumberTwo(Long sequenceNumberTwo) {
-        this.sequenceNumberTwo = sequenceNumberTwo;
+    public final void setSequenceNumber(Long sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
     public final Boolean isEclipseModeForced() {
@@ -78,20 +91,12 @@ public class SatelliteStatusEntity {
         this.eclipsed = eclipsed;
     }
 
-    public final Timestamp getLastUpdated() {
+    public final Date getLastUpdated() {
         return lastUpdated;
     }
 
-    public final void setLastUpdated(Timestamp lastUpdated) {
+    public final void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
-    }
-
-    public final Timestamp getLastUpdatedRealtimeTwo() {
-        return lastUpdatedRealtimeTwo;
-    }
-
-    public final void setLastUpdatedRealtimeTwo(Timestamp lastUpdatedRealtimeTwo) {
-        this.lastUpdatedRealtimeTwo = lastUpdatedRealtimeTwo;
     }
 
     public final Double getEclipseDepth() {
@@ -126,11 +131,11 @@ public class SatelliteStatusEntity {
         this.epochSequenceNumber = epochSequenceNumber;
     }
 
-    public Timestamp getEpochReferenceTime() {
+    public Date getEpochReferenceTime() {
         return epochReferenceTime;
     }
 
-    public void setEpochReferenceTime(Timestamp epochReferenceTime) {
+    public void setEpochReferenceTime(Date epochReferenceTime) {
         this.epochReferenceTime = epochReferenceTime;
     }
 
@@ -174,58 +179,130 @@ public class SatelliteStatusEntity {
         }
     }
 
-    public final Timestamp getLastWodDump() {
+    public final Date getLastWodDump() {
         return lastWodDump;
     }
 
-    public final void setLastWodDump(Timestamp lastWodDump) {
+    public final void setLastWodDump(Date lastWodDump) {
         this.lastWodDump = lastWodDump;
     }
 
-    public final Timestamp getLastResetNotification() {
+    public final Date getLastResetNotification() {
         return lastResetNotification;
     }
 
-    public final void setLastResetNotification(Timestamp lastResetNotification) {
+    public final void setLastResetNotification(Date lastResetNotification) {
         this.lastResetNotification = lastResetNotification;
     }
 
-    public final Timestamp getLastNoShowNotification() {
+    public final Date getLastNoShowNotification() {
         return lastNoShowNotification;
     }
 
-    public final void setLastNoShowNotification(Timestamp lastNoShowNotification) {
+    public final void setLastNoShowNotification(Date lastNoShowNotification) {
         this.lastNoShowNotification = lastNoShowNotification;
     }
 
-    public Long getFrameTypeOne() {
-        return frameTypeOne;
+    public Long getPacketCount() {
+        return packetCount;
     }
 
-    public void setFrameTypeOne(Long frameTypeOne) {
-        this.frameTypeOne = frameTypeOne;
+    public void setPacketCount(Long packetCount) {
+        this.packetCount = packetCount;
     }
 
-    public Long getFrameTypeTwo() {
-        return frameTypeTwo;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setFrameTypeTwo(Long frameTypeTwo) {
-        this.frameTypeTwo = frameTypeTwo;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(String contributors) {
+        this.contributors = contributors;
+    }
+
+    public Date getLastWodTime() {
+        return lastWodTime;
+    }
+
+    public void setLastWodTime(Date lastWodTime) {
+        this.lastWodTime = lastWodTime;
+    }
+
+    public Date getLastHighresTime() {
+        return lastHighresTime;
+    }
+
+    public void setLastHighresTime(Date lastHighresTime) {
+        this.lastHighresTime = lastHighresTime;
+    }
+
+    public Date getLastRealtimeTime() {
+        return lastRealtimeTime;
+    }
+
+    public void setLastRealtimeTime(Date lastRealtimeTime) {
+        this.lastRealtimeTime = lastRealtimeTime;
+    }
+
+    public Date getLastFitterTime() {
+        return lastFitterTime;
+    }
+
+    public void setLastFitterTime(Date lastFitterTime) {
+        this.lastFitterTime = lastFitterTime;
+    }
+
+    public Long getFrameType() {
+        return frameType;
+    }
+
+    public void setFrameType(Long frameType) {
+        this.frameType = frameType;
+    }
+
+    public Boolean getEclipseSwitch() {
+        return eclipseSwitch;
+    }
+
+    public Long getCatalogueNumber() {
+        return catalogueNumber;
+    }
+
+    public void setCatalogueNumber(Long catalogueNumber) {
+        this.catalogueNumber = catalogueNumber;
+    }
+
+    public Date getSatelliteTime() {
+        return satelliteTime;
+    }
+
+    public void setSatelliteTime(Date satelliteTime) {
+        this.satelliteTime = satelliteTime;
     }
 
     @Override
     public String toString() {
         return "SatelliteStatusEntity{" +
                 "satelliteId=" + satelliteId +
-                ", sequenceNumberOne=" + sequenceNumberOne +
-                ", sequenceNumberTwo=" + sequenceNumberTwo +
-                ", frameTypeOne=" + frameTypeOne +
-                ", frameTypeTwo=" + frameTypeTwo +
+                ", sequenceNumber=" + sequenceNumber +
                 ", eclipseModeForced=" + eclipseModeForced +
                 ", eclipsed=" + eclipsed +
                 ", lastUpdated=" + lastUpdated +
-                ", lastUpdatedRealtimeTwo=" + lastUpdatedRealtimeTwo +
                 ", eclipseDepth=" + eclipseDepth +
                 ", eclipseSwitch=" + eclipseSwitch +
                 ", lastWodDump=" + lastWodDump +
@@ -233,6 +310,15 @@ public class SatelliteStatusEntity {
                 ", lastNoShowNotification=" + lastNoShowNotification +
                 ", epochSequenceNumber=" + epochSequenceNumber +
                 ", epochReferenceTime=" + epochReferenceTime +
+                ", packetCount=" + packetCount +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", contributors='" + contributors + '\'' +
+                ", lastWodTime=" + lastWodTime +
+                ", lastHighresTime=" + lastHighresTime +
+                ", lastRealtimeTime=" + lastRealtimeTime +
+                ", lastFitterTime=" + lastFitterTime +
+                ", frameType=" + frameType +
                 '}';
     }
 }

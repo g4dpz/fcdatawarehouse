@@ -1,13 +1,19 @@
 package com.badgersoft.datawarehouse.eseo.processor;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
-import com.badgersoft.datawarehouse.eseo.dao.RealtimeOneDao;
+import com.badgersoft.datawarehouse.eseo.dao.PayloadOneDao;
+import com.badgersoft.datawarehouse.eseo.dao.PayloadTwoDao;
+import com.badgersoft.datawarehouse.eseo.dao.RealtimeDao;
 import com.badgersoft.datawarehouse.eseo.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.eseo.domain.RealtimeOneEntity;
+import com.badgersoft.datawarehouse.eseo.domain.PayloadOne;
+import com.badgersoft.datawarehouse.eseo.domain.PayloadTwo;
+import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
 import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -18,19 +24,26 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by davidjohnson on 23/08/2016.
  */
-public class RealtimeOneProcessorImpl extends AbstractProcessor implements RealtimeProcessor {
+public class RealtimeProcessorImpl extends AbstractProcessor implements RealtimeProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RealtimeOneProcessorImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RealtimeProcessorImpl.class);
 
     private static AtomicLong channelValue = new AtomicLong(0L);
 
     @Autowired
-    RealtimeOneDao realtimeOneDAO;
+    RealtimeDao realtimeDAO;
 
     @Autowired
     SatelliteStatusDao satelliteStatusDAO;
 
+    @Autowired
+    PayloadOneDao payloadOneDao;
+
+    @Autowired
+    PayloadTwoDao payloadTwoDao;
+
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = false)
     public void process(HexFrameDTO hexFrameDTO) throws Exception {
 
         long then = Calendar.getInstance().getTime().getTime();
@@ -38,7 +51,7 @@ public class RealtimeOneProcessorImpl extends AbstractProcessor implements Realt
         Long sequenceNumber = hexFrameDTO.getSequenceNumber();
         Long frameType = hexFrameDTO.getFrameType();
 
-        RealtimeOneEntity realtimeEntity = new RealtimeOneEntity();
+        RealtimeEntity realtimeEntity = new RealtimeEntity();
 
         realtimeEntity.setSequenceNumber(sequenceNumber);
         realtimeEntity.setFrameType(hexFrameDTO.getFrameType());
@@ -59,14 +72,14 @@ public class RealtimeOneProcessorImpl extends AbstractProcessor implements Realt
         Iterator<SatelliteStatusEntity> iterator = satelliteStatuses.iterator();
         if (iterator.hasNext()) {
             final SatelliteStatusEntity satelliteStatus = iterator.next();
-            if (satelliteStatus.getSequenceNumberOne() == null || sequenceNumber > satelliteStatus.getSequenceNumberOne()) {
-                satelliteStatus.setSequenceNumberOne(sequenceNumber);
+            if (satelliteStatus.getSequenceNumber() == null || sequenceNumber > satelliteStatus.getSequenceNumber()) {
+                satelliteStatus.setSequenceNumber(sequenceNumber);
 
                 if (frameType % 2 == 0) {
                     satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
                 }
                 else {
-                    satelliteStatus.setLastUpdatedRealtimeTwo(new Timestamp(System.currentTimeMillis()));
+                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
                 }
             }
 
@@ -83,10 +96,29 @@ public class RealtimeOneProcessorImpl extends AbstractProcessor implements Realt
 
             realtimeEntity.setSatelliteTime(new Timestamp(satelliteTime));
 
+            realtimeDAO.save(realtimeEntity);
+
             satelliteStatusDAO.save(satelliteStatus);
         }
 
-        realtimeOneDAO.save(realtimeEntity);
+        if (hexFrameDTO.getFrameType() %2 == 1) {
+            PayloadOne payloadOne = new PayloadOne();
+            payloadOne.readBinary(binaryString);
+            payloadOne.setSequenceNumber(sequenceNumber);
+            payloadOne.setFrameType(frameType);
+            payloadOne.setCreatedDate(hexFrameDTO.getCreatedDate());
+            payloadOne.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+            payloadOneDao.save(payloadOne);
+        }
+        else {
+            PayloadTwo payloadTwo = new PayloadTwo();
+            payloadTwo.readBinary(binaryString);
+            payloadTwo.setSequenceNumber(sequenceNumber);
+            payloadTwo.setFrameType(frameType);
+            payloadTwo.setCreatedDate(hexFrameDTO.getCreatedDate());
+            payloadTwo.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+            payloadTwoDao.save(payloadTwo);
+        }
 
         long timeTaken = Calendar.getInstance().getTime().getTime() - then;
         LOGGER.debug(String.format("Processed realtime messages in %s mS", timeTaken));
