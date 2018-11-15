@@ -42,9 +42,9 @@ public class RealtimeEntity implements Serializable {
     private double c6;
     private long c7;
     private double c8;
-    private long c9;
+    private double c9;
     private double c10;
-    private long c11;
+    private double c11;
     private long c12;
     private long c13;
     private double c14;
@@ -59,12 +59,12 @@ public class RealtimeEntity implements Serializable {
     private long c23;
     private String c24;
     private String c25;
-    private boolean c26;
-    private boolean c27;
-    private boolean c28;
-    private boolean c29;
+    private String c26;
+    private String c27;
+    private String c28;
+    private String c29;
     private boolean c30;
-    private boolean c31;
+    private String c31;
 
     public Long getId() {
         return id;
@@ -186,11 +186,11 @@ public class RealtimeEntity implements Serializable {
         this.c8 = c8;
     }
 
-    public long getC9() {
+    public double getC9() {
         return c9;
     }
 
-    public void setC9(long c9) {
+    public void setC9(double c9) {
         this.c9 = c9;
     }
 
@@ -202,11 +202,11 @@ public class RealtimeEntity implements Serializable {
         this.c10 = c10;
     }
 
-    public long getC11() {
+    public double getC11() {
         return c11;
     }
 
-    public void setC11(long c11) {
+    public void setC11(double c11) {
         this.c11 = c11;
     }
 
@@ -322,39 +322,39 @@ public class RealtimeEntity implements Serializable {
         this.c25 = c25;
     }
 
-    public boolean isC26() {
+    public String getC26() {
         return c26;
     }
 
-    public void setC26(boolean c26) {
+    public void setC26(String c26) {
         this.c26 = c26;
     }
 
-    public boolean isC27() {
+    public String getC27() {
         return c27;
     }
 
-    public void setC27(boolean c27) {
+    public void setC27(String c27) {
         this.c27 = c27;
     }
 
-    public boolean isC28() {
+    public String getC28() {
         return c28;
     }
 
-    public void setC28(boolean c28) {
+    public void setC28(String c28) {
         this.c28 = c28;
     }
 
-    public boolean isC29() {
+    public String getC29() {
         return c29;
     }
 
-    public void setC29(boolean c29) {
+    public void setC29(String c29) {
         this.c29 = c29;
     }
 
-    public boolean isC30() {
+    public boolean getC30() {
         return c30;
     }
 
@@ -362,54 +362,88 @@ public class RealtimeEntity implements Serializable {
         this.c30 = c30;
     }
 
-    public boolean isC31() {
+    public String getC31() {
         return c31;
     }
 
-    public void setC31(boolean c31) {
+    public void setC31(String c31) {
         this.c31 = c31;
     }
 
     public void readBinary(String binaryString) {
 
+        // we skip the satelliteid/frame type preamble
+        getBitsAsULong(16, binaryString);
+        
+
+
+
+        
+
         // AMSAT DATA
-        c1 = new VoltageMultiplierTelemetryValue(0.07242, getBitsAsULong(8, binaryString)).calculate();
-        c2 = new MultiplierTelemetryValue(2.019, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new VoltageMultiplierTelemetryValue(0.1, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsDctoDcVoltage));
+        c1 = new VoltageMultiplierTelemetryValue(0.1, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new MultiplierTelemetryValue(5.131579, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsDctoDcCurrent));
+        c2 = new MultiplierTelemetryValue(5.131579, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new EseoTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.EpsDctoDcTemp));
         c3 = new EseoTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new EseoTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.EpsEnclosureTemp));
         c4 = new EseoTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new EseoTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.CctProcessorTemp));
         c5 = new EseoTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
-        c6 = new VoltageMultiplierTelemetryValue(0.0129412, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new VoltageMultiplierTelemetryValue(0.031141509, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsVoltage3v3)); //*
+        c6 = new VoltageMultiplierTelemetryValue(0.031141509, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.EpsCurrent3v3));
         c7 = getBitsAsULong(8, binaryString);
-        c8 = new VoltageMultiplierTelemetryValue(0.04852, getBitsAsULong(8, binaryString)).calculate();
-        c9 = getBitsAsULong(8, binaryString);
-        c10 = new VoltageMultiplierTelemetryValue(0.049185, getBitsAsULong(8, binaryString)).calculate();
-        c11 = getBitsAsULong(8, binaryString);
+        // this.Add(new VoltageMultiplierTelemetryValue(0.0885753425, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsVoltageTransponderSupply)); //*
+        c8 = new VoltageMultiplierTelemetryValue(0.0885753425, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new MultiplierOffsetTelemetryValue(2.5941175, -5.188235, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsCurrentTransponderSupply)); //*
+        c9 = new MultiplierOffsetTelemetryValue(2.5941175, -5.188235, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new VoltageMultiplierTelemetryValue(0.0881715, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsVoltage9v0)); //*
+        c10 = new VoltageMultiplierTelemetryValue(0.0881715, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new MultiplierTelemetryValue(2.52778, // this.Get8bitsAsUInt(rawStream), DataIndex.EpsCurrent9v0)); //*
+        c11 = new MultiplierTelemetryValue(2.52778, getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.VhfForwardPower));
         c12 = getBitsAsULong(8, binaryString);
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.VffReflectedPower));
         c13 = getBitsAsULong(8, binaryString);
-
+        // this.Add(new EseoFmAmpTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.FMAmplifierTemp));
         c14 = new EseoFmAmpTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new EseoBpskAmpTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.BpskAmplifierTemp));
         c15 = new EseoBpskAmpTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.BpskAmplifierCurrent));
         c16 = getBitsAsULong(8, binaryString);
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.BpskAmplifier3v3Current));
         c17 = getBitsAsULong(8, binaryString);
-
+        // this.Add(new TransponderRSSITelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.LBandRxTransponderRSSI)); //*
         c18 = getBitsAsULong(8, binaryString);
+        // this.Add(new CommandRSSITelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.LBandRxCommandRSSI)); //*
         c19 = getBitsAsULong(8, binaryString);
+        // this.Add(new CommandDopplerTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.LBandRxCommandDoppler)); //*
         c20 = getBitsAsULong(8, binaryString);
+        // this.Add(new EseoCmdOscTempTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.LBandRxCommandOscTemp));
         c21 = new EseoCmdOscTempTelemetryValue(getBitsAsULong(8, binaryString)).calculate();
-
+        // this.Add(new RawTelemetryValue(// this.Get24bitsAsUInt(rawStream), DataIndex.SequenceNumber));
         c22 = getBitsAsULong(24, binaryString);
+        // this.Add(new RawTelemetryValue(// this.Get8bitsAsUInt(rawStream), DataIndex.LastCommand));
         c23 = getBitsAsULong(8, binaryString);
-
+        // this.Add(new RFModeTelemetryValue(// this.Get3bitsAsUInt(rawStream), DataIndex.RfMode));
         final long c24Value = getBitsAsULong(3, binaryString);
         c24 = new RFModeTelemetryValue(c24Value).getValueAsString();
+        // this.Add(new SatDataModeTelemetryValue(// this.Get2bitsAsUInt(rawStream), DataIndex.DataMode));
         c25 = new SatDataModeTelemetryValue(getBitsAsULong(2, binaryString)).getValueAsString();
-
-        c26 = getBooleanBit(binaryString);
-        c27 = getBooleanBit(binaryString);
-        c28 = getBooleanBit(binaryString);
-        c29 = getBooleanBit(binaryString);
+        // this.Add(new PayloadTransferStatusTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.PayloadTransferState));
+        c26 = (getBooleanBit(binaryString)) ? "Downlink data to ground" : "Get data from payload";
+        // this.Add(new RawTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.InEclipse));
+        c27 = (getBooleanBit(binaryString) ? "Yes" : "No");
+        // this.Add(new AorBTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.TransponderAutonomousModeState));
+        c28 = (getBooleanBit(binaryString) ? "B" : "A");
+        // this.Add(new BoolOnOffTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.CtCssDetectState));
+        c29 = (getBooleanBit(binaryString) ? "On" : "Off");
+        // this.Add(new RawTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.AutoSafeModeEnabled));
         c30 = getBooleanBit(binaryString);
-        c31 = getBooleanBit(binaryString);
+        // this.Add(new RawTelemetryValue(// this.Get1bitAsInt(rawStream), DataIndex.InSafeMode));
+        c31 = (getBooleanBit(binaryString) ? "Yes" : "No");
     }
 
 

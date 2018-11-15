@@ -9,6 +9,7 @@ import com.badgersoft.datawarehouse.eseo.domain.PayloadOne;
 import com.badgersoft.datawarehouse.eseo.domain.PayloadTwo;
 import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
 import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,7 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
         realtimeEntity.setSequenceNumber(sequenceNumber);
         realtimeEntity.setFrameType(hexFrameDTO.getFrameType());
 
-        final String binaryString = convertHexBytePairToBinary(hexFrameDTO.getHexString()
-                .substring(4, hexFrameDTO.getHexString().length()));
+        final String binaryString = convertHexBytePairToBinary(hexFrameDTO.getHexString());
 
         realtimeEntity.readBinary(binaryString);
 
@@ -74,13 +74,8 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
             final SatelliteStatusEntity satelliteStatus = iterator.next();
             if (satelliteStatus.getSequenceNumber() == null || sequenceNumber > satelliteStatus.getSequenceNumber()) {
                 satelliteStatus.setSequenceNumber(sequenceNumber);
-
-                if (frameType % 2 == 0) {
-                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
-                }
-                else {
-                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
-                }
+                satelliteStatus.setFrameType(frameType);
+                satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
             }
 
             // we may have just launched....
@@ -97,6 +92,12 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
             realtimeEntity.setSatelliteTime(new Timestamp(satelliteTime));
 
             realtimeDAO.save(realtimeEntity);
+
+            satelliteStatus.setLastRealtimeTime(new Timestamp(satelliteTime));
+            satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+            satelliteStatus.setContributors(StringUtils.join(hexFrameDTO.getContributors().toArray(), ","));
+            satelliteStatus.setPacketCount(realtimeDAO.count());
+            satelliteStatus.setEclipsed(realtimeEntity.getC27().equals("Yes"));
 
             satelliteStatusDAO.save(satelliteStatus);
         }
