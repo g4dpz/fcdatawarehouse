@@ -48,8 +48,8 @@
 
                 <div class="w-100"></div>
 
-                <!--this.dcConvVoltsOut = dcConvVoltsOut;-->
-                <!--this.dcConvCurrOut = dcConvCurrOut;-->
+                <!--this.fmTxTemp = fmTxTemp;-->
+                <!--this.bpskTemp = bpskTemp;-->
 
                 <!-- Tab panes -->
                 <div class="tab-content">
@@ -148,9 +148,63 @@
                         <h4>Communication Subsystem</h4>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     </div>
+                    
+                    
+                    
                     <div id="tab-pa" class="container tab-pane"><br>
                         <h4>RF Power Amplifier</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <table style="width: 100%;">
+                            <tbody>
+                            <tr>
+                                <th style="text-align: center;">Name</th>
+                                <th style="text-align: center; white-space: nowrap;">Value</th>
+                                <th style="text-align: center; white-space: nowrap;">Min.</th>
+                                <th style="text-align: center; white-space: nowrap;">Max.</th>
+                            </tr>
+                            <!--$("#fmTxTemp_value").text(data.data.epsDTO.fmTxTemp + " C");-->
+                            <tr>
+                                <td style="text-align: center;">FM Amplifier Temp.</td>
+                                <td style="text-align: center;" id = "fmTxTemp_value">2753 V</td>
+                                <td style="text-align: center;" id = "fmTxTemp_min">N/A</td>
+                                <td style="text-align: center;" id = "fmTxTemp_max">N/A</td>
+                            </tr>
+                            <!--$("#bpskTemp_value").text(data.data.epsDTO.bpskTemp + " C");-->
+                            <tr>
+                                <td style="text-align: center;">BPSK Amplifier Temp.</td>
+                                <td style="text-align: center;" id = "bpskTemp_value">3172 mA</td>
+                                <td style="text-align: center;" id = "bpskTemp_min">N/A</td>
+                                <td style="text-align: center;" id = "bpskTemp_max">N/A</td>
+                            </tr>
+                            <!--$("#txRevPwr_value").text(data.data.epsDTO.txRevPwr + " mW");-->
+                            <tr>
+                                <td style="text-align: center;">Forward Power</td>
+                                <td style="text-align: center;" id = "txRevPwr_value">3421 mV</td>
+                                <td style="text-align: center;" id = "txRevPwr_min">N/A</td>
+                                <td style="text-align: center;" id = "txRevPwr_max">N/A</td>
+                            </tr>
+                            <!--$("#txFwdPwr_value").text(data.data.epsDTO.txFwdPwr + " mW");-->
+                            <tr>
+                                <td style="text-align: center;">Reverse Power</td>
+                                <td style="text-align: center;" id = "txFwdPwr_value">3421 mV</td>
+                                <td style="text-align: center;" id = "txFwdPwr_min">N/A</td>
+                                <td style="text-align: center;" id = "txFwdPwr_max">N/A</td>
+                            </tr>
+                            <!--$("#bpskCurr_value").text(data.data.epsDTO.bpskCurr + " mA");-->
+                            <tr>
+                                <td style="text-align: center;">BPSK Amplifier Curr.</td>
+                                <td style="text-align: center;" id="bpskCurr_value">7647 mV</td>
+                                <td style="text-align: center;" id="bpskCurr_min">N/A</td>
+                                <td style="text-align: center;" id="bpskCurr_max">N/A</td>
+                            </tr>
+                            <!--$("#bpsk3v3_value").text(data.data.epsDTO.bpsk3v3 + " V");-->
+                            <tr>
+                                <td style="text-align: center;">BPSK Amp. 3.3 Volts</td>
+                                <td style="text-align: center;" id="bpsk3v3_value">3 mA</td>
+                                <td style="text-align: center;" id="bpsk3v3_min">N/A</td>
+                                <td style="text-align: center;" id="bpsk3v3_max">N/A</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div id="tab-sw" class="container tab-pane"><br>
                         <h4>Software State</h4>

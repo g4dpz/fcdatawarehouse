@@ -73,6 +73,13 @@
         $("#volts9v_value").text(data.data.epsDTO.volts9v + " V");
         $("#curr9v_value").text(data.data.epsDTO.curr9v + " mA");
 
+        $("#fmTxTemp_value").text(data.data.paDTO.fmTxTemp + " C");
+        $("#bpskTemp_value").text(data.data.paDTO.bpskTemp + " C");
+        $("#txRevPwr_value").text(data.data.paDTO.txRevPwr + " mW");
+        $("#txFwdPwr_value").text(data.data.paDTO.txFwdPwr + " mW");
+        $("#bpskCurr_value").text(data.data.paDTO.bpskCurr + " mA");
+        $("#bpsk3v3_value").text(data.data.paDTO.bpsk3v3 + " V");
+
 
     }
 </script>

@@ -17,7 +17,7 @@ public class RealtimeDTO extends BaseDTO {
     private EpsDTO epsDTO;
     private EseoOBCDTO eseoOBCDTO;
     private EseoStatusDTO eseoStatusDTO;
-    private EseoAttitudeDTO eseAttitudeDTO;
+    private EseoAttitudeDTO eseoAttitudeDTO;
     private RfDTO rfDTO;
     private PaDTO paDTO;
     private SwDTO swDTO;
@@ -151,12 +151,12 @@ public class RealtimeDTO extends BaseDTO {
         this.eseoStatusDTO = eseoStatusDTO;
     }
 
-    public EseoAttitudeDTO getEseAttitudeDTO() {
-        return eseAttitudeDTO;
+    public EseoAttitudeDTO getEseoAttitudeDTO() {
+        return eseoAttitudeDTO;
     }
 
-    public void setEseAttitudeDTO(EseoAttitudeDTO eseAttitudeDTO) {
-        this.eseAttitudeDTO = eseAttitudeDTO;
+    public void setEseoAttitudeDTO(EseoAttitudeDTO eseoAttitudeDTO) {
+        this.eseoAttitudeDTO = eseoAttitudeDTO;
     }
 
     public RfDTO getRfDTO() {
