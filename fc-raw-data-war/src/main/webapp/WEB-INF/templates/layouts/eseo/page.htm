@@ -85,6 +85,17 @@
         $("#lBandCmdRxDop_value").text(data.data.rfDTO.lBandCmdRxDop);
         $("#lBandCmdRxTemp_value").text(data.data.rfDTO.lBandCmdRxTemp + " C");
 
+        $("#sequenceNumber_value").text(data.data.swDTO.sequenceNumber);
+        $("#dtmfLastCmd_value").text(data.data.swDTO.dtmfLastCmd);
+        $("#rfMode_value").text(data.data.swDTO.rfMode);
+        $("#dataMode_value").text(data.data.swDTO.dataMode);
+        $("#payloadStatus_value").text(data.data.swDTO.payloadStatus);
+        $("#inEclipseMode_value").text(data.data.swDTO.inEclipseMode);
+        $("#inAutoMode_value").text(data.data.swDTO.inAutoMode);
+        $("#ctcssDetect_value").text(data.data.swDTO.ctcssDetect);
+        $("#safeModeState_value").text(data.data.swDTO.safeModeState);
+        $("#inSafeMode_value").text(data.data.swDTO.inSafeMode);
+
 
     }
 </script>
