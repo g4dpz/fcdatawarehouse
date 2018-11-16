@@ -1,4 +1,8 @@
 package com.badgersoft.datawarehouse.eseo.dto;
 
-public class EseoOBCDTO {
+import java.io.Serializable;
+
+public class EseoOBCDTO implements Serializable {
+    public EseoOBCDTO() {
+    }
 }

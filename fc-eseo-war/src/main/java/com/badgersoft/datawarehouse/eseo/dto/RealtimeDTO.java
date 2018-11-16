@@ -77,6 +77,12 @@ public class RealtimeDTO extends BaseDTO {
                 entity.getC31()
         );
 
+        this.eseoOBCDTO = new EseoOBCDTO();
+
+        this.eseoStatusDTO = new EseoStatusDTO();
+
+        this.eseoAttitudeDTO = new EseoAttitudeDTO();
+
     }
 
     public long getSequenceNumber() {

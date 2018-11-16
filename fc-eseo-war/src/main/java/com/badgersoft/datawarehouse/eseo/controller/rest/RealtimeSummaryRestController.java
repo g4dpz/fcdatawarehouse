@@ -10,6 +10,7 @@ import com.badgersoft.datawarehouse.eseo.dto.RealtimeDTO;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +58,8 @@ public class RealtimeSummaryRestController {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
         Map<String, Object> map = new HashMap<String, Object>();
 
         map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima));
