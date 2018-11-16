@@ -33,7 +33,49 @@
 
 <script src="/js/bundle.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
-<script layout:fragment="script"></script>
+<script layout:fragment="script"></script><script>
+    $(document).ready(function(){
+        refreshRealime();
+        setInterval(refreshRealime, 5000);
+    });
+</script>
+
+<script>
+    function refreshRealime(){
+
+        var url = "/eseo/data/realtime";
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            accepts : "application/json",
+            dataType: "jsonp",
+            crossDomain: true,
+            cache: false,
+            success : handleRealtime
+        });
+    }
+</script>
+
+<script>
+    var handleRealtime = function(data) {
+
+        $("#dcConvVoltsOut_value").text(data.data.epsDTO.dcConvVoltsOut + " V");
+        $("#dcConvCurrOut_value").text(data.data.epsDTO.dcConvCurrOut + " mA");
+        $("#dcConvTemp_value").text(data.data.epsDTO.dcConvTemp + " C");
+        $("#enclosureTemp_value").text(data.data.epsDTO.enclosureTemp + " C");
+        $("#cctProcTemp_value").text(data.data.epsDTO.cctProcTemp + " C");
+        $("#volts3v3_value").text(data.data.epsDTO.volts3v3 + " V");
+        $("#curr3v3_value").text(data.data.epsDTO.curr3v3 + " mA");
+        $("#volts6v9_value").text(data.data.epsDTO.volts6v9 + " V");
+        $("#curr6v9_value").text(data.data.epsDTO.curr6v9 + " mA");
+        $("#volts9v_value").text(data.data.epsDTO.volts9v + " V");
+        $("#curr9v_value").text(data.data.epsDTO.curr9v + " mA");
+
+
+    }
+</script>
 
 </body>
 </html>
