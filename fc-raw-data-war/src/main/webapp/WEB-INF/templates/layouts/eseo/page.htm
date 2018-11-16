@@ -35,13 +35,13 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
 <script layout:fragment="script"></script><script>
     $(document).ready(function(){
-        refreshRealime();
+        refreshRealtime();
         setInterval(refreshRealime, 5000);
     });
 </script>
 
 <script>
-    function refreshRealime(){
+    function refreshRealtime(){
 
         var url = "/eseo/data/realtime";
 
@@ -79,6 +79,11 @@
         $("#txFwdPwr_value").text(data.data.paDTO.txFwdPwr + " mW");
         $("#bpskCurr_value").text(data.data.paDTO.bpskCurr + " mA");
         $("#bpsk3v3_value").text(data.data.paDTO.bpsk3v3 + " V");
+
+        $("#lBandTranspRxRssi_value").text(data.data.rfDTO.lBandTranspRxRssi);
+        $("#lBandCmdRxRssi_value").text(data.data.rfDTO.lBandCmdRxRssi);
+        $("#lBandCmdRxDop_value").text(data.data.rfDTO.lBandCmdRxDop);
+        $("#lBandCmdRxTemp_value").text(data.data.rfDTO.lBandCmdRxTemp + " C");
 
 
     }
