@@ -11,8 +11,9 @@ public class RealtimeDTO extends BaseDTO {
     private long frameType;
     private String createdDate;
     private String satelliteTime;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
+    private String latLong;
 
     private EpsDTO epsDTO;
     private EseoOBCDTO eseoOBCDTO;
@@ -30,10 +31,21 @@ public class RealtimeDTO extends BaseDTO {
     public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima) {
         this.sequenceNumber = entity.getSequenceNumber();
         this.frameType = entity.getFrameType();
-        this.createdDate = entity.getCreatedDate().toString();
+        this.createdDate = "Data received: " + entity.getCreatedDate().toString();
         this.satelliteTime = entity.getSatelliteTime().toString();
-        this.latitude = entity.getLatitude();
-        this.longitude = entity.getLongitude();
+        this.latitude = Double.parseDouble(entity.getLatitude());
+        this.longitude = Double.parseDouble(entity.getLongitude());
+
+        String longitudeString;
+
+        if (longitude > 180.0) {
+            longitudeString = String.format("%5.1f W", 360.0 - longitude);
+        } else {
+            longitudeString = String.format("%5.1f E", longitude);
+        }
+
+        latLong = String.format("Satellite Latitude, Longitude: %5.1f %s, %s",
+            Math.abs(latitude), (latitude < 0 ? "S" : "N"), longitudeString);
 
         this.epsDTO = new EpsDTO(
             formatOneDP(entity.getC1()),
@@ -117,22 +129,6 @@ public class RealtimeDTO extends BaseDTO {
         this.satelliteTime = satelliteTime;
     }
 
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
     public EpsDTO getEpsDTO() {
         return epsDTO;
     }
@@ -203,5 +199,13 @@ public class RealtimeDTO extends BaseDTO {
 
     public void setMaxima(List<String> maxima) {
         this.maxima = maxima;
+    }
+
+    public String getLatLong() {
+        return latLong;
+    }
+
+    public void setLatLong(String latLong) {
+        this.latLong = latLong;
     }
 }

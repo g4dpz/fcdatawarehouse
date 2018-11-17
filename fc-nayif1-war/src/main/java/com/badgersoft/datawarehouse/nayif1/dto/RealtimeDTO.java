@@ -12,12 +12,13 @@ import java.util.List;
  */
 public class RealtimeDTO implements Serializable {
 
+    private String latLong;
     private long sequenceNumber;
     private long frameType;
     private String createdDate;
     private String satelliteTime;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
 
     private EpsDTO epsDTO;
     private ImtqDTO imtqDTO;
@@ -35,10 +36,24 @@ public class RealtimeDTO implements Serializable {
     public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima) {
         this.sequenceNumber = entity.getSequenceNumber();
         this.frameType = entity.getFrameType();
-        this.createdDate = entity.getCreatedDate().toString();
+        this.createdDate = "Data received: " + entity.getCreatedDate().toString();
         this.satelliteTime = entity.getSatelliteTime().toString();
-        this.latitude = entity.getLatitude();
-        this.longitude = entity.getLongitude();
+
+
+
+        this.latitude = Double.parseDouble(entity.getLatitude());
+        this.longitude = Double.parseDouble(entity.getLongitude());
+
+        String longitudeString;
+
+        if (longitude > 180.0) {
+            longitudeString = String.format("%5.1f W", 360.0 - longitude);
+        } else {
+            longitudeString = String.format("%5.1f E", longitude);
+        }
+
+        latLong = String.format("Satellite Latitude, Longitude: %5.1f %s, %s",
+                Math.abs(latitude), (latitude < 0 ? "S" : "N"), longitudeString);
 
         this.epsDTO = new EpsDTO(
                 entity.getC1(),
@@ -139,10 +154,10 @@ public class RealtimeDTO implements Serializable {
     public String getSatelliteTime() {
         return satelliteTime;
     }
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -180,6 +195,10 @@ public class RealtimeDTO implements Serializable {
 
     public List<String> getMaxima() {
         return maxima;
+    }
+
+    public String getLatLong() {
+        return latLong;
     }
 
     private String formatOneDP(double value) {

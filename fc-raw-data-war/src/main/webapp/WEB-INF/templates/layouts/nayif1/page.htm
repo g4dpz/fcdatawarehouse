@@ -63,6 +63,9 @@
     var handleRealtime = function(data) {
 
 
+        $("#created_date").text(data.data.createdDate);
+        $("#lat_long").text(data.data.latLong);
+
         $("#eps_sol_volts_x_value").text(data.data.epsDTO.panelVolts1 + " mV");
         $("#eps_sol_volts_x_min").text(data.data.minima[0]);
         $("#eps_sol_volts_x_max").text(data.data.maxima[0]);

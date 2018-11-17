@@ -61,6 +61,9 @@
 <script>
     var handleRealtime = function(data) {
 
+        $("#created_date").text(data.data.createdDate);
+        $("#lat_long").text(data.data.latLong);
+
         $("#dcConvVoltsOut_value").text(data.data.epsDTO.dcConvVoltsOut + " V");
         $("#dcConvCurrOut_value").text(data.data.epsDTO.dcConvCurrOut + " mA");
         $("#dcConvTemp_value").text(data.data.epsDTO.dcConvTemp + " C");
