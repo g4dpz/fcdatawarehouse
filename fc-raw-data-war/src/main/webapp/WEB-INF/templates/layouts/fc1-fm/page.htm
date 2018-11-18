@@ -47,8 +47,8 @@
         $("#created_date").text(data.data.createdDate);
         $("#lat_long").text(data.data.latLong);
 
-        $("#info_seqno").text("Seq. No.: " + data.sequenceNumber);
-        $("#info_packet_count").text("Packets: " + data.packetCount);
+        $("#info_seqno").text("Seq. No.: " + data.data.sequenceNumber);
+        $("#info_packet_count").text("Packets: " + data.data.packetCount);
         $("#info_satellite_mode").text("Mode switching: " + data.satelliteMode);
         $("#info_transponder_state").text("Transponder state: " + data.transponderState);
         $("#eps_sol_volts_x_value").text(data.data.epsDTO.panelVolts1);

@@ -58,7 +58,7 @@ public class RealtimeSummaryRestController {
 
         List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
 
-        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors));
+        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount()));
 
         try {
             return objectMapper.writeValueAsString(new JSONPObject(callback, map));

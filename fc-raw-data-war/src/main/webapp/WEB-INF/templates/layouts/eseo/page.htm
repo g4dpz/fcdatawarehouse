@@ -61,6 +61,8 @@
 <script>
     var handleRealtime = function(data) {
 
+        $("#info_seqno").text("Seq. No.: " + data.data.sequenceNumber);
+        $("#info_packet_count").text("Packets: " + data.data.packetCount);
         $("#created_date").text(data.data.createdDate);
         $("#lat_long").text(data.data.latLong);
 

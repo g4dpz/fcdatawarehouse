@@ -20,6 +20,7 @@ public class RealtimeDTO implements Serializable {
     private double latitude;
     private double longitude;
     private List<String> sites;
+    private long packetCount;
 
     private EpsDTO epsDTO;
     private ImtqDTO imtqDTO;
@@ -34,7 +35,7 @@ public class RealtimeDTO implements Serializable {
 
     public RealtimeDTO() {}
 
-    public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima, List<String> sites) {
+    public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima, List<String> sites, long packetCount) {
         this.sequenceNumber = entity.getSequenceNumber();
         this.frameType = entity.getFrameType();
         this.createdDate = "Data received: " + entity.getCreatedDate().toString();
@@ -43,6 +44,7 @@ public class RealtimeDTO implements Serializable {
         this.latitude = Double.parseDouble(entity.getLatitude());
         this.longitude = Double.parseDouble(entity.getLongitude());
         this.sites = sites;
+        this.packetCount = packetCount;
 
         String longitudeString;
 
@@ -203,6 +205,10 @@ public class RealtimeDTO implements Serializable {
 
     public List<String> getSites() {
         return sites;
+    }
+
+    public long getPacketCount() {
+        return packetCount;
     }
 
     private String formatOneDP(double value) {
