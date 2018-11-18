@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/data")
@@ -59,7 +56,9 @@ public class RealtimeSummaryRestController {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put("data", new RealtimeDTO(realtimeEntity));
+        List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
+
+        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors));
 
         try {
             return objectMapper.writeValueAsString(new JSONPObject(callback, map));

@@ -117,7 +117,7 @@
 
         $("#site_list").html('');
         var items = [];
-        $.each(data.data.siteList, function (id, site) {
+        $.each(data.data.sites, function (id, site) {
             items.push('<li>' + site + '</li>');
         });
         $("#site_list").append(items.join(''));

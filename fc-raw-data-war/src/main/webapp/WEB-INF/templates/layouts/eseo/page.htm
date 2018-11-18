@@ -99,6 +99,13 @@
         $("#safeModeState_value").text(data.data.swDTO.safeModeState);
         $("#inSafeMode_value").text(data.data.swDTO.inSafeMode);
 
+        $("#site_list").html('');
+        var items = [];
+        $.each(data.data.sites, function (id, site) {
+            items.push('<li>' + site + '</li>');
+        });
+        $("#site_list").append(items.join(''));
+
 
     }
 </script>

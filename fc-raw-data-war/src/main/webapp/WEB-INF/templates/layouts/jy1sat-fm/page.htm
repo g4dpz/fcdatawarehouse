@@ -209,6 +209,13 @@
         $("#sw_hardware_abf_value").text(data.data.swDTO.hardwareABFOnOff);
         $("#sw_software_abf_value").text(data.data.swDTO.softwareABFOnOff);
         $("#sw_deployment_wait_value").text(data.data.swDTO.deploymentWait);
+
+        $("#site_list").html('');
+        var items = [];
+        $.each(data.data.sites, function (id, site) {
+            items.push('<li>' + site + '</li>');
+        });
+        $("#site_list").append(items.join(''));
     }
 </script>
 
