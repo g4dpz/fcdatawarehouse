@@ -382,14 +382,14 @@ public class RealtimeEntity implements Serializable {
         // dcdcCurrent
         c2 = new MultiplierTelemetryValue(5.131579, getBitsAsULong(8, binaryString)).calculate();
 
-        // dcdcTemp
-        c3 = new MultiplierOffsetTelemetryValue(-1.279, 125.86, getBitsAsULong(8, binaryString)).calculate();
+        // dcdcTemp y = -0.7796212*x + 98.19402
+        c3 = new MultiplierOffsetTelemetryValue(-0.7796212, 98.19402, getBitsAsULong(8, binaryString)).calculate();
 
-        // enclosureTemp
-        c4 = new MultiplierOffsetTelemetryValue(-1.3448, 132.12, getBitsAsULong(8, binaryString)).calculate();
+        // enclosureTemp y = -0.7385868*x + 97.74249
+        c4 = new MultiplierOffsetTelemetryValue(-0.7385868, 97.74249, getBitsAsULong(8, binaryString)).calculate();
 
-        // processorTemp
-        c5 = new MultiplierOffsetTelemetryValue(-1.2938, 122.89, getBitsAsULong(8, binaryString)).calculate();
+        // processorTemp y = -0.7725984*x + 94.95152
+        c5 = new MultiplierOffsetTelemetryValue(-0.7725984, 94.95152, getBitsAsULong(8, binaryString)).calculate();
 
         // 3v3Volts
         c6 = new VoltageMultiplierTelemetryValue(0.031141509, getBitsAsULong(8, binaryString)).calculate();
@@ -415,11 +415,11 @@ public class RealtimeEntity implements Serializable {
         // fwdPwr
         c13 = calculateRfPower(getBitsAsULong(8, binaryString));
 
-        // fmAmpTemp
-        c14 = new MultiplierOffsetTelemetryValue(-1.2579, 123.35, getBitsAsULong(8, binaryString)).calculate();
+        // fmAmpTemp y = y = -0.789929*x + 97.5934
+        c14 = new MultiplierOffsetTelemetryValue(-0.789929, 97.5934, getBitsAsULong(8, binaryString)).calculate();
 
-        // bpskAmpTemp
-        c15 = new MultiplierOffsetTelemetryValue(-1.2287, 113.31, getBitsAsULong(8, binaryString)).calculate();
+        // bpskAmpTemp y = -0.8104347*x + 91.93637
+        c15 = new MultiplierOffsetTelemetryValue(-0.8104347, 91.93637, getBitsAsULong(8, binaryString)).calculate();
 
         // bpskAmpCurr
         c16 = (long) (2.18 * getBitsAsULong(8, binaryString));
@@ -436,8 +436,8 @@ public class RealtimeEntity implements Serializable {
         // commandDopp
         c20 = getBitsAsULong(8, binaryString);
 
-        // commandOscTemp
-        c21 = new MultiplierOffsetTelemetryValue(-1.1599 , 109.66, getBitsAsULong(8, binaryString)).calculate();
+        // commandOscTemp y = -0.8592393*x + 94.30121
+        c21 = new MultiplierOffsetTelemetryValue(-0.8592393 , 94.30121, getBitsAsULong(8, binaryString)).calculate();
 
         // seqNo
         c22 = getBitsAsULong(24, binaryString);
