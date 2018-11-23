@@ -68,8 +68,8 @@ public class RealtimeDTO extends BaseDTO {
         this.paDTO = new PaDTO(
                 formatOneDP(entity.getC12()),
                 formatOneDP(entity.getC13()),
+                formatOneDP(entity.getC15()), // FWD REV Reversed
                 formatOneDP(entity.getC14()),
-                formatOneDP(entity.getC15()),
                 formatOneDP(entity.getC16()),
                 formatOneDP(entity.getC17()));
 

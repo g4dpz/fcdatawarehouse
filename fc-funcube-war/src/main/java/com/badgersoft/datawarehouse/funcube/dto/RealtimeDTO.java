@@ -99,8 +99,8 @@ public class RealtimeDTO implements Serializable {
         );
 
         this.paDTO = new PaDTO(
+                formatOneDP(entity.getC34()), // FWD / REV Power reversed
                 formatOneDP(entity.getC33()),
-                formatOneDP(entity.getC34()),
                 formatOneDP(entity.getC35()),
                 formatOneDP(entity.getC36())
         );

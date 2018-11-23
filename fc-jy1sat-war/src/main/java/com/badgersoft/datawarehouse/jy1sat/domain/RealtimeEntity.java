@@ -714,7 +714,7 @@ public class RealtimeEntity extends TelemetryEntity {
         c33 = getBitsAsULong(8, binaryString);
 
         // Receiver Temperature
-        c34 = (getBitsAsULong(8, binaryString) * -1.3860) + 266.70646;
+        c34 = (getBitsAsULong(8, binaryString) * -0.98) + 234.58;
         // Receive current
         c35 = getBitsAsULong(8, binaryString) * 0.636;
         // Transmit current 3.3V bus
