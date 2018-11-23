@@ -16,4 +16,7 @@ public interface HexFrameDao extends JpaRepository<HexFrame, Long> {
 
     @Query
     List<HexFrame> findBySatelliteIdAndSequenceNumber(Long satelliteId, Long sequenceNumber);
+
+    @Query
+    List<HexFrame> findBySatelliteIdAndSequenceNumberAndFrameTypeIn(Long satelliteId, Long sequenceNumber, List<Long> frames);
 }

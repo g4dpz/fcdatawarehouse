@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -87,6 +88,24 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         Ranking ranking = userRankingService.getRanking(draw, sort, start, length, search);
 
         return ranking;
+    }
+
+    @GetMapping(value = "/api/data/payload/{satelliteId}/{sequenceNumber}")
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<String> getPayloads(@PathVariable(value = "satelliteId") Long satelliteId,
+                                    @PathVariable(value = "sequenceNumber") Long sequenceNumber,
+                                    @RequestParam(value = "frames") String frames,
+                                    HttpServletRequest request, HttpServletResponse response) {
+
+        final List<String> payloads = hexFrameService.getPayloads(satelliteId, sequenceNumber, frames);
+
+        if (payloads == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        else {
+            return payloads;
+        }
     }
 
 }

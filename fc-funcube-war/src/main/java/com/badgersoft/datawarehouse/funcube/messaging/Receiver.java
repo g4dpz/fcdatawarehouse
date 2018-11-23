@@ -114,6 +114,9 @@ public class Receiver {
 
                 if (frameTypeName.equals("rt")) {
                     realtimeProcessor.process(hexFrameDTO);
+                    if (hexFrameDTO.getFrameType() == 24) {
+                        processWOD(satelliteId, sequenceNumber);
+                    }
                 };
 
                 jmsMessageSender.send("rt," + satelliteId + "," + sequenceNumber + "," + frameTypeId);
@@ -127,5 +130,15 @@ public class Receiver {
         }
 
         latch.countDown();
+    }
+
+    private void processWOD(String satelliteId, String sequenceNumber) {
+//        final String url = "http://localhost:" + WAREHOUSE_PORT + "/api/data/payload/" +
+//                satelliteId + "/" +
+//                sequenceNumber + "?" +
+//                frameTypeId;
+//        HexFrameDTO hexFrameDTO
+//                = restTemplate.getForObject(
+//                url, HexFrameDTO.class);
     }
 }

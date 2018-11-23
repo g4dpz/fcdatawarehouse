@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility.convertHexBytePairToBinary;
 
@@ -448,5 +450,29 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         return hexFrameDTO;
 
+    }
+
+    public List<String> getPayloads(Long satelliteId, Long sequenceNumber, String framesRequested) {
+        List<Long> frameList = Stream.of(framesRequested.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        LOG.info(String.format("Payload request %d %d %s", satelliteId, sequenceNumber, framesRequested));
+
+        final List<HexFrame> frames = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameTypeIn(
+                satelliteId, sequenceNumber, frameList);
+
+        if (frames == null || frames.isEmpty() || frameList.size() != frames.size()) {
+            LOG.info("Payloads not found");
+            return null;
+        }
+
+        List<String> payloads = new ArrayList<>();
+
+        for(HexFrame hexFrame : frames) {
+            payloads.add(hexFrame.getPayload().getHexText());
+        }
+
+        return payloads;
     }
 }
