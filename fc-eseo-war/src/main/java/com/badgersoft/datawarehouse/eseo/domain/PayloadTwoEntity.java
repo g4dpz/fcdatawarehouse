@@ -9,8 +9,8 @@ import java.util.Date;
  * Created by davidjohnson on 18/09/2016.
  */
 @Entity
-@Table(name = "payload_1", catalog = "eseo")
-public class PayloadOne implements Serializable {
+@Table(name = "payload_2", catalog = "eseo")
+public class PayloadTwoEntity implements Serializable {
 
     @Transient
     private int stringPos = 211;
@@ -19,17 +19,16 @@ public class PayloadOne implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long c1;
-    private long c2;
-    private long c3;
-    private long c4;
-    private long c5;
-    private long c6;
-    private double c7;
-    private double c8;
-    private double c9;
-    private long c10;
-    private long c11;
+    private double c1; // ACS_ORBIT_x (Orbital position)
+    private double c2; // ACS_ORBIT_y
+    private double c3; // ACS_ORBIT_z
+    private long c4; // PMM_AMSAT_CURRENT (16b) (AMSAT Switch current)
+    private long c5; // MWM_VOLTAGE (Momentum wheel Measured DC-link voltage)
+    private long c6; // MWM_CURRENT (Momentum wheel Measured current)
+    private long c7; // MWM_OMEGAMESURED (Measured rotation speed)
+    private long c8; // MPS_HPT01 (High Pressure Transducer measures tank pressure)
+    private long c9; // PMM_TEMP_SP1_SENS_1 (Temp. of the solar panel 1)
+    private long c10; // PMM_TEMP_BP1_SENS_1 (Temp. of battery pack 1)
 
     @Column(name = "sequence_number")
     private Long sequenceNumber;
@@ -44,29 +43,37 @@ public class PayloadOne implements Serializable {
     private Date satelliteTime;
 
 
-    public PayloadOne() {}
+    public PayloadTwoEntity() {}
 
-    public long getC1() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public double getC1() {
         return c1;
     }
 
-    public void setC1(long c1) {
+    public void setC1(double c1) {
         this.c1 = c1;
     }
 
-    public long getC2() {
+    public double getC2() {
         return c2;
     }
 
-    public void setC2(long c2) {
+    public void setC2(double c2) {
         this.c2 = c2;
     }
 
-    public long getC3() {
+    public double getC3() {
         return c3;
     }
 
-    public void setC3(long c3) {
+    public void setC3(double c3) {
         this.c3 = c3;
     }
 
@@ -94,27 +101,27 @@ public class PayloadOne implements Serializable {
         this.c6 = c6;
     }
 
-    public double getC7() {
+    public long getC7() {
         return c7;
     }
 
-    public void setC7(double c7) {
+    public void setC7(long c7) {
         this.c7 = c7;
     }
 
-    public double getC8() {
+    public long getC8() {
         return c8;
     }
 
-    public void setC8(double c8) {
+    public void setC8(long c8) {
         this.c8 = c8;
     }
 
-    public double getC9() {
+    public long getC9() {
         return c9;
     }
 
-    public void setC9(double c9) {
+    public void setC9(long c9) {
         this.c9 = c9;
     }
 
@@ -124,22 +131,6 @@ public class PayloadOne implements Serializable {
 
     public void setC10(long c10) {
         this.c10 = c10;
-    }
-
-    public long getC11() {
-        return c11;
-    }
-
-    public void setC11(long c11) {
-        this.c11 = c11;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getSequenceNumber() {
@@ -177,19 +168,17 @@ public class PayloadOne implements Serializable {
     @Transient
     public void readBinary(String binaryString) {
 
-        // AMSAT DATA
-        c1 = getBitsAsULong(16, binaryString);
-        c2 = getBitsAsULong(16, binaryString);
-        c3 = getBitsAsULong(16, binaryString);
-        c4 = getBitsAsULong(8, binaryString);
-        c5 = getBitsAsULong(20, binaryString);
-        c6 = getBitsAsULong(8, binaryString);
-
-        c7 = getBitsAsDouble(1, binaryString);
-        c8 = getBitsAsDouble(1, binaryString);
-        c9 = getBitsAsDouble(1, binaryString);
-        c10 = getBitsAsULong(8, binaryString);
-        c11 = getBitsAsULong(8, binaryString);
+        // ESEO DATA
+        c1 = getBitsAsDouble(1, binaryString);
+        c2 = getBitsAsDouble(1, binaryString);
+        c3 = getBitsAsDouble(1, binaryString);
+        c4 = getBitsAsULong(16, binaryString);
+        c5 = getBitsAsULong(8, binaryString);
+        c6 = getBitsAsULong(16, binaryString);
+        c7 = getBitsAsULong(16, binaryString);
+        c8 = getBitsAsSLong(16, binaryString);
+        c9 = getBitsAsSLong(12, binaryString);
+        c10 = getBitsAsSLong(12, binaryString);
     }
 
 

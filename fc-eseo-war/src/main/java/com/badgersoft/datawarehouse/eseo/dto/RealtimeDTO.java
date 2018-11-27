@@ -1,5 +1,7 @@
 package com.badgersoft.datawarehouse.eseo.dto;
 
+import com.badgersoft.datawarehouse.eseo.domain.PayloadOneEntity;
+import com.badgersoft.datawarehouse.eseo.domain.PayloadTwoEntity;
 import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class RealtimeDTO extends BaseDTO {
 
     public RealtimeDTO() {}
 
-    public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima, List<String> sites, long packetCount) {
+    public RealtimeDTO(final RealtimeEntity entity, List<Double> minima, List<Double> maxima, List<String> sites, long packetCount, PayloadOneEntity payloadOneEntity, PayloadTwoEntity payloadTwoEntity) {
         this.sequenceNumber = entity.getSequenceNumber();
         this.frameType = entity.getFrameType();
         this.createdDate = "Data received: " + entity.getCreatedDate().toString();
@@ -93,11 +95,11 @@ public class RealtimeDTO extends BaseDTO {
                 entity.getC31()
         );
 
-        this.eseoOBCDTO = new EseoOBCDTO();
+        this.eseoOBCDTO = new EseoOBCDTO(payloadOneEntity, payloadTwoEntity);
 
-        this.eseoStatusDTO = new EseoStatusDTO();
+        this.eseoStatusDTO = new EseoStatusDTO(payloadOneEntity);
 
-        this.eseoAttitudeDTO = new EseoAttitudeDTO();
+        this.eseoAttitudeDTO = new EseoAttitudeDTO(payloadOneEntity, payloadTwoEntity);
 
     }
 

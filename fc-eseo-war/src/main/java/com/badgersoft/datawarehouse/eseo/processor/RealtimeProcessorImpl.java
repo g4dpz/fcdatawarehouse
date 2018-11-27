@@ -5,8 +5,8 @@ import com.badgersoft.datawarehouse.eseo.dao.PayloadOneDao;
 import com.badgersoft.datawarehouse.eseo.dao.PayloadTwoDao;
 import com.badgersoft.datawarehouse.eseo.dao.RealtimeDao;
 import com.badgersoft.datawarehouse.eseo.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.eseo.domain.PayloadOne;
-import com.badgersoft.datawarehouse.eseo.domain.PayloadTwo;
+import com.badgersoft.datawarehouse.eseo.domain.PayloadOneEntity;
+import com.badgersoft.datawarehouse.eseo.domain.PayloadTwoEntity;
 import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
 import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -72,10 +72,29 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
         Iterator<SatelliteStatusEntity> iterator = satelliteStatuses.iterator();
         if (iterator.hasNext()) {
             final SatelliteStatusEntity satelliteStatus = iterator.next();
-            if (satelliteStatus.getSequenceNumber() == null || sequenceNumber > satelliteStatus.getSequenceNumber()) {
-                satelliteStatus.setSequenceNumber(sequenceNumber);
-                satelliteStatus.setFrameType(frameType);
-                satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+            if (frameType %2 == 1) {
+                // ODD Numbered Frames indicate Payload 1
+                if (satelliteStatus.getSequenceNumber() == null || sequenceNumber > satelliteStatus.getSequenceNumber()) {
+                    satelliteStatus.setSequenceNumber(sequenceNumber);
+                    satelliteStatus.setFrameType(frameType);
+                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+                }
+                else if (frameType > satelliteStatus.getFrameType()) {
+                    satelliteStatus.setFrameType(frameType);
+                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+                }
+            }
+            else {
+                // EVEN Numbered Frames indicate Payload 2
+                if (satelliteStatus.getSequenceNumberTwo() == null || sequenceNumber > satelliteStatus.getSequenceNumberTwo()) {
+                    satelliteStatus.setSequenceNumberTwo(sequenceNumber);
+                    satelliteStatus.setFrameTypeTwo(frameType);
+                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+                }
+                else if (frameType > satelliteStatus.getFrameTypeTwo()) {
+                    satelliteStatus.setFrameTypeTwo(frameType);
+                    satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+                }
             }
 
             // we may have just launched....
@@ -103,22 +122,22 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
         }
 
         if (hexFrameDTO.getFrameType() %2 == 1) {
-            PayloadOne payloadOne = new PayloadOne();
-            payloadOne.readBinary(binaryString);
-            payloadOne.setSequenceNumber(sequenceNumber);
-            payloadOne.setFrameType(frameType);
-            payloadOne.setCreatedDate(hexFrameDTO.getCreatedDate());
-            payloadOne.setSatelliteTime(hexFrameDTO.getSatelliteTime());
-            payloadOneDao.save(payloadOne);
+            PayloadOneEntity payloadOneEntity = new PayloadOneEntity();
+            payloadOneEntity.readBinary(binaryString);
+            payloadOneEntity.setSequenceNumber(sequenceNumber);
+            payloadOneEntity.setFrameType(frameType);
+            payloadOneEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
+            payloadOneEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+            payloadOneDao.save(payloadOneEntity);
         }
         else {
-            PayloadTwo payloadTwo = new PayloadTwo();
-            payloadTwo.readBinary(binaryString);
-            payloadTwo.setSequenceNumber(sequenceNumber);
-            payloadTwo.setFrameType(frameType);
-            payloadTwo.setCreatedDate(hexFrameDTO.getCreatedDate());
-            payloadTwo.setSatelliteTime(hexFrameDTO.getSatelliteTime());
-            payloadTwoDao.save(payloadTwo);
+            PayloadTwoEntity payloadTwoEntity = new PayloadTwoEntity();
+            payloadTwoEntity.readBinary(binaryString);
+            payloadTwoEntity.setSequenceNumber(sequenceNumber);
+            payloadTwoEntity.setFrameType(frameType);
+            payloadTwoEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
+            payloadTwoEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+            payloadTwoDao.save(payloadTwoEntity);
         }
 
         long timeTaken = Calendar.getInstance().getTime().getTime() - then;

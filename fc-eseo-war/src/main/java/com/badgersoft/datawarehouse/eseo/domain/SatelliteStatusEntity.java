@@ -55,6 +55,11 @@ public class SatelliteStatusEntity {
     private Long catalogueNumber;
     @Column(name="satellite_time")
     private Date satelliteTime;
+    @Column(name = "sequence_number_two")
+    private Long sequenceNumberTwo;
+    @Column(name = "frame_type_two")
+    private Long frameTypeTwo;
+
 
     public SatelliteStatusEntity() {
     }
@@ -295,6 +300,22 @@ public class SatelliteStatusEntity {
         this.satelliteTime = satelliteTime;
     }
 
+    public Long getSequenceNumberTwo() {
+        return sequenceNumberTwo;
+    }
+
+    public void setSequenceNumberTwo(Long sequenceNumberTwo) {
+        this.sequenceNumberTwo = sequenceNumberTwo;
+    }
+
+    public Long getFrameTypeTwo() {
+        return frameTypeTwo;
+    }
+
+    public void setFrameTypeTwo(Long frameTypeTwo) {
+        this.frameTypeTwo = frameTypeTwo;
+    }
+
     @Override
     public String toString() {
         return "SatelliteStatusEntity{" +
@@ -319,6 +340,10 @@ public class SatelliteStatusEntity {
                 ", lastRealtimeTime=" + lastRealtimeTime +
                 ", lastFitterTime=" + lastFitterTime +
                 ", frameType=" + frameType +
+                ", catalogueNumber=" + catalogueNumber +
+                ", satelliteTime=" + satelliteTime +
+                ", sequenceNumberTwo=" + sequenceNumberTwo +
+                ", frameTypeTwo=" + frameTypeTwo +
                 '}';
     }
 }

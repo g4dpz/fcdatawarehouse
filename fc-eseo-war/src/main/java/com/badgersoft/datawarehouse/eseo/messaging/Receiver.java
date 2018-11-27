@@ -114,6 +114,7 @@ public class Receiver {
             }
             catch (Exception e) {
                 String errorMsg = String.format("Could not process realtime data for %s: %s", SATELLITE_NAME, e.getMessage());
+                e.printStackTrace();
                 LOG.error(errorMsg);
                 jmsMessageSender.send(errorMsg);
             }

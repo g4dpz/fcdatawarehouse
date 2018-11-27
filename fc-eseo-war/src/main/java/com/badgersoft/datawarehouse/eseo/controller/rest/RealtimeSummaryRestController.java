@@ -1,11 +1,7 @@
 package com.badgersoft.datawarehouse.eseo.controller.rest;
 
-import com.badgersoft.datawarehouse.eseo.dao.MinMaxDao;
-import com.badgersoft.datawarehouse.eseo.dao.RealtimeDao;
-import com.badgersoft.datawarehouse.eseo.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.eseo.domain.MinMaxEntity;
-import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
-import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
+import com.badgersoft.datawarehouse.eseo.dao.*;
+import com.badgersoft.datawarehouse.eseo.domain.*;
 import com.badgersoft.datawarehouse.eseo.dto.RealtimeDTO;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -29,6 +25,12 @@ public class RealtimeSummaryRestController {
     RealtimeDao realtimeDAO;
 
     @Autowired
+    PayloadOneDao payloadOneDao;
+
+    @Autowired
+    PayloadTwoDao payloadTwoDao;
+
+    @Autowired
     SatelliteStatusDao satelliteStatusDao;
 
     @Autowired
@@ -37,10 +39,26 @@ public class RealtimeSummaryRestController {
     @RequestMapping(value = "/realtime", method = RequestMethod.GET, produces = "application/javascript")
     public String getSummary(@RequestParam(value = "callback") String callback) {
         SatelliteStatusEntity statusEntity = (SatelliteStatusEntity) (satelliteStatusDao.findAll().iterator().next());
-        Long sequenceNumber = statusEntity.getSequenceNumber();
-        Long frameType = statusEntity.getFrameType();
+        Long sequenceNumberOne = statusEntity.getSequenceNumber();
+        Long frameTypeOne = statusEntity.getFrameType();
+        Long sequenceNumberTwo = statusEntity.getSequenceNumberTwo();
+        Long frameTypeTwo = statusEntity.getFrameTypeTwo();
+
+        Long sequenceNumber;
+        Long frameType;
+
+        if (sequenceNumberOne > sequenceNumberTwo) {
+            sequenceNumber = sequenceNumberOne;
+            frameType = frameTypeOne;
+        }
+        else {
+            sequenceNumber = sequenceNumberTwo;
+            frameType = frameTypeTwo;
+        }
 
         RealtimeEntity realtimeEntity = realtimeDAO.findBySequenceNumberAndFrameType(sequenceNumber, frameType);
+        PayloadOneEntity payloadOneEntity = payloadOneDao.findBySequenceNumberAndFrameType(sequenceNumberOne, frameTypeOne);
+        PayloadTwoEntity payloadTwoEntity = payloadTwoDao.findBySequenceNumberAndFrameType(sequenceNumberTwo, frameTypeTwo);
 
         if (realtimeEntity == null) {
             return callback + "([error:" + "No data found" + "]);";
@@ -61,7 +79,7 @@ public class RealtimeSummaryRestController {
 
         List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
 
-        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount()));
+        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount(), payloadOneEntity, payloadTwoEntity));
 
         try {
             return objectMapper.writeValueAsString(new JSONPObject(callback, map));
