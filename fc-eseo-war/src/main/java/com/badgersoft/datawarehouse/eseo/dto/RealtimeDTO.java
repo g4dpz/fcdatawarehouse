@@ -76,9 +76,9 @@ public class RealtimeDTO extends BaseDTO {
                 formatOneDP(entity.getC17()));
 
         this.rfDTO = new RfDTO(
-                entity.getC18(),
-                entity.getC19(),
-                entity.getC20(),
+                formatOneDP(entity.getC18()),
+                formatOneDP(entity.getC19()),
+                formatOneDP(entity.getC20()),
                 formatOneDP(entity.getC21())
         );
 

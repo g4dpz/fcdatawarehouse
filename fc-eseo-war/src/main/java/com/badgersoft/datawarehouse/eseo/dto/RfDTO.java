@@ -7,29 +7,29 @@ import java.io.Serializable;
  */
 public class RfDTO implements Serializable {
 
-    private long lBandTranspRxRssi;
-    private long lBandCmdRxRssi;
-    private long lBandCmdRxDop;
+    private String lBandTranspRxRssi;
+    private String lBandCmdRxRssi;
+    private String lBandCmdRxDop;
     private String lBandCmdRxTemp;
 
     public RfDTO() {}
 
-    public RfDTO(long lBandTranspRxRssi, long lBandCmdRxRssi, long lBandCmdRxDop, String lBandCmdRxTemp) {
+    public RfDTO(String lBandTranspRxRssi, String lBandCmdRxRssi, String lBandCmdRxDop, String lBandCmdRxTemp) {
         this.lBandTranspRxRssi = lBandTranspRxRssi;
         this.lBandCmdRxRssi = lBandCmdRxRssi;
         this.lBandCmdRxDop = lBandCmdRxDop;
         this.lBandCmdRxTemp = lBandCmdRxTemp;
     }
 
-    public long getlBandTranspRxRssi() {
+    public String getlBandTranspRxRssi() {
         return lBandTranspRxRssi;
     }
 
-    public long getlBandCmdRxRssi() {
+    public String getlBandCmdRxRssi() {
         return lBandCmdRxRssi;
     }
 
-    public long getlBandCmdRxDop() {
+    public String getlBandCmdRxDop() {
         return lBandCmdRxDop;
     }
 

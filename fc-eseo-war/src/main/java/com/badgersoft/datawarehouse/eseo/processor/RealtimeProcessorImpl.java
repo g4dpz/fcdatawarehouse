@@ -97,6 +97,25 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                 }
             }
 
+            if (hexFrameDTO.getFrameType() %2 == 1) {
+                PayloadOneEntity payloadOneEntity = new PayloadOneEntity();
+                payloadOneEntity.readBinary(binaryString);
+                payloadOneEntity.setSequenceNumber(sequenceNumber);
+                payloadOneEntity.setFrameType(frameType);
+                payloadOneEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
+                payloadOneEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+                payloadOneDao.save(payloadOneEntity);
+            }
+            else {
+                PayloadTwoEntity payloadTwoEntity = new PayloadTwoEntity();
+                payloadTwoEntity.readBinary(binaryString);
+                payloadTwoEntity.setSequenceNumber(sequenceNumber);
+                payloadTwoEntity.setFrameType(frameType);
+                payloadTwoEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
+                payloadTwoEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
+                payloadTwoDao.save(payloadTwoEntity);
+            }
+
             // we may have just launched....
             if (satelliteStatus.getEpochSequenceNumber() == null && satelliteStatus.getEpochReferenceTime() == null) {
                 satelliteStatus.setEpochSequenceNumber(sequenceNumber);
@@ -119,25 +138,6 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
             satelliteStatus.setEclipsed(realtimeEntity.getC27().equals("Yes"));
 
             satelliteStatusDAO.save(satelliteStatus);
-        }
-
-        if (hexFrameDTO.getFrameType() %2 == 1) {
-            PayloadOneEntity payloadOneEntity = new PayloadOneEntity();
-            payloadOneEntity.readBinary(binaryString);
-            payloadOneEntity.setSequenceNumber(sequenceNumber);
-            payloadOneEntity.setFrameType(frameType);
-            payloadOneEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
-            payloadOneEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
-            payloadOneDao.save(payloadOneEntity);
-        }
-        else {
-            PayloadTwoEntity payloadTwoEntity = new PayloadTwoEntity();
-            payloadTwoEntity.readBinary(binaryString);
-            payloadTwoEntity.setSequenceNumber(sequenceNumber);
-            payloadTwoEntity.setFrameType(frameType);
-            payloadTwoEntity.setCreatedDate(hexFrameDTO.getCreatedDate());
-            payloadTwoEntity.setSatelliteTime(hexFrameDTO.getSatelliteTime());
-            payloadTwoDao.save(payloadTwoEntity);
         }
 
         long timeTaken = Calendar.getInstance().getTime().getTime() - then;

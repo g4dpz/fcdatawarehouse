@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by davidjohnson on 17/10/2016.
@@ -11,6 +13,98 @@ import java.util.Date;
 @Entity
 @Table(name = "realtime", catalog = "eseo")
 public class RealtimeEntity implements Serializable {
+
+    private static Map<Long, Double> TRANSP_RSSI = new HashMap();
+    private static Map<Long, Double> CMD_RSSI = new HashMap();
+    private static Map<Long, Double> CMD_DOP = new HashMap();
+    
+    static {
+        initTransponderRSSI();
+        initCommandRSSI();
+        initCommandDoppler();
+    }
+
+    private static void initTransponderRSSI() {
+        double[][] refData = { { -120, Double.MIN_VALUE }, { -120, 108 }, { -118, 110 }, { -116, 112 }, { -115, 114 },
+                { -114, 116 }, { -113, 117 }, { -112, 118 }, { -111, 120 }, { -110, 122 },
+                { -109, 123 }, { -108, 124 }, { -107, 126 }, { -106, 128 }, { -105, 130 },
+                { -104, 131 }, { -103, 133 }, { -102, 134 }, { -101, 136 }, { -100, 137 },
+                { -99, 139 }, { -98, 140 }, { -96, 144 }, { -94, 147 }, { -92, 151 },
+                { -90, 154 }, { -88, 157 }, { -86, 159 }, { -84, 161 }, { -82, 163 },
+                { -80, 165 }, { -78, 168 }, { -76, 171 }, { -74, 174 }, { -72, 176 },
+                { -70, 178 }, { -68, 179 }, { -66, 180 }, { -64, 181 }, {-64, Double.MAX_VALUE} };
+
+        // calc values for all possible 8bit values
+        for (int adc = 0; adc < 256; ++adc) {
+            for (int j = 0; j < refData.length; j++) {
+                if (adc != 0 && adc < refData[j][1]) {
+                    double t1 = refData[j][0];
+                    double a1 = refData[j][1];
+                    double diffa = refData[j - 1][1] - a1;
+                    double difft = refData[j - 1][0] - t1;
+                    double value = ((adc - a1) * (difft / diffa)) + t1;
+                    TRANSP_RSSI.put((long) adc, value);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private static void initCommandRSSI() {
+        double[][] refData = { { -120, Double.MIN_VALUE }, { -120, 93 }, { -118, 95 }, { -117, 96 }, { -116, 98 },
+                { -114, 100 }, { -113, 101 }, { -112, 103 }, { -111, 104 }, { -109, 106 }, { -108, 108 }, { -107, 109 },
+                { -106, 110 }, { -105, 111 }, { -104, 113 }, { -103, 114 }, { -102, 116 }, { -101, 117 }, { -100, 118 },
+                { -99, 119 }, { -98, 121 }, { -96, 124 }, { -94, 127 }, { -92, 130 }, { -90, 133 }, { -88, 135 },
+                { -86, 136 }, { -84, 138 }, { -82, 140 }, { -80, 142 }, { -78, 145 }, { -76, 147 }, { -74, 150 },
+                { -72, 152 }, { -70, 153 }, { -68, 155 }, { -64, 156 }, {-64, Double.MAX_VALUE} };
+
+        // calc values for all possible 8bit values
+        for (int adc = 0; adc < 256; ++adc) {
+            for (int j = 0; j < refData.length; j++) {
+                if (adc != 0 && adc < refData[j][1]) {
+                    double t1 = refData[j][0];
+                    double a1 = refData[j][1];
+                    double diffa = refData[j - 1][1] - a1;
+                    double difft = refData[j - 1][0] - t1;
+                    double value = ((adc - a1) * (difft / diffa)) + t1;
+                    CMD_RSSI.put((long) adc, value);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private static void initCommandDoppler() {
+        // Command Doppler
+        double[][] refData = { { -9, Double.MAX_VALUE }, { -9, 140 }, { -8, 139 }, { -7, 138 }, { -6, 136 }, { -5, 134 },
+                { -4, 131 }, { -3, 128 }, { -2, 124 }, { -1, 120 }, { 0, 115 }, { +1, 110 }, { +2, 105 }, { +3, 100 },
+                { +4, 95 }, { +5, 91 }, { +6, 87 }, { +7, 84 }, { +8, 82 }, { +9, 80 }, { +10, 78 }, { +11, 77 }, { +12, 76 },
+                { +12, Double.MIN_VALUE }};
+
+        // calc values for all possible 8bit values
+        for (int adc = 255; adc >= 0; --adc) {
+            for (int j = 0; j < refData.length; j++) {
+                if (adc != 0 && adc > refData[j][1]) {
+                    double t1 = refData[j][0];
+                    double a1 = refData[j][1];
+                    double diffa = refData[j - 1][1] - a1;
+                    double difft = refData[j - 1][0] - t1;
+                    double value = ((adc - a1) * (difft / diffa)) + t1;
+                    CMD_DOP.put((long) adc, value);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public static void getRefData() {
+        System.out.println(TRANSP_RSSI.toString());
+        System.out.println(CMD_RSSI.toString());
+        System.out.println(CMD_DOP.toString());
+    }
 
     @Transient
     protected int stringPos = 0;
@@ -51,9 +145,9 @@ public class RealtimeEntity implements Serializable {
     private double c15;
     private long c16;
     private long c17;
-    private long c18;
-    private long c19;
-    private long c20;
+    private double c18;
+    private double c19;
+    private double c20;
     private double c21;
     private long c22;
     private long c23;
@@ -258,27 +352,27 @@ public class RealtimeEntity implements Serializable {
         this.c17 = c17;
     }
 
-    public long getC18() {
+    public double getC18() {
         return c18;
     }
 
-    public void setC18(long c18) {
+    public void setC18(double c18) {
         this.c18 = c18;
     }
 
-    public long getC19() {
+    public double getC19() {
         return c19;
     }
 
-    public void setC19(long c19) {
+    public void setC19(double c19) {
         this.c19 = c19;
     }
 
-    public long getC20() {
+    public double getC20() {
         return c20;
     }
 
-    public void setC20(long c20) {
+    public void setC20(double c20) {
         this.c20 = c20;
     }
 
@@ -428,13 +522,13 @@ public class RealtimeEntity implements Serializable {
         c17 = (long) (0.8 * getBitsAsULong(8, binaryString));
 
         // transpRSSI
-        c18 = getBitsAsULong(8, binaryString);
+        c18 = TRANSP_RSSI.get(getBitsAsULong(8, binaryString));
 
         // commandRSSI
-        c19 = getBitsAsULong(8, binaryString);
+        c19 = CMD_RSSI.get(getBitsAsULong(8, binaryString));
 
         // commandDopp
-        c20 = getBitsAsULong(8, binaryString);
+        c20 = CMD_DOP.get(getBitsAsULong(8, binaryString));
 
         // commandOscTemp y = -0.8592393*x + 94.30121
         c21 = new MultiplierOffsetTelemetryValue(-0.8592393 , 94.30121, getBitsAsULong(8, binaryString)).calculate();
@@ -510,49 +604,5 @@ public class RealtimeEntity implements Serializable {
         long multiplier = (binaryString.charAt(0) == '0') ? 1L : -1L;
         stringPos += 1;
         return (getBitsAsULong(15, binaryString) * multiplier);
-    }
-
-    @Override
-    public String toString() {
-        return "RealtimeEntity{" +
-                "id=" + id +
-                ", sequenceNumber=" + sequenceNumber +
-                ", frameType=" + frameType +
-                ", createdDate=" + createdDate +
-                ", satelliteTime=" + satelliteTime +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", c1=" + c1 +
-                ", c2=" + c2 +
-                ", c3=" + c3 +
-                ", c4=" + c4 +
-                ", c5=" + c5 +
-                ", c6=" + c6 +
-                ", c7=" + c7 +
-                ", c8=" + c8 +
-                ", c9=" + c9 +
-                ", c10=" + c10 +
-                ", c11=" + c11 +
-                ", c12=" + c12 +
-                ", c13=" + c13 +
-                ", c14=" + c14 +
-                ", c15=" + c15 +
-                ", c16=" + c16 +
-                ", c17=" + c17 +
-                ", c18=" + c18 +
-                ", c19=" + c19 +
-                ", c20=" + c20 +
-                ", c21=" + c21 +
-                ", c22=" + c22 +
-                ", c23=" + c23 +
-                ", c24='" + c24 + '\'' +
-                ", c25='" + c25 + '\'' +
-                ", c26=" + c26 +
-                ", c27=" + c27 +
-                ", c28=" + c28 +
-                ", c29=" + c29 +
-                ", c30=" + c30 +
-                ", c31=" + c31 +
-                '}';
     }
 }

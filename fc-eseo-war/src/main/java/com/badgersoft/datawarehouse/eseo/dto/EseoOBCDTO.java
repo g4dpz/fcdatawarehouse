@@ -5,7 +5,7 @@ import com.badgersoft.datawarehouse.eseo.domain.PayloadTwoEntity;
 
 import java.io.Serializable;
 
-public class EseoOBCDTO implements Serializable {
+public class EseoOBCDTO extends BaseDTO implements Serializable {
 
     private String voltageSolarPanel1;
     private String voltageSolarPanel2;
@@ -58,12 +58,12 @@ public class EseoOBCDTO implements Serializable {
         sBandAmpTemp = payloadOneEntity.getC10() + " C";
         mainBusVoltage = payloadOneEntity.getC11() + " mV";
         amsatSwitchCurrent = payloadTwoEntity.getC4() + " mA";
-        momentumWheelVoltage = payloadTwoEntity.getC5() + " mV";
-        momentumWheelCurrent = payloadTwoEntity.getC6() + " mA";
-        momentumWheelSpeed = payloadTwoEntity.getC7() + " rpm";
+        momentumWheelVoltage = formatOneDP(payloadTwoEntity.getC5()) + " mV";
+        momentumWheelCurrent = formatOneDP(payloadTwoEntity.getC6()) + " mA";
+        momentumWheelSpeed = formatOneDP(payloadTwoEntity.getC7()) + " rpm";
         tankPressure = payloadTwoEntity.getC8() + " kPa";
-        temperatureSolarPanel1 = payloadTwoEntity.getC9() + " C";
-        temperatureBattery1 = payloadTwoEntity.getC10() + " C";
+        temperatureSolarPanel1 = formatOneDP(payloadTwoEntity.getC9()) + " C";
+        temperatureBattery1 = formatOneDP(payloadTwoEntity.getC10()) + " C";
     }
 
     public String getVoltageSolarPanel1() {
