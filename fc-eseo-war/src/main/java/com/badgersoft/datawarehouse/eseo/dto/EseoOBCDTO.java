@@ -7,20 +7,20 @@ import java.io.Serializable;
 
 public class EseoOBCDTO implements Serializable {
 
-    private Long voltageSolarPanel1;
-    private Long voltageSolarPanel2;
-    private Long voltageSolarPanel3;
+    private String voltageSolarPanel1;
+    private String voltageSolarPanel2;
+    private String voltageSolarPanel3;
     private String mode;
     private Long wdResetCount;
-    private Long sBandAmpTemp;
-    private Long mainBusVoltage;
-    private Long amsatSwitchCurrent;
-    private Long momentumWheelVoltage;
-    private Long momentumWheelCurrent;
-    private Long momentumWheelSpeed;
-    private Long tankPressure;
-    private Long temperatureSolarPanel1;
-    private Long temperatureBattery1;
+    private String sBandAmpTemp;
+    private String mainBusVoltage;
+    private String amsatSwitchCurrent;
+    private String momentumWheelVoltage;
+    private String momentumWheelCurrent;
+    private String momentumWheelSpeed;
+    private String tankPressure;
+    private String temperatureSolarPanel1;
+    private String temperatureBattery1;
 
     /* payload_1
     private Long c1; // PMM_VOLTAGE_SP1_STRING_1
@@ -50,31 +50,31 @@ public class EseoOBCDTO implements Serializable {
      */
     
     public EseoOBCDTO(PayloadOneEntity payloadOneEntity, PayloadTwoEntity payloadTwoEntity) {
-        voltageSolarPanel1 = payloadOneEntity.getC1();
-        voltageSolarPanel2 = payloadOneEntity.getC2();
-        voltageSolarPanel3 = payloadOneEntity.getC3();
+        voltageSolarPanel1 = payloadOneEntity.getC1() + " mV";
+        voltageSolarPanel2 = payloadOneEntity.getC2() + " mV";
+        voltageSolarPanel3 = payloadOneEntity.getC3() + " mV";
         mode = payloadOneEntity.getC4();
         wdResetCount = payloadOneEntity.getC6();
-        sBandAmpTemp = payloadOneEntity.getC10();
-        mainBusVoltage = payloadOneEntity.getC11();
-        amsatSwitchCurrent = payloadTwoEntity.getC4();
-        momentumWheelVoltage = payloadTwoEntity.getC5();
-        momentumWheelCurrent = payloadTwoEntity.getC6();
-        momentumWheelSpeed = payloadTwoEntity.getC7();
-        tankPressure = payloadTwoEntity.getC8();
-        temperatureSolarPanel1 = payloadTwoEntity.getC9();
-        temperatureBattery1 = payloadTwoEntity.getC10();
+        sBandAmpTemp = payloadOneEntity.getC10() + " C";
+        mainBusVoltage = payloadOneEntity.getC11() + " mV";
+        amsatSwitchCurrent = payloadTwoEntity.getC4() + " mA";
+        momentumWheelVoltage = payloadTwoEntity.getC5() + " mV";
+        momentumWheelCurrent = payloadTwoEntity.getC6() + " mA";
+        momentumWheelSpeed = payloadTwoEntity.getC7() + " rpm";
+        tankPressure = payloadTwoEntity.getC8() + " kPa";
+        temperatureSolarPanel1 = payloadTwoEntity.getC9() + " C";
+        temperatureBattery1 = payloadTwoEntity.getC10() + " C";
     }
 
-    public Long getVoltageSolarPanel1() {
+    public String getVoltageSolarPanel1() {
         return voltageSolarPanel1;
     }
 
-    public Long getVoltageSolarPanel2() {
+    public String getVoltageSolarPanel2() {
         return voltageSolarPanel2;
     }
 
-    public Long getVoltageSolarPanel3() {
+    public String getVoltageSolarPanel3() {
         return voltageSolarPanel3;
     }
 
@@ -86,39 +86,39 @@ public class EseoOBCDTO implements Serializable {
         return wdResetCount;
     }
 
-    public Long getsBandAmpTemp() {
+    public String getsBandAmpTemp() {
         return sBandAmpTemp;
     }
 
-    public Long getMainBusVoltage() {
+    public String getMainBusVoltage() {
         return mainBusVoltage;
     }
 
-    public Long getAmsatSwitchCurrent() {
+    public String getAmsatSwitchCurrent() {
         return amsatSwitchCurrent;
     }
 
-    public Long getMomentumWheelVoltage() {
+    public String getMomentumWheelVoltage() {
         return momentumWheelVoltage;
     }
 
-    public Long getMomentumWheelCurrent() {
+    public String getMomentumWheelCurrent() {
         return momentumWheelCurrent;
     }
 
-    public Long getMomentumWheelSpeed() {
+    public String getMomentumWheelSpeed() {
         return momentumWheelSpeed;
     }
 
-    public Long getTankPressure() {
+    public String getTankPressure() {
         return tankPressure;
     }
 
-    public Long getTemperatureSolarPanel1() {
+    public String getTemperatureSolarPanel1() {
         return temperatureSolarPanel1;
     }
 
-    public Long getTemperatureBattery1() {
+    public String getTemperatureBattery1() {
         return temperatureBattery1;
     }
 }

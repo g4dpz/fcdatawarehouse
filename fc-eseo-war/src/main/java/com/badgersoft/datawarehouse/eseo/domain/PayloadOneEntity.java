@@ -221,18 +221,27 @@ public class PayloadOneEntity implements Serializable {
     @Transient
     public void readBinary(String binaryString) {
 
-        // AMSAT DATA
+        // PMM_VOLTAGE_SP1_STRING_1
         c1 = getBitsAsULong(16, binaryString);
+        // PMM_VOLTAGE_SP2_STRING_1
         c2 = getBitsAsULong(16, binaryString);
+        // PMM_VOLTAGE_SP3_STRING_1
         c3 = getBitsAsULong(16, binaryString);
+        // ESEO OBD_MODE
         c4 = getOBDMode(getBitsAsULong(8, binaryString));
+        // ESEO OBD_EQUIPMENT_STATUS
         c5 = getBitsAsULong(20, binaryString);
+        // OBD_WD_RESET_COUNT
         c6 = getBitsAsULong(8, binaryString);
-
+        // ACS_OMEGA_P (Roll)
         c7 = getBitsAsDouble(1, binaryString);
+        // ACS_OMEGA_Q (Pitch)
         c8 = getBitsAsDouble(1, binaryString);
+        // ACS_OMEGA_R (yaw)
         c9 = getBitsAsDouble(1, binaryString);
+        // STX_TEMP_4 (S-band Amplifier temperature)
         c10 = getBitsAsULong(8, binaryString);
+        // PMM_VOLTAGE_MB (16b) (Main Bus Voltage)
         c11 = getBitsAsULong(8, binaryString);
     }
 
@@ -240,6 +249,7 @@ public class PayloadOneEntity implements Serializable {
     private String getOBDMode(long modeValue) {
 
         String[] modes = new String[] {
+            "EGSE mode" ,
             "OBDH power up",
             "AOCS initialization",
             "AOCS damping",
@@ -247,8 +257,7 @@ public class PayloadOneEntity implements Serializable {
             "AOCS normal ECLIPSE",
             "Safe mode S1: minor main bus power down",
             "Safe mode S2: sever main bus power down",
-            "Safe mode S3: major main bus power down",
-                "Not defined (0x80)"
+            "Safe mode S3: major main bus power down"
         };
 
         return modes[(int) (modeValue / 2)];

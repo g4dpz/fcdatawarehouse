@@ -6,127 +6,127 @@ import java.io.Serializable;
 
 public class EseoStatusDTO implements Serializable {
 
-    private long tmtcMain;
-    private long tmtcRedundant;
-    private long powerUnitMain;
-    private Long powerUnitRedundant;
-    private Long inSafeMode;
-    private Long sunSensorMain;
-    private Long earthSensor;
-    private Long magnetometerMain;
-    private Long magneometerRedundant;
-    private Long magneticTorquerMain;
-    private Long magneticTorquerRedundant;
-    private Long momentumWheelMain;
-    private Long momentumWheelRedundant;
-    private Long tritel;
-    private Long langmuirProbe;
-    private Long uCAM;
-    private Long deOrbitmechanism;
-    private Long amsatPayload;
-    private Long sBand;
-    private Long gpsReceiver;
+    private String tmtcMain;
+    private String tmtcRedundant;
+    private String powerUnitMain;
+    private String powerUnitRedundant;
+    private String inSafeMode;
+    private String sunSensorMain;
+    private String earthSensor;
+    private String magnetometerMain;
+    private String magneometerRedundant;
+    private String magneticTorquerMain;
+    private String magneticTorquerRedundant;
+    private String momentumWheelMain;
+    private String momentumWheelRedundant;
+    private String tritel;
+    private String langmuirProbe;
+    private String uCAM;
+    private String deOrbitmechanism;
+    private String amsatPayload;
+    private String sBand;
+    private String gpsReceiver;
 
     public EseoStatusDTO(PayloadOneEntity payloadOneEntity) {
-        tmtcMain = payloadOneEntity.getC5() & 1;
-        tmtcRedundant = ((payloadOneEntity.getC5() >> 1) & 1);
-        powerUnitMain = ((payloadOneEntity.getC5() >> 2) & 1);
-        powerUnitRedundant = ((payloadOneEntity.getC5() >> 3) & 1);
-        inSafeMode = ((payloadOneEntity.getC5() >> 4) & 1);
-        sunSensorMain = ((payloadOneEntity.getC5() >> 5) & 1);
-        earthSensor = ((payloadOneEntity.getC5() >> 6) & 1);
-        magnetometerMain = ((payloadOneEntity.getC5() >> 7) & 1);
-        magneometerRedundant = ((payloadOneEntity.getC5() >> 8) & 1);
-        magneticTorquerMain = ((payloadOneEntity.getC5() >> 9) & 1);
-        magneticTorquerRedundant = ((payloadOneEntity.getC5() >> 10) & 1);
-        momentumWheelMain = ((payloadOneEntity.getC5() >> 11) & 1);
-        momentumWheelRedundant = ((payloadOneEntity.getC5() >> 12) & 1);
-        tritel = ((payloadOneEntity.getC5() >> 13) & 1);
-        langmuirProbe = ((payloadOneEntity.getC5() >> 14) & 1);
-        uCAM = ((payloadOneEntity.getC5() >> 15) & 1);
-        deOrbitmechanism = ((payloadOneEntity.getC5() >> 16) & 1);
-        amsatPayload = ((payloadOneEntity.getC5() >> 17) & 1);
-        sBand = ((payloadOneEntity.getC5() >> 2) & 18);
-        gpsReceiver = ((payloadOneEntity.getC5() >> 19) & 1);
+        tmtcMain = ((payloadOneEntity.getC5() & 1) == 1) ? "ON" : "OFF";
+        tmtcRedundant = (((payloadOneEntity.getC5() >> 1) & 1) == 1) ? "ON" : "OFF";
+        powerUnitMain = (((payloadOneEntity.getC5() >> 2) & 1) == 1) ? "ON" : "OFF";
+        powerUnitRedundant = (((payloadOneEntity.getC5() >> 3) & 1) == 1) ? "ON" : "OFF";
+        inSafeMode = (((payloadOneEntity.getC5() >> 4) & 1) == 1) ? "ON" : "OFF";
+        sunSensorMain = (((payloadOneEntity.getC5() >> 5) & 1) == 1) ? "ON" : "OFF";
+        earthSensor = (((payloadOneEntity.getC5() >> 6) & 1) == 1) ? "ON" : "OFF";
+        magnetometerMain = (((payloadOneEntity.getC5() >> 7) & 1) == 1) ? "ON" : "OFF";
+        magneometerRedundant = (((payloadOneEntity.getC5() >> 8) & 1) == 1) ? "ON" : "OFF";
+        magneticTorquerMain = (((payloadOneEntity.getC5() >> 9) & 1) == 1) ? "ON" : "OFF";
+        magneticTorquerRedundant = (((payloadOneEntity.getC5() >> 10) & 1) == 1) ? "ON" : "OFF";
+        momentumWheelMain = (((payloadOneEntity.getC5() >> 11) & 1) == 1) ? "ON" : "OFF";
+        momentumWheelRedundant = (((payloadOneEntity.getC5() >> 12) & 1) == 1) ? "ON" : "OFF";
+        tritel = (((payloadOneEntity.getC5() >> 13) & 1) == 1) ? "ON" : "OFF";
+        langmuirProbe = (((payloadOneEntity.getC5() >> 14) & 1) == 1) ? "ON" : "OFF";
+        uCAM = (((payloadOneEntity.getC5() >> 15) & 1) == 1) ? "ON" : "OFF";
+        deOrbitmechanism = (((payloadOneEntity.getC5() >> 16) & 1) == 1) ? "ON" : "OFF";
+        amsatPayload = (((payloadOneEntity.getC5() >> 17) & 1) == 1) ? "ON" : "OFF";
+        sBand = (((payloadOneEntity.getC5() >> 2) & 18) == 1) ? "ON" : "OFF";
+        gpsReceiver = (((payloadOneEntity.getC5() >> 19) & 1) == 1) ? "ON" : "OFF";
     }
 
-    public long getTmtcMain() {
+    public String getTmtcMain() {
         return tmtcMain;
     }
 
-    public long getTmtcRedundant() {
+    public String getTmtcRedundant() {
         return tmtcRedundant;
     }
 
-    public long getPowerUnitMain() {
+    public String getPowerUnitMain() {
         return powerUnitMain;
     }
 
-    public Long getPowerUnitRedundant() {
+    public String getPowerUnitRedundant() {
         return powerUnitRedundant;
     }
 
-    public Long getInSafeMode() {
+    public String getInSafeMode() {
         return inSafeMode;
     }
 
-    public Long getSunSensorMain() {
+    public String getSunSensorMain() {
         return sunSensorMain;
     }
 
-    public Long getEarthSensor() {
+    public String getEarthSensor() {
         return earthSensor;
     }
 
-    public Long getMagnetometerMain() {
+    public String getMagnetometerMain() {
         return magnetometerMain;
     }
 
-    public Long getMagneometerRedundant() {
+    public String getMagneometerRedundant() {
         return magneometerRedundant;
     }
 
-    public Long getMagneticTorquerMain() {
+    public String getMagneticTorquerMain() {
         return magneticTorquerMain;
     }
 
-    public Long getMagneticTorquerRedundant() {
+    public String getMagneticTorquerRedundant() {
         return magneticTorquerRedundant;
     }
 
-    public Long getMomentumWheelMain() {
+    public String getMomentumWheelMain() {
         return momentumWheelMain;
     }
 
-    public Long getMomentumWheelRedundant() {
+    public String getMomentumWheelRedundant() {
         return momentumWheelRedundant;
     }
 
-    public Long getTritel() {
+    public String getTritel() {
         return tritel;
     }
 
-    public Long getLangmuirProbe() {
+    public String getLangmuirProbe() {
         return langmuirProbe;
     }
 
-    public Long getuCAM() {
+    public String getuCAM() {
         return uCAM;
     }
 
-    public Long getDeOrbitmechanism() {
+    public String getDeOrbitmechanism() {
         return deOrbitmechanism;
     }
 
-    public Long getAmsatPayload() {
+    public String getAmsatPayload() {
         return amsatPayload;
     }
 
-    public Long getsBand() {
+    public String getsBand() {
         return sBand;
     }
 
-    public Long getGpsReceiver() {
+    public String getGpsReceiver() {
         return gpsReceiver;
     }
 }

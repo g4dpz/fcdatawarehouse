@@ -101,6 +101,49 @@
         $("#safeModeState_value").text(data.data.swDTO.safeModeState);
         $("#inSafeMode_value").text(data.data.swDTO.inSafeMode);
 
+        $("#roll_value").text(data.data.eseoAttitudeDTO.roll);
+        $("#pitch_value").text(data.data.eseoAttitudeDTO.pitch);
+        $("#yaw_value").text(data.data.eseoAttitudeDTO.yaw);
+        $("#xPosition_value").text(data.data.eseoAttitudeDTO.xPosition);
+        $("#yPosition_value").text(data.data.eseoAttitudeDTO.yPosition);
+        $("#zPosition_value").text(data.data.eseoAttitudeDTO.zPosition);
+
+        $("#voltageSolarPanel1_value").text(data.data.eseoOBCDTO.voltageSolarPanel1);
+        $("#voltageSolarPanel2_value").text(data.data.eseoOBCDTO.voltageSolarPanel2);
+        $("#voltageSolarPanel3_value").text(data.data.eseoOBCDTO.voltageSolarPanel3);
+        $("#mode_value").text(data.data.eseoOBCDTO.mode);
+        $("#wdResetCount_value").text(data.data.eseoOBCDTO.wdResetCount);
+        $("#sBandAmpTemp_value").text(data.data.eseoOBCDTO.sBandAmpTemp);
+        $("#mainBusVoltage_value").text(data.data.eseoOBCDTO.mainBusVoltage);
+        $("#amsatSwitchCurrent_value").text(data.data.eseoOBCDTO.amsatSwitchCurrent);
+        $("#momentumWheelVoltage_value").text(data.data.eseoOBCDTO.momentumWheelVoltage);
+        $("#momentumWheelCurrent_value").text(data.data.eseoOBCDTO.momentumWheelCurrent);
+        $("#momentumWheelSpeed_value").text(data.data.eseoOBCDTO.momentumWheelSpeed);
+        $("#tankPressure_value").text(data.data.eseoOBCDTO.tankPressure);
+        $("#temperatureSolarPanel1_value").text(data.data.eseoOBCDTO.temperatureSolarPanel1);
+        $("#temperatureBattery1_value").text(data.data.eseoOBCDTO.temperatureBattery1);
+
+        $("#tmtcMain_value").text(data.data.eseoStatusDTO.tmtcMain);
+        $("#tmtcRedundant_value").text(data.data.eseoStatusDTO.tmtcRedundant);
+        $("#powerUnitMain_value").text(data.data.eseoStatusDTO.powerUnitMain);
+        $("#powerUnitRedundant_value").text(data.data.eseoStatusDTO.powerUnitRedundant);
+        $("#inSafeModeESEO_value").text(data.data.eseoStatusDTO.inSafeMode);
+        $("#sunSensorMain_value").text(data.data.eseoStatusDTO.sunSensorMain);
+        $("#earthSensor_value").text(data.data.eseoStatusDTO.earthSensor);
+        $("#magnetometerMain_value").text(data.data.eseoStatusDTO.magnetometerMain);
+        $("#magneometerRedundant_value").text(data.data.eseoStatusDTO.magneometerRedundant);
+        $("#magneticTorquerMain_value").text(data.data.eseoStatusDTO.magneticTorquerMain);
+        $("#magneticTorquerRedundant_value").text(data.data.eseoStatusDTO.magneticTorquerRedundant);
+        $("#momentumWheelMain_value").text(data.data.eseoStatusDTO.momentumWheelMain);
+        $("#momentumWheelRedundant_value").text(data.data.eseoStatusDTO.momentumWheelRedundant);
+        $("#tritel_value").text(data.data.eseoStatusDTO.tritel);
+        $("#langmuirProbe_value").text(data.data.eseoStatusDTO.langmuirProbe);
+        $("#uCAM_value").text(data.data.eseoStatusDTO.uCAM);
+        $("#deOrbitmechanism_value").text(data.data.eseoStatusDTO.deOrbitmechanism);
+        $("#amsatPayload_value").text(data.data.eseoStatusDTO.amsatPayload);
+        $("#sBand_value").text(data.data.eseoStatusDTO.sBand);
+        $("#gpsReceiver_value").text(data.data.eseoStatusDTO.gpsReceiver);
+
         $("#site_list").html('');
         var items = [];
         $.each(data.data.sites, function (id, site) {

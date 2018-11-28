@@ -5,7 +5,7 @@ import com.badgersoft.datawarehouse.eseo.domain.PayloadTwoEntity;
 
 import java.io.Serializable;
 
-public class EseoAttitudeDTO implements Serializable {
+public class EseoAttitudeDTO extends BaseDTO implements Serializable {
 
     private String roll;
     private String pitch;
@@ -13,6 +13,20 @@ public class EseoAttitudeDTO implements Serializable {
     private String xPosition;
     private String yPosition;
     private String zPosition;
+
+    /* payload_1
+    private Long c1; // PMM_VOLTAGE_SP1_STRING_1
+    private Long c2; // PMM_VOLTAGE_SP1_STRING_2
+    private Long c3; // PMM_VOLTAGE_SP1_STRING_3
+    private String c4; // ESEO OBD_MODE
+    private String c5; // ESEO OBD_EQUIPMENT_STATUS
+    private Long c6; // OBD_WD_RESET_COUNT
+    private double c7; // Roll
+    private double c8; // Pitch
+    private double c9; // Yaw
+    private Long c10; // sband temp
+    private Long c11; // main bus volts
+     */
 
 
     /*
@@ -32,6 +46,12 @@ public class EseoAttitudeDTO implements Serializable {
 
 
     public EseoAttitudeDTO(PayloadOneEntity payloadOneEntity, PayloadTwoEntity payloadTwoEntity) {
+        roll = formatOneDP(payloadOneEntity.getC7()) + " deg./s";
+        pitch = formatOneDP(payloadOneEntity.getC8()) + " deg./s";
+        yaw = formatOneDP(payloadOneEntity.getC9()) + " deg./s";
+        xPosition = formatOneDP(payloadTwoEntity.getC1()) + " km";
+        yPosition = formatOneDP(payloadTwoEntity.getC2()) + " km";
+        zPosition = formatOneDP(payloadOneEntity.getC3()) + " km";
     }
 
     public String getRoll() {
