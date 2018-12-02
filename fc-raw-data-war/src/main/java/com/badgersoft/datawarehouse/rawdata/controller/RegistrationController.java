@@ -101,6 +101,7 @@ public class RegistrationController {
 
         UserRanking userRanking = new UserRanking();
         userRanking.setSiteId(registerUserRequest.getSiteName());
+        userRanking.setSiteAlias(registerUserRequest.getSiteName());
         userRanking.setSatelliteId(2L);
         userRanking.setNumber(0);
 

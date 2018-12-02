@@ -29,7 +29,7 @@ public class UserRankingServiceImpl implements UserRankingService {
         List<UserRanking> userRankings;
 
         if (search != null) {
-            userRankings = userRankingDao.findBySiteIdContainingIgnoreCase(search);
+            userRankings = userRankingDao.findBySiteIdContainingIgnoreCaseOrSiteAliasContainingIgnoreCase(search, search);
         }
         else {
             userRankings = userRankingDao.findAll();
@@ -40,7 +40,11 @@ public class UserRankingServiceImpl implements UserRankingService {
         List<Data> data = new ArrayList<>();
 
         for(UserRanking userRanking : userRankings) {
-            final String siteId = userRanking.getSiteId();
+            String siteId = userRanking.getSiteId();
+            String siteAlias = userRanking.getSiteAlias();
+            if (siteAlias != null && !siteId.equals(siteAlias)) {
+                siteId = siteAlias;
+            }
             sites.add(siteId);
             rankings.put(siteId, userRanking.getSatelliteId(), userRanking.getNumber());
         }
