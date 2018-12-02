@@ -27,26 +27,20 @@ public class WholeOrbitDataEntity extends TelemetryEntity {
     private Date satelliteTime;
 
 
-    private double c1;
-    private double c2;
-    private double c3;
-    private double c4;
-    private double c5;
-    private double c6;
-    private double c7;
-    private double c8;
-    private double c9;
-    private long c10;
-    private long c11;
-    private long c12;
-    private long c13;
-    private long c14;
-    private long c15;
-    private long c16;
-    private long c17;
-    private long c18;
-    private long c19;
-    private long badger;
+    private double blackChassis;
+    private double silverChassis;
+    private double blackPanel;
+    private double silverPanel;
+    private double solPanelXplus;
+    private double solPanelXminus;
+    private double solPanelYplus;
+    private double solPanelYminus;
+    private double solPanelXvolts;
+    private double solPanelYvolts;
+    private double solPanelZvolts;
+    private double totPhotoCurr;
+    private double batteryVolts;
+    private double totSystemCurr;
 
     public WholeOrbitDataEntity() {}
 
@@ -55,45 +49,20 @@ public class WholeOrbitDataEntity extends TelemetryEntity {
         this.sequenceNumber = sequenceNumber;
         this.satelliteTime = satelliteTime;
 
-        // Temp @ CCT microcontroller
-        c1 = calcMcuTemp(getBitsAsULong(12, binaryString));
-        // Temp @ RF board crystal
-        c2 = ((getBitsAsULong(12, binaryString) & 1023) * -0.3465) + 266.70646;
-        // Temp @ Power amplifier
-        badger = getBitsAsULong(12, binaryString);
-        c3 = PA_TEMPS_1024[(int) (badger & 1023)];
-        // Solar panel temp +X
-        c4 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Solar panel temp –X
-        c5 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Solar panel temp +Y
-        c6 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Solar panel temp -Y
-        c7 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Solar panel temp +Z
-        c8 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Solar panel temp -Z
-        c9 = scale(getBitsAsULong(10, binaryString), -0.2080, 158.792);
-        // Sun Sensor X+
-        c10 = getBitsAsULong(10, binaryString);
-        // Sun Sensor X-
-        c11 = getBitsAsULong(10, binaryString);
-        // Sun Sensor Y+
-        c12 = getBitsAsULong(10, binaryString);
-        // Sun Sensor Y-
-        c13 = getBitsAsULong(10, binaryString);
-        // Sun Sensor Z+
-        c14 = getBitsAsULong(10, binaryString);
-        // Sun Sensor Z-
-        c15 = getBitsAsULong(10, binaryString);
-        // Battery temp
-        c16 = twosComplement(getBitsAsULong(8, binaryString));
-        // Total Photo current
-        c17 = getBitsAsULong(10, binaryString);
-        // Battery voltage
-        c18 = getBitsAsULong(14, binaryString);
-        // Total system current
-        c19 = getBitsAsULong(12, binaryString);
+        blackChassis = scale(getBitsAsULong(12, binaryString), -0.024, 75.244);
+        silverChassis = scale(getBitsAsULong(12, binaryString), -0.024, 74.750);
+        blackPanel = scale(getBitsAsULong(12, binaryString), -0.024, 75.039);
+        silverPanel = scale(getBitsAsULong(12, binaryString), -0.024, 75.987);
+        solPanelXplus = scale(getBitsAsULong(10, binaryString), -0.2073, 158.239);
+        solPanelXminus = scale(getBitsAsULong(10, binaryString), -0.2073, 158.239);
+        solPanelYplus = scale(getBitsAsULong(10, binaryString), -0.2076, 158.656);
+        solPanelYminus = scale(getBitsAsULong(10, binaryString), -0.2087, 159.045);
+        solPanelXvolts = scale(getBitsAsULong(16, binaryString), 0.001, 0.0);
+        solPanelYvolts = scale(getBitsAsULong(16, binaryString), 0.001, 0.0);
+        solPanelZvolts = scale(getBitsAsULong(16, binaryString), 0.001, 0.0);
+        totPhotoCurr = scale(getBitsAsULong(16, binaryString), 0.01, 0.0);
+        batteryVolts = scale(getBitsAsULong(16, binaryString), 0.001, 0.0);
+        totSystemCurr = scale(getBitsAsULong(16, binaryString), 0.01, 0.0);
 
     }
 
@@ -121,164 +90,116 @@ public class WholeOrbitDataEntity extends TelemetryEntity {
         this.satelliteTime = satelliteTime;
     }
 
-    public double getC1() {
-        return c1;
+    public double getBlackChassis() {
+        return blackChassis;
     }
 
-    public void setC1(double c1) {
-        this.c1 = c1;
+    public void setBlackChassis(double blackChassis) {
+        this.blackChassis = blackChassis;
     }
 
-    public double getC2() {
-        return c2;
+    public double getSilverChassis() {
+        return silverChassis;
     }
 
-    public void setC2(double c2) {
-        this.c2 = c2;
+    public void setSilverChassis(double silverChassis) {
+        this.silverChassis = silverChassis;
     }
 
-    public double getC3() {
-        return c3;
+    public double getBlackPanel() {
+        return blackPanel;
     }
 
-    public void setC3(double c3) {
-        this.c3 = c3;
+    public void setBlackPanel(double blackPanel) {
+        this.blackPanel = blackPanel;
     }
 
-    public double getC4() {
-        return c4;
+    public double getSilverPanel() {
+        return silverPanel;
     }
 
-    public void setC4(double c4) {
-        this.c4 = c4;
+    public void setSilverPanel(double silverPanel) {
+        this.silverPanel = silverPanel;
     }
 
-    public double getC5() {
-        return c5;
+    public double getSolPanelXplus() {
+        return solPanelXplus;
     }
 
-    public void setC5(double c5) {
-        this.c5 = c5;
+    public void setSolPanelXplus(double solPanelXplus) {
+        this.solPanelXplus = solPanelXplus;
     }
 
-    public double getC6() {
-        return c6;
+    public double getSolPanelXminus() {
+        return solPanelXminus;
     }
 
-    public void setC6(double c6) {
-        this.c6 = c6;
+    public void setSolPanelXminus(double solPanelXminus) {
+        this.solPanelXminus = solPanelXminus;
     }
 
-    public double getC7() {
-        return c7;
+    public double getSolPanelYplus() {
+        return solPanelYplus;
     }
 
-    public void setC7(double c7) {
-        this.c7 = c7;
+    public void setSolPanelYplus(double solPanelYplus) {
+        this.solPanelYplus = solPanelYplus;
     }
 
-    public double getC8() {
-        return c8;
+    public double getSolPanelYminus() {
+        return solPanelYminus;
     }
 
-    public void setC8(double c8) {
-        this.c8 = c8;
+    public void setSolPanelYminus(double solPanelYminus) {
+        this.solPanelYminus = solPanelYminus;
     }
 
-    public double getC9() {
-        return c9;
+    public double getSolPanelXvolts() {
+        return solPanelXvolts;
     }
 
-    public void setC9(double c9) {
-        this.c9 = c9;
+    public void setSolPanelXvolts(double solPanelXvolts) {
+        this.solPanelXvolts = solPanelXvolts;
     }
 
-    public long getC10() {
-        return c10;
+    public double getSolPanelYvolts() {
+        return solPanelYvolts;
     }
 
-    public void setC10(long c10) {
-        this.c10 = c10;
+    public void setSolPanelYvolts(double solPanelYvolts) {
+        this.solPanelYvolts = solPanelYvolts;
     }
 
-    public long getC11() {
-        return c11;
+    public double getSolPanelZvolts() {
+        return solPanelZvolts;
     }
 
-    public void setC11(long c11) {
-        this.c11 = c11;
+    public void setSolPanelZvolts(double solPanelZvolts) {
+        this.solPanelZvolts = solPanelZvolts;
     }
 
-    public long getC12() {
-        return c12;
+    public double getTotPhotoCurr() {
+        return totPhotoCurr;
     }
 
-    public void setC12(long c12) {
-        this.c12 = c12;
+    public void setTotPhotoCurr(double totPhotoCurr) {
+        this.totPhotoCurr = totPhotoCurr;
     }
 
-    public long getC13() {
-        return c13;
+    public double getBatteryVolts() {
+        return batteryVolts;
     }
 
-    public void setC13(long c13) {
-        this.c13 = c13;
+    public void setBatteryVolts(double batteryVolts) {
+        this.batteryVolts = batteryVolts;
     }
 
-    public long getC14() {
-        return c14;
+    public double getTotSystemCurr() {
+        return totSystemCurr;
     }
 
-    public void setC14(long c14) {
-        this.c14 = c14;
-    }
-
-    public long getC15() {
-        return c15;
-    }
-
-    public void setC15(long c15) {
-        this.c15 = c15;
-    }
-
-    public long getC16() {
-        return c16;
-    }
-
-    public void setC16(long c16) {
-        this.c16 = c16;
-    }
-
-    public long getC17() {
-        return c17;
-    }
-
-    public void setC17(long c17) {
-        this.c17 = c17;
-    }
-
-    public long getC18() {
-        return c18;
-    }
-
-    public void setC18(long c18) {
-        this.c18 = c18;
-    }
-
-    public long getC19() {
-        return c19;
-    }
-
-    public void setC19(long c19) {
-        this.c19 = c19;
-    }
-
-    public long getBadger() {
-        return badger;
-    }
-
-    public void setBadger(long badger) {
-        this.badger = badger;
+    public void setTotSystemCurr(double totSystemCurr) {
+        this.totSystemCurr = totSystemCurr;
     }
 
     @Transient

@@ -29,7 +29,8 @@
                             <div style="height:100px;" class="mb-24 jsDash__resizeToEllipse">
                                 <img th:src="${'/images/' + satellite.imageUrl}" style="max-width:60%; height:auto;" th:alt="${satellite.name}" src="/images/funcube-fm.png" alt="FUNcube Engineering Model">
                             </div>
-                            <a href="#" th:href="@{'/ui/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
+                            <a th:if="${satellite.url == 'fc1-fm'}" href="http://warehouse.funcube.org.uk" target="_blank" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
+                            <a th:unless="${satellite.url == 'fc1-fm'}" href="#" th:href="@{'/ui/' + ${satellite.url}}" class="btn btn-block btn-secondary mb-24"><span th:text="${satellite.name}">Satellite Name</span></a>
                         </div>
                     </div>
                 </div>

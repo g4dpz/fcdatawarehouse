@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = "/data")
 public class RealtimeSummaryRestController {
 
     @Autowired
@@ -33,7 +32,7 @@ public class RealtimeSummaryRestController {
     @Autowired
     MinMaxDao minMaxDao;
 
-    @RequestMapping(value = "/realtime", method = RequestMethod.GET, produces = "application/javascript")
+    @RequestMapping(value = "/data/realtime", method = RequestMethod.GET, produces = "application/javascript")
     public String getSummary(@RequestParam(value = "callback") String callback) {
         SatelliteStatusEntity statusEntity = (SatelliteStatusEntity) (satelliteStatusDao.findAll().iterator().next());
         Long sequenceNumber = statusEntity.getSequenceNumber();

@@ -85,9 +85,9 @@
         $("#bpskCurr_value").text(data.data.paDTO.bpskCurr + " mA");
         $("#bpsk3v3_value").text(data.data.paDTO.bpsk3v3 + " mA");
 
-        $("#lBandTranspRxRssi_value").text(data.data.rfDTO.lBandTranspRxRssi);
-        $("#lBandCmdRxRssi_value").text(data.data.rfDTO.lBandCmdRxRssi);
-        $("#lBandCmdRxDop_value").text(data.data.rfDTO.lBandCmdRxDop);
+        $("#lBandTranspRxRssi_value").text(data.data.rfDTO.lBandTranspRxRssi + " dBm");
+        $("#lBandCmdRxRssi_value").text(data.data.rfDTO.lBandCmdRxRssi + " dBm");
+        $("#lBandCmdRxDop_value").text(data.data.rfDTO.lBandCmdRxDop + " kHz");
         $("#lBandCmdRxTemp_value").text(data.data.rfDTO.lBandCmdRxTemp + " C");
 
         $("#sequenceNumber_value").text(data.data.swDTO.sequenceNumber);

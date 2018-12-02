@@ -459,7 +459,7 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         LOG.info(String.format("Payload request %d %d %s", satelliteId, sequenceNumber, framesRequested));
 
-        final List<HexFrame> frames = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameTypeIn(
+        final List<HexFrame> frames = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameTypeInOrderByFrameTypeAsc(
                 satelliteId, sequenceNumber, frameList);
 
         if (frames == null || frames.isEmpty() || frameList.size() != frames.size()) {

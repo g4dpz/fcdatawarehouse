@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.transaction.annotation.Isolation;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class Receiver {
@@ -114,8 +118,8 @@ public class Receiver {
 
                 if (frameTypeName.equals("rt")) {
                     realtimeProcessor.process(hexFrameDTO);
-                    if (hexFrameDTO.getFrameType() == 24) {
-                        processWOD(satelliteId, sequenceNumber);
+                    if (hexFrameDTO.getFrameType() == 23) {
+                        processWOD(satelliteId, sequenceNumber, "1,2,3,4,5,6,7,8,9,10,11,12");
                     }
                 };
 
@@ -132,13 +136,24 @@ public class Receiver {
         latch.countDown();
     }
 
-    private void processWOD(String satelliteId, String sequenceNumber) {
-//        final String url = "http://localhost:" + WAREHOUSE_PORT + "/api/data/payload/" +
-//                satelliteId + "/" +
-//                sequenceNumber + "?" +
-//                frameTypeId;
-//        HexFrameDTO hexFrameDTO
-//                = restTemplate.getForObject(
-//                url, HexFrameDTO.class);
+    private void processWOD(String satelliteId, String sequenceNumber, String frames) {
+
+        LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String url = "http://localhost:8080/api/data/payload/" +
+                satelliteId + "/" +
+                sequenceNumber + "?" +
+                "frames=" + frames;
+
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<String>>(){});
+        List<String> payloads = response.getBody();
+
+        LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
+
     }
 }

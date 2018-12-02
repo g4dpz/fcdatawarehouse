@@ -16,6 +16,6 @@ public interface WholeOrbitDataDAO extends PagingAndSortingRepository<WholeOrbit
     @Query
     Optional<WholeOrbitDataEntity> findById(Long id);
 
-    @Query("select fm from WholeOrbitDataEntity fm where satellite_time >= ?1")
+    @Query("select fm from WholeOrbitDataEntity fm where satellite_time >= ?1 order by satellite_time asc")
     List<WholeOrbitDataEntity> findAfterSatTime(Timestamp from);
 }
