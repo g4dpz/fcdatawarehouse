@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/page}">
+<head>
+    <title>Registration Confirmation</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Registration Email Authenticated</h1>
+        </div>
+
+        <div class="DashSection mt-0">
+
+            <div th:if="${error}" class="alert alert-info">
+                <p th:text="${error}"><</p>
+            </div>
+
+            <p>Thank you for confirming your Site to take part in the data upload for the FUNcube payload projects
+
+            <div class="row">
+
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+                    <p>If you have not already done so, please set up the PC Dashboard in the File&rarr;Settings&rarr;Warehouse menu:
+
+                    <p><img th:src="${'/images/warehouse_setup.png'}" src="/images/warehouse_setup.png" alt="PC Dashboard Settings">
+                        <br><strong>Site Id:</strong> enter the Callsign/School/Name you chose
+                        <br><strong>Auth Code:</strong> enter the authorisation code you received
+                        <br><strong>URL:</strong> enter <strong>http://data.funcube.org.uk</strong>
+                        <br><strong>Stream data to warehouse:</strong> check the box</p>
+
+                    <p><strong>Please use the menu on the left side to continue with use of the site</strong></p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(function () {
+
+        Feedgen.platforms.init();
+
+    });
+
+</script>
+
+</body>
+</html>

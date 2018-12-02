@@ -15,14 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,6 +115,41 @@ public class RegistrationController {
 
         ModelAndView modelAndView = new ModelAndView("content/registration-confirmation");
         return modelAndView;
+    }
+
+    @GetMapping("registration-confirmation/{siteId}/{registrationCode}")
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
+    public ModelAndView registrationConfirmation(@PathVariable(value = "siteId") String siteId,
+                                    @PathVariable(value = "registrationCode") String registrationCode,
+                                    HttpServletRequest request, HttpServletResponse response) {
+
+        ModelAndView m = new ModelAndView("content/authemail");
+        m.addObject("satelliteId", 2);
+        m.addObject("showStatus", new Long(0));
+
+        User user = userDao.findBySiteId(siteId);
+
+        if (user == null) {
+            m.addObject("error", "Site Name was not found");
+            return m;
+        }
+
+        if (!registrationCode.equals(user.getRegistrationCode())) {
+            m.addObject("error", "Registration code was not found");
+            return m;
+        }
+
+        if ((clock.currentTime() - user.getCreatedDate().getTime()) > 6048e5) {
+            m.addObject("error", "Registration code has expired, please contact admin@funcube.org.uk");
+            return m;
+        }
+
+        user.setEnabled(true);
+
+        userDao.save(user);
+
+        return m;
+
     }
 
     private List<String> getErrorMesages(List<FieldError> fieldErrors) {
