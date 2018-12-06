@@ -17,6 +17,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
@@ -115,7 +116,12 @@ public class Receiver {
                 if (frameTypeName.equals("rt")) {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
-                        processWOD(satelliteId, sequenceNumber, "0,1,2,3,4,5,6,7,8,9,10,11");
+                        try {
+                            processWOD(satelliteId, sequenceNumber, "0,1,2,3,4,5,6,7,8,9,10,11");
+                        }
+                        catch (HttpClientErrorException h) {
+                            LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
+                        }
                     }
                 };
 

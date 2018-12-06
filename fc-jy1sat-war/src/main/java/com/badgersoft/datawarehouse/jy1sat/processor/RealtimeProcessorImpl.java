@@ -153,16 +153,12 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                     minMaxDao.save(newMinMax);
                 }
                 else if (value > minMax.getMaximum()) {
-                    if (channel != 22 || (channel == 22 && realtimeEntity.getC20() == 1)) {
                         minMax.setMaximum(value);
                         minMaxDao.save(minMax);
-                    }
                 }
                 else if (value < minMax.getMinimum()) {
-                    if (channel != 22 || (channel == 22 && realtimeEntity.getC20() == 1)) {
                         minMax.setMinimum(value);
                         minMaxDao.save(minMax);
-                    }
                 }
             }
         }

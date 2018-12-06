@@ -1,14 +1,8 @@
 package com.badgersoft.datawarehouse.eseo.processor;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
-import com.badgersoft.datawarehouse.eseo.dao.PayloadOneDao;
-import com.badgersoft.datawarehouse.eseo.dao.PayloadTwoDao;
-import com.badgersoft.datawarehouse.eseo.dao.RealtimeDao;
-import com.badgersoft.datawarehouse.eseo.dao.SatelliteStatusDao;
-import com.badgersoft.datawarehouse.eseo.domain.PayloadOneEntity;
-import com.badgersoft.datawarehouse.eseo.domain.PayloadTwoEntity;
-import com.badgersoft.datawarehouse.eseo.domain.RealtimeEntity;
-import com.badgersoft.datawarehouse.eseo.domain.SatelliteStatusEntity;
+import com.badgersoft.datawarehouse.eseo.dao.*;
+import com.badgersoft.datawarehouse.eseo.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -27,9 +22,11 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RealtimeProcessorImpl extends AbstractProcessor implements RealtimeProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RealtimeProcessorImpl.class);
-
     private static AtomicLong channelValue = new AtomicLong(0L);
+
+    public static final int MIN_MAX_VALUE_COUNT = 23;
+    private static final long SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000;
+    private static Logger LOG = LoggerFactory.getLogger(RealtimeProcessorImpl.class.getName());
 
     @Autowired
     RealtimeDao realtimeDAO;
@@ -42,6 +39,9 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
 
     @Autowired
     PayloadTwoDao payloadTwoDao;
+
+    @Autowired
+    MinMaxDao minMaxDao;
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = false)
@@ -138,10 +138,94 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
             satelliteStatus.setEclipsed(realtimeEntity.getC27().equals("Yes"));
 
             satelliteStatusDAO.save(satelliteStatus);
+            updateMinMax(realtimeEntity);
         }
 
         long timeTaken = Calendar.getInstance().getTime().getTime() - then;
-        LOGGER.debug(String.format("Processed realtime messages in %s mS", timeTaken));
+        LOG.debug(String.format("Processed realtime messages in %s mS", timeTaken));
 
+    }
+
+    private void updateMinMax(RealtimeEntity realtimeEntity) {
+        List<MinMaxEntity> minMaxEntities = minMaxDao.getAllEnabled();
+        if (minMaxEntities.size() == MIN_MAX_VALUE_COUNT) {
+            long refDate = minMaxEntities.get(0).getRefDate().getTime();
+            long now = System.currentTimeMillis();
+            boolean refresh = (now - refDate) > SEVEN_DAYS_MILLIS;
+            for (MinMaxEntity minMax : minMaxEntities) {
+                Long channel = minMax.getChannel();
+                Double value = getChannelValue(channel, realtimeEntity);
+                if (refresh) {
+                    minMax.setEnabled(false);
+                    minMaxDao.save(minMax);
+                    MinMaxEntity newMinMax = new MinMaxEntity(channel, value, value, new Date(now), true);
+                    minMaxDao.save(newMinMax);
+                }
+                else if (value > minMax.getMaximum()) {
+                        minMax.setMaximum(value);
+                        minMaxDao.save(minMax);
+                }
+                else if (value < minMax.getMinimum()) {
+                        minMax.setMinimum(value);
+                        minMaxDao.save(minMax);
+                }
+            }
+        }
+        else {
+            LOG.error("Did not find " + MIN_MAX_VALUE_COUNT + " minmax values");
+        }
+    }
+
+    private Double getChannelValue(Long channel, RealtimeEntity realtimeEntity) {
+        switch (channel.intValue()) {
+            case 1:
+                return Double.valueOf(realtimeEntity.getC1());
+            case 2:
+                return Double.valueOf(realtimeEntity.getC2());
+            case 3:
+                return Double.valueOf(realtimeEntity.getC3());
+            case 4:
+                return Double.valueOf(realtimeEntity.getC4());
+            case 5:
+                return Double.valueOf(realtimeEntity.getC5());
+            case 6:
+                return Double.valueOf(realtimeEntity.getC6());
+            case 7:
+                return Double.valueOf(realtimeEntity.getC7());
+            case 8:
+                return Double.valueOf(realtimeEntity.getC8());
+            case 9:
+                return Double.valueOf(realtimeEntity.getC9());
+            case 10:
+                return Double.valueOf(realtimeEntity.getC10());
+            case 11:
+                return Double.valueOf(realtimeEntity.getC11());
+            case 12:
+                return Double.valueOf(realtimeEntity.getC12());
+            case 13:
+                return Double.valueOf(realtimeEntity.getC13());
+            case 14:
+                return Double.valueOf(realtimeEntity.getC14());
+            case 15:
+                return Double.valueOf(realtimeEntity.getC15());
+            case 16:
+                return Double.valueOf(realtimeEntity.getC16());
+            case 17:
+                return Double.valueOf(realtimeEntity.getC17());
+            case 18:
+                return Double.valueOf(realtimeEntity.getC18());
+            case 19:
+                return Double.valueOf(realtimeEntity.getC19());
+            case 20:
+                return Double.valueOf(realtimeEntity.getC20());
+            case 21:
+                return Double.valueOf(realtimeEntity.getC20());
+            case 22:
+                return Double.valueOf(realtimeEntity.getC22());
+            case 23:
+                return Double.valueOf(realtimeEntity.getC23());
+            default:
+                return 0.0;
+        }
     }
 }
