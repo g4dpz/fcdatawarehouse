@@ -50,20 +50,42 @@ public class EseoOBCDTO extends BaseDTO implements Serializable {
      */
     
     public EseoOBCDTO(PayloadOneEntity payloadOneEntity, PayloadTwoEntity payloadTwoEntity) {
-        voltageSolarPanel1 = payloadOneEntity.getC1() + " mV";
-        voltageSolarPanel2 = payloadOneEntity.getC2() + " mV";
-        voltageSolarPanel3 = payloadOneEntity.getC3() + " mV";
-        mode = payloadOneEntity.getC4();
-        wdResetCount = payloadOneEntity.getC6();
-        sBandAmpTemp = payloadOneEntity.getC10() + " C";
-        mainBusVoltage = payloadOneEntity.getC11() + " mV";
-        amsatSwitchCurrent = payloadTwoEntity.getC4() + " mA";
-        momentumWheelVoltage = formatOneDP(payloadTwoEntity.getC5()) + " mV";
-        momentumWheelCurrent = formatOneDP(payloadTwoEntity.getC6()) + " mA";
-        momentumWheelSpeed = formatOneDP(payloadTwoEntity.getC7()) + " rpm";
-        tankPressure = payloadTwoEntity.getC8() + " kPa";
-        temperatureSolarPanel1 = formatOneDP(payloadTwoEntity.getC9()) + " C";
-        temperatureBattery1 = formatOneDP(payloadTwoEntity.getC10()) + " C";
+        if (payloadOneEntity == null) {
+            voltageSolarPanel1 = " N/A";
+            voltageSolarPanel2 = " N/A";
+            voltageSolarPanel3 = " N/A";
+            mode = " N/A";
+            wdResetCount = -1L;
+            sBandAmpTemp = " N/A";
+            mainBusVoltage = " N/A";
+        }
+        else {
+            voltageSolarPanel1 = payloadOneEntity.getC1() + " mV";
+            voltageSolarPanel2 = payloadOneEntity.getC2() + " mV";
+            voltageSolarPanel3 = payloadOneEntity.getC3() + " mV";
+            mode = payloadOneEntity.getC4();
+            wdResetCount = payloadOneEntity.getC6();
+            sBandAmpTemp = payloadOneEntity.getC10() + " C";
+            mainBusVoltage = payloadOneEntity.getC11() + " mV";
+        }
+        if (payloadOneEntity == null) {
+            amsatSwitchCurrent = " N/A";
+            momentumWheelVoltage = " N/A";
+            momentumWheelCurrent = " N/A";
+            momentumWheelSpeed = " N/A";
+            tankPressure = " N/A";
+            temperatureSolarPanel1 = " N/A";
+            temperatureBattery1 = " N/A";
+        }
+        else {
+            amsatSwitchCurrent = payloadTwoEntity.getC4() + " mA";
+            momentumWheelVoltage = formatOneDP(payloadTwoEntity.getC5()) + " mV";
+            momentumWheelCurrent = formatOneDP(payloadTwoEntity.getC6()) + " mA";
+            momentumWheelSpeed = formatOneDP(payloadTwoEntity.getC7()) + " rpm";
+            tankPressure = payloadTwoEntity.getC8() + " kPa";
+            temperatureSolarPanel1 = formatOneDP(payloadTwoEntity.getC9()) + " C";
+            temperatureBattery1 = formatOneDP(payloadTwoEntity.getC10()) + " C";
+        }
     }
 
     public String getVoltageSolarPanel1() {

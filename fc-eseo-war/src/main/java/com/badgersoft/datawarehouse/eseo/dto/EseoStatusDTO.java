@@ -28,26 +28,50 @@ public class EseoStatusDTO implements Serializable {
     private String gpsReceiver;
 
     public EseoStatusDTO(PayloadOneEntity payloadOneEntity) {
-        tmtcMain = ((payloadOneEntity.getC5() & 1) == 1) ? "ON" : "OFF";
-        tmtcRedundant = (((payloadOneEntity.getC5() >> 1) & 1) == 1) ? "ON" : "OFF";
-        powerUnitMain = (((payloadOneEntity.getC5() >> 2) & 1) == 1) ? "ON" : "OFF";
-        powerUnitRedundant = (((payloadOneEntity.getC5() >> 3) & 1) == 1) ? "ON" : "OFF";
-        inSafeMode = (((payloadOneEntity.getC5() >> 4) & 1) == 1) ? "ON" : "OFF";
-        sunSensorMain = (((payloadOneEntity.getC5() >> 5) & 1) == 1) ? "ON" : "OFF";
-        earthSensor = (((payloadOneEntity.getC5() >> 6) & 1) == 1) ? "ON" : "OFF";
-        magnetometerMain = (((payloadOneEntity.getC5() >> 7) & 1) == 1) ? "ON" : "OFF";
-        magneometerRedundant = (((payloadOneEntity.getC5() >> 8) & 1) == 1) ? "ON" : "OFF";
-        magneticTorquerMain = (((payloadOneEntity.getC5() >> 9) & 1) == 1) ? "ON" : "OFF";
-        magneticTorquerRedundant = (((payloadOneEntity.getC5() >> 10) & 1) == 1) ? "ON" : "OFF";
-        momentumWheelMain = (((payloadOneEntity.getC5() >> 11) & 1) == 1) ? "ON" : "OFF";
-        momentumWheelRedundant = (((payloadOneEntity.getC5() >> 12) & 1) == 1) ? "ON" : "OFF";
-        tritel = (((payloadOneEntity.getC5() >> 13) & 1) == 1) ? "ON" : "OFF";
-        langmuirProbe = (((payloadOneEntity.getC5() >> 14) & 1) == 1) ? "ON" : "OFF";
-        uCAM = (((payloadOneEntity.getC5() >> 15) & 1) == 1) ? "ON" : "OFF";
-        deOrbitmechanism = (((payloadOneEntity.getC5() >> 16) & 1) == 1) ? "ON" : "OFF";
-        amsatPayload = (((payloadOneEntity.getC5() >> 17) & 1) == 1) ? "ON" : "OFF";
-        sBand = (((payloadOneEntity.getC5() >> 2) & 18) == 1) ? "ON" : "OFF";
-        gpsReceiver = (((payloadOneEntity.getC5() >> 19) & 1) == 1) ? "ON" : "OFF";
+        if (payloadOneEntity == null) {
+            tmtcMain = "N/A";
+            tmtcRedundant = "N/A";
+            powerUnitMain = "N/A";
+            powerUnitRedundant = "N/A";
+            inSafeMode = "N/A";
+            sunSensorMain = "N/A";
+            earthSensor = "N/A";
+            magnetometerMain = "N/A";
+            magneometerRedundant = "N/A";
+            magneticTorquerMain = "N/A";
+            magneticTorquerRedundant = "N/A";
+            momentumWheelMain = "N/A";
+            momentumWheelRedundant = "N/A";
+            tritel =  "N/A";
+            langmuirProbe =  "N/A";
+            uCAM =  "N/A";
+            deOrbitmechanism =  "N/A";
+            amsatPayload =  "N/A";
+            sBand =  "N/A";
+            gpsReceiver =  "N/A";
+        }
+        else {
+            tmtcMain = ((payloadOneEntity.getC5() & 1) == 1) ? "ON" : "OFF";
+            tmtcRedundant = (((payloadOneEntity.getC5() >> 1) & 1) == 1) ? "ON" : "OFF";
+            powerUnitMain = (((payloadOneEntity.getC5() >> 2) & 1) == 1) ? "ON" : "OFF";
+            powerUnitRedundant = (((payloadOneEntity.getC5() >> 3) & 1) == 1) ? "ON" : "OFF";
+            inSafeMode = (((payloadOneEntity.getC5() >> 4) & 1) == 1) ? "ON" : "OFF";
+            sunSensorMain = (((payloadOneEntity.getC5() >> 5) & 1) == 1) ? "ON" : "OFF";
+            earthSensor = (((payloadOneEntity.getC5() >> 6) & 1) == 1) ? "ON" : "OFF";
+            magnetometerMain = (((payloadOneEntity.getC5() >> 7) & 1) == 1) ? "ON" : "OFF";
+            magneometerRedundant = (((payloadOneEntity.getC5() >> 8) & 1) == 1) ? "ON" : "OFF";
+            magneticTorquerMain = (((payloadOneEntity.getC5() >> 9) & 1) == 1) ? "ON" : "OFF";
+            magneticTorquerRedundant = (((payloadOneEntity.getC5() >> 10) & 1) == 1) ? "ON" : "OFF";
+            momentumWheelMain = (((payloadOneEntity.getC5() >> 11) & 1) == 1) ? "ON" : "OFF";
+            momentumWheelRedundant = (((payloadOneEntity.getC5() >> 12) & 1) == 1) ? "ON" : "OFF";
+            tritel = (((payloadOneEntity.getC5() >> 13) & 1) == 1) ? "ON" : "OFF";
+            langmuirProbe = (((payloadOneEntity.getC5() >> 14) & 1) == 1) ? "ON" : "OFF";
+            uCAM = (((payloadOneEntity.getC5() >> 15) & 1) == 1) ? "ON" : "OFF";
+            deOrbitmechanism = (((payloadOneEntity.getC5() >> 16) & 1) == 1) ? "ON" : "OFF";
+            amsatPayload = (((payloadOneEntity.getC5() >> 17) & 1) == 1) ? "ON" : "OFF";
+            sBand = (((payloadOneEntity.getC5() >> 2) & 18) == 1) ? "ON" : "OFF";
+            gpsReceiver = (((payloadOneEntity.getC5() >> 19) & 1) == 1) ? "ON" : "OFF";
+        }
     }
 
     public String getTmtcMain() {

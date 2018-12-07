@@ -46,12 +46,27 @@ public class EseoAttitudeDTO extends BaseDTO implements Serializable {
 
 
     public EseoAttitudeDTO(PayloadOneEntity payloadOneEntity, PayloadTwoEntity payloadTwoEntity) {
-        roll = formatOneDP(payloadOneEntity.getC7()) + " deg./s";
-        pitch = formatOneDP(payloadOneEntity.getC8()) + " deg./s";
-        yaw = formatOneDP(payloadOneEntity.getC9()) + " deg./s";
-        xPosition = formatOneDP(payloadTwoEntity.getC1()) + " km";
-        yPosition = formatOneDP(payloadTwoEntity.getC2()) + " km";
-        zPosition = formatOneDP(payloadOneEntity.getC3()) + " km";
+        if (payloadOneEntity == null) {
+            roll = " N/A";
+            pitch = " N/A";
+            yaw = " N/A";
+        }
+        else {
+            roll = formatOneDP(payloadOneEntity.getC7()) + " deg./s";
+            pitch = formatOneDP(payloadOneEntity.getC8()) + " deg./s";
+            yaw = formatOneDP(payloadOneEntity.getC9()) + " deg./s";
+        }
+
+        if (payloadTwoEntity == null) {
+            xPosition = " N/A";
+            yPosition = " N/A";
+            zPosition = " N/A";
+        }
+        else {
+            xPosition = formatOneDP(payloadTwoEntity.getC1()) + " km";
+            yPosition = formatOneDP(payloadTwoEntity.getC2()) + " km";
+            zPosition = formatOneDP(payloadOneEntity.getC3()) + " km";
+        }
     }
 
     public String getRoll() {
