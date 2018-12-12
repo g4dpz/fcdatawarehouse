@@ -34,4 +34,11 @@ $( document ).ready(function () {
             $('#registerSubmit').prop('disabled', false);
         }
     });
+    $('#recoverAuthCodeInput').keyup(function () {
+        if ($(this).val().length < 3) {
+            $('#recoverAuthCodeSubmit').prop('disabled', true);
+        } else {
+            $('#recoverAuthCodeSubmit').prop('disabled', false);
+        }
+    });
 });

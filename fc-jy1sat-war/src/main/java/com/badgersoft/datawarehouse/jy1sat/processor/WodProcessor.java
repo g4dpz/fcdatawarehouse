@@ -1,10 +1,11 @@
 package com.badgersoft.datawarehouse.jy1sat.processor;
 
-import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by davidjohnson on 23/08/2016.
  */
 public interface WodProcessor {
-    void process(Long sequenceNumber, HexFrameDTO[] frames);
+    void process(Long sequenceNumber, Date satelliteTime, List<String> frames);
 }

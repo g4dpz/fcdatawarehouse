@@ -3,7 +3,6 @@ package com.badgersoft.datawarehouse.rawdata.service.impl;
 import com.badgersoft.datawarehouse.rawdata.messaging.Mail;
 import com.badgersoft.datawarehouse.rawdata.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Override
-    public void sendSimpleMessage(Mail mail) throws MessagingException, IOException {
+    public void sendRegistrationMessage(Mail mail) throws MessagingException, IOException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,
                 MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,

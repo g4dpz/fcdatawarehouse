@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/page}">
+<head>
+    <title>Dashboard Auth. Code Recovery</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Dashboard Authorisation Code Recovery</h1>
+            <!--<div class="btn-toolbar">-->
+            <!--<button class="btn btn-sm btn-primary">Save changes</button>-->
+            <!--</div>-->
+        </div>
+
+        <div class="DashSection mt-0">
+            <p>Please enter the Callsign / School / Name that you used and we will send the Dashboard credentials to your registered email address.</br></p>
+
+            <div class="row">
+
+                <form id="recoverAuthCode" action="/recover-authcode" method="post">
+
+                    <div th:if="${errors}">
+                        <div th:each="error: ${errors}">
+                            <div class="alert alert-danger" role="alert">
+                                <span th:text="${error}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <td>
+                                <label>Callsign/School/Name:</label>
+                            </td>
+                            <td>
+                                <input id="recoverAuthCodeInput" name="siteName" title="E.g.: My_School_Name" type="text" value="" />
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input id="recoverAuthCodeSubmit" type="submit" value="Submit" style="width: 100px"  disabled="disabled" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                    </table>
+                </form>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+</main>
+
+<script layout:fragment="script">
+
+    $(function () {
+
+        Feedgen.platforms.init();
+
+    });
+
+</script>
+
+</body>
+</html>

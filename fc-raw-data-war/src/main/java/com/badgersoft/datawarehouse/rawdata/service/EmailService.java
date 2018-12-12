@@ -6,5 +6,5 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 
 public interface EmailService {
-    void sendSimpleMessage(Mail mail) throws MessagingException, IOException;
+    void sendRegistrationMessage(Mail mail) throws MessagingException, IOException;
 }

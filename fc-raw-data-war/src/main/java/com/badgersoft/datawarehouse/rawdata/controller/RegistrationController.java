@@ -9,6 +9,7 @@ import com.badgersoft.datawarehouse.rawdata.messaging.Mail;
 import com.badgersoft.datawarehouse.rawdata.security.ReasonablePasswordGenerator;
 import com.badgersoft.datawarehouse.rawdata.service.EmailService;
 import com.badgersoft.datawarehouse.rawdata.service.SatelliteListService;
+import com.badgersoft.datawarehouse.rawdata.validation.AuthCodeRequest;
 import com.badgersoft.datawarehouse.rawdata.validation.RegisterUserRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -27,10 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class RegistrationController {
@@ -112,7 +110,7 @@ public class RegistrationController {
                 registerUserRequest.getEmail1(),
                 "AMSAT Data Warehouse Registration", model);
 
-        mailService.sendSimpleMessage(mail);
+        mailService.sendRegistrationMessage(mail);
 
         ModelAndView modelAndView = new ModelAndView("content/registration-confirmation");
         return modelAndView;
@@ -140,16 +138,55 @@ public class RegistrationController {
             return m;
         }
 
-        if ((clock.currentTime() - user.getCreatedDate().getTime()) > 6048e5) {
-            m.addObject("error", "Registration code has expired, please contact admin@funcube.org.uk");
-            return m;
-        }
-
         user.setEnabled(true);
 
         userDao.save(user);
 
         return m;
+
+    }
+
+    @GetMapping("recover-authcode")
+    public ModelAndView recoverAuthcode() {
+        ModelAndView modelAndView = new ModelAndView("content/recover-authcode");
+        return modelAndView;
+    }
+
+    @PostMapping("recover-authcode")
+    public ModelAndView doRecoverAuthcode(@ModelAttribute("recoverAuthCode")  @Valid AuthCodeRequest authCodeRequest, BindingResult result) throws IOException, MessagingException {
+
+        if (result.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("content/recover-authcode");
+            final List<FieldError> fieldErrors = result.getFieldErrors();
+            List<String> fieldErrorMesages = getErrorMesages(fieldErrors);
+            modelAndView.addObject("errors", fieldErrorMesages);
+            return modelAndView;
+        }
+
+        final String siteId = authCodeRequest.getSiteName();
+        final User user = userDao.findBySiteId(siteId);
+
+        if (null == user) {
+            ModelAndView modelAndView = new ModelAndView("content/recover-authcode");
+            modelAndView.addObject("errors", Collections.singletonList("Site ID: " + siteId + " is not registered."));
+            return modelAndView;
+        }
+
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        model.put("siteName", user.getSiteId());
+        model.put("authKey", user.getAuthKey());
+        model.put("registrationCode", user.getRegistrationCode());
+
+        Mail mail
+                = new Mail("operations@funcube.org.uk",
+                user.getUsername(),
+                "AMSAT Data Warehouse Auth. Code Recovery", model);
+
+        mailService.sendRegistrationMessage(mail);
+
+        ModelAndView modelAndView = new ModelAndView("content/registration-confirmation");
+        return modelAndView;
 
     }
 

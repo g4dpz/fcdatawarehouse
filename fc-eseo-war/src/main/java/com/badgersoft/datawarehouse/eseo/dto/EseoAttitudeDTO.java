@@ -65,7 +65,7 @@ public class EseoAttitudeDTO extends BaseDTO implements Serializable {
         else {
             xPosition = formatOneDP(payloadTwoEntity.getC1()) + " km";
             yPosition = formatOneDP(payloadTwoEntity.getC2()) + " km";
-            zPosition = formatOneDP(payloadOneEntity.getC3()) + " km";
+            zPosition = formatOneDP(payloadTwoEntity.getC3()) + " km";
         }
     }
 

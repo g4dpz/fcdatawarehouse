@@ -22,6 +22,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -119,7 +120,7 @@ public class Receiver {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
                         try {
-                            processWOD(satelliteId, sequenceNumber, "0,1,2,3,4,5,6,7,8,9,10,11");
+                            processWOD(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "0,1,2,3,4,5,6,7,8,9,10,11");
                         }
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
@@ -140,7 +141,7 @@ public class Receiver {
         latch.countDown();
     }
 
-    private void processWOD(String satelliteId, String sequenceNumber, String frames) {
+    private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
 
@@ -158,6 +159,8 @@ public class Receiver {
         List<String> payloads = response.getBody();
 
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
+
+        //wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 }

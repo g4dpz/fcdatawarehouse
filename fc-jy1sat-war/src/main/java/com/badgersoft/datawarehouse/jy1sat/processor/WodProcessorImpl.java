@@ -1,12 +1,10 @@
 package com.badgersoft.datawarehouse.jy1sat.processor;
 
-import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
 import com.badgersoft.datawarehouse.jy1sat.dao.RealtimeDAO;
 import com.badgersoft.datawarehouse.jy1sat.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.jy1sat.dao.WholeOrbitDataDAO;
 import com.badgersoft.datawarehouse.jy1sat.domain.SatelliteStatusEntity;
 import com.badgersoft.datawarehouse.jy1sat.domain.WholeOrbitDataEntity;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by davidjohnson on 23/08/2016.
@@ -32,26 +31,20 @@ public class WodProcessorImpl extends AbstractProcessor implements WodProcessor 
     SatelliteStatusDao satelliteStatusDao;
 
     @Override
-    public void process(Long sequenceNumber, HexFrameDTO[] frames) {
+    public void process(Long sequenceNumber, Date satelliteTime, List<String> frames) {
 
         long then = Calendar.getInstance().getTime().getTime();
 
-        HexFrameDTO lastFrame = frames[11];
-
-        Date lastSatelliteTime = lastFrame.getSatelliteTime();
-
         final Date firstFrameTime = new Date(
-                lastSatelliteTime.getTime() - (96 * 60 * 1000));
+                satelliteTime.getTime() - (96 * 60 * 1000));
 
         final StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < 12; i++) {
-            sb.append(StringUtils.right(frames[i].getHexString(), 400));
+        for (String frame : frames) {
+            sb.append(frame);
         }
 
         String binaryString = convertHexBytePairToBinary(sb.toString());
-
-        Date satelliteTime = new Date(then);
 
         for (long i = 0; i < 96; i++) {
 
