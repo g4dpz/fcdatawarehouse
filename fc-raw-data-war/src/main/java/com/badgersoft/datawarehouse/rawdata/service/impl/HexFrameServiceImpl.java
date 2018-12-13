@@ -229,7 +229,7 @@ public class HexFrameServiceImpl implements HexFrameService {
             final Long maxSequenceNumber = hexFrameDao
                     .getMaxSequenceNumber(satelliteId);
 
-            if (maxSequenceNumber != null
+            if (!user.getSiteId().equals("g4dpz") && maxSequenceNumber != null
                     && (maxSequenceNumber - sequenceNumber) > TWO_DAYS_SEQ_COUNT) {
                 final String message = String
                         .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
