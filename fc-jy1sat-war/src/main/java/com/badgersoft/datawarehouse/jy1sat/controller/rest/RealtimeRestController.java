@@ -22,7 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/data")
-public class RealtimeSummaryRestController {
+public class RealtimeRestController {
 
     @Autowired
     RealtimeDAO realtimeDAO;
@@ -34,7 +34,7 @@ public class RealtimeSummaryRestController {
     MinMaxDao minMaxDao;
 
     @RequestMapping(value = "/realtime", method = RequestMethod.GET, produces = "application/javascript")
-    public String getSummary(@RequestParam(value = "callback") String callback) {
+    public String getRealtime(@RequestParam(value = "callback") String callback) {
         SatelliteStatusEntity statusEntity = (SatelliteStatusEntity) (satelliteStatusDao.findAll().iterator().next());
         Long sequenceNumber = statusEntity.getSequenceNumber();
         Long frameType = statusEntity.getFrameType();
