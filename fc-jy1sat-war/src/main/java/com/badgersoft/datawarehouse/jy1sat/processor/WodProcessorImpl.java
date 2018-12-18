@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by davidjohnson on 23/08/2016.
@@ -50,12 +51,12 @@ public class WodProcessorImpl extends AbstractProcessor implements WodProcessor 
 
             final long id = sequenceNumber * 2 + i;
 
-            WholeOrbitDataEntity wholeOrbitDataEntity = wholeOrbitDataDAO.findById(id).get();
+            final Optional<WholeOrbitDataEntity> dataEntity = wholeOrbitDataDAO.findById(id);
 
-            if (wholeOrbitDataEntity == null) {
+            if (!dataEntity.isPresent()) {
                 int offset = (int) (i * 200);
                 satelliteTime = new Date(firstFrameTime.getTime() + (i * 60L * 1000L));
-                wholeOrbitDataEntity = new WholeOrbitDataEntity(id, sequenceNumber, satelliteTime, binaryString.substring(offset, offset + 200));
+                WholeOrbitDataEntity wholeOrbitDataEntity = new WholeOrbitDataEntity(id, sequenceNumber, satelliteTime, binaryString.substring(offset, offset + 200));
                 wholeOrbitDataDAO.save(wholeOrbitDataEntity);
 
                 SatelliteStatusEntity statusEntity = satelliteStatusDao.findAll().iterator().next();

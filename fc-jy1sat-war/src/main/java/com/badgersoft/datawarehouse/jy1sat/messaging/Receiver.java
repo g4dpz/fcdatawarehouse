@@ -160,7 +160,7 @@ public class Receiver {
 
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
 
-        //wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
+        wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 }
