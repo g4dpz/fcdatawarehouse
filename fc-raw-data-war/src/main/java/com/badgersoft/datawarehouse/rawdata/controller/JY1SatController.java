@@ -13,4 +13,10 @@ public class JY1SatController {
         return modelAndView;
     }
 
+    @GetMapping("/ui/jy1sat-fm/wod")
+    public ModelAndView wod() {
+        ModelAndView modelAndView = new ModelAndView("content/jy1sat-fm/wod");
+        return modelAndView;
+    }
+
 }
