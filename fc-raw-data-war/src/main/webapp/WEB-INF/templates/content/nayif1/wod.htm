@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/jy1sat-fm/page}">
+<head>
+    <title>JY1Sat-FM</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Nayif-1 Whole Orbit Data</h1>
+        </div>
+
+        <div class="DashSection mt-0">
+            <p>This page shows the values of all the WOD parameters captured during the latest 96 minutes when the satellite was in range of a ground station.</p>
+
+            <h6 id="lat_long" style="text-align: left;">Satellite Latitude, Longitude: 18.77 S, 108.2 W  </h6>
+            <h6 id="created_date" style="text-align: left;">Uploaded at: 2017-01-10 15:48:40.0 UTC</h6>
+
+            <div class="row">
+                <div id="wod-container"></div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+    <th:block layout:fragment="script">
+        <!-- App scripts -->
+        <script th:src="@{/js/luna.js}"></script>
+        <script th:src="@{/js/highcharts.js}"></script>
+        <script th:src="@{/js/exporting.js}"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                displaygraph();
+                displaygraph(refreshDiv, 300000);
+            });
+
+
+            var options = {
+                chart: {
+                    zoomType: 'x',
+                    renderTo: 'wod-container',
+                    type: 'line'
+                },
+                xAxis: {
+                    min: -96,
+                    max: 0
+                },
+                title: {
+                    text: 'Whole Orbit Data',
+                    style: {
+                        margin: '10px 100px 0 0' // center it
+                    }
+                },
+                series: [{}]
+            };
+
+            $.getJSON('/nayif1/data/wod/graph', function(data) {
+                options.series = data.data.series;
+                var chart = new Highcharts.Chart(options);
+            });
+
+        </script>
+    </th:block>
+</main>
+
+
+
+</body>
+</html>

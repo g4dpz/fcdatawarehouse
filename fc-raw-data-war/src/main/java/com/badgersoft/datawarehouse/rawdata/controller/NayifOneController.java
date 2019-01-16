@@ -13,4 +13,10 @@ public class NayifOneController {
         return modelAndView;
     }
 
+    @GetMapping("/ui/nayif1/wod")
+    public ModelAndView wod() {
+        ModelAndView modelAndView = new ModelAndView("content/nayif1/wod");
+        return modelAndView;
+    }
+
 }
