@@ -24,6 +24,7 @@
             <h6 id="created_date" style="text-align: left;">Uploaded at: 2017-01-10 15:48:40.0 UTC</h6>
 
             <div class="row">
+                <div id="wod-container"></div>
             </div>
 
         </div>
@@ -31,17 +32,48 @@
 
 
     </div>
+    <th:block layout:fragment="script">
+        <!-- App scripts -->
+        <script th:src="@{/js/luna.js}"></script>
+        <script th:src="@{/js/highcharts.js}"></script>
+        <script th:src="@{/js/exporting.js}"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                displaygraph();
+                displaygraph(refreshDiv, 300000);
+            });
+
+
+            var options = {
+                chart: {
+                    zoomType: 'x',
+                    renderTo: 'wod-container',
+                    type: 'line'
+                },
+                xAxis: {
+                    min: -96,
+                    max: 0
+                },
+                title: {
+                    text: 'Whole Orbit Data',
+                    style: {
+                        margin: '10px 100px 0 0' // center it
+                    }
+                },
+                series: [{}]
+            };
+
+            $.getJSON('/jy1sat/data/wod/graph', function(data) {
+                options.series = data.data.series;
+                var chart = new Highcharts.Chart(options);
+            });
+
+        </script>
+    </th:block>
 </main>
 
-<script layout:fragment="script">
 
-    $(function () {
-
-        Feedgen.platforms.init();
-
-    });
-
-</script>
 
 </body>
 </html>
