@@ -5,6 +5,7 @@ import com.badgersoft.datawarehouse.nayif1.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.nayif1.processor.FitterMessageProcessor;
 import com.badgersoft.datawarehouse.nayif1.processor.HighResProcessor;
 import com.badgersoft.datawarehouse.nayif1.processor.RealtimeProcessor;
+import com.badgersoft.datawarehouse.nayif1.processor.WodProcessor;
 import com.badgersoft.datawarehouse.nayif1.service.JmsMessageSender;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -34,6 +36,9 @@ public class Receiver {
 
     @Autowired
     RealtimeProcessor realtimeProcessor;
+
+    @Autowired
+    WodProcessor wodProcessor;
 
     @Autowired
     SatelliteStatusDao statusDao;
@@ -117,7 +122,7 @@ public class Receiver {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
                         try {
-                            processWOD(satelliteId, sequenceNumber, "0,1,2,3,4,5,6,7,8,9,10,11");
+                            processWOD(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "0,1,2,3,4,5,6,7,8,9,10,11");
                         }
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
@@ -138,7 +143,9 @@ public class Receiver {
         latch.countDown();
     }
 
-    private void processWOD(String satelliteId, String sequenceNumber, String frames) {
+
+
+    private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
 
@@ -156,6 +163,8 @@ public class Receiver {
         List<String> payloads = response.getBody();
 
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
+
+        wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 }

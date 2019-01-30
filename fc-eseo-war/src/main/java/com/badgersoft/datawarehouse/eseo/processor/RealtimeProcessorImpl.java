@@ -50,6 +50,12 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
         long then = Calendar.getInstance().getTime().getTime();
 
         Long sequenceNumber = hexFrameDTO.getSequenceNumber();
+
+        if (sequenceNumber >= 10000 && sequenceNumber <= 10010) {
+            LOG.warn("Ignoring sequence number " + sequenceNumber);
+            return;
+        }
+
         Long frameType = hexFrameDTO.getFrameType();
 
         RealtimeEntity realtimeEntity = new RealtimeEntity();

@@ -19,4 +19,10 @@ public class JY1SatController {
         return modelAndView;
     }
 
+    @GetMapping("/ui/jy1sat-fm/fitter")
+    public ModelAndView fitter() {
+        ModelAndView modelAndView = new ModelAndView("content/jy1sat-fm/fitter");
+        return modelAndView;
+    }
+
 }

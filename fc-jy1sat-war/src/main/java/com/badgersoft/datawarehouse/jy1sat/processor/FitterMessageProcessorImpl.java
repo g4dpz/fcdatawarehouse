@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.jy1sat.processor;
 
-import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
 import com.badgersoft.datawarehouse.jy1sat.dao.FitterMessageDao;
 import com.badgersoft.datawarehouse.jy1sat.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.jy1sat.domain.FitterMessageEntity;
@@ -10,12 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 /**
  * Created by davidjohnson on 23/08/2016.
@@ -33,7 +28,7 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
 
 
     @Override
-    public void process(HexFrameDTO[] fitterList) {
+    public void process(Long sequenceNumber, Date satelliteTime, List<String> payloads) {
 
         long then = Calendar.getInstance().getTime().getTime();
 
@@ -43,11 +38,15 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
 
         Timestamp receivedDate = new Timestamp(cal.getTime().getTime());
 
-        for (final HexFrameDTO fitterFrame : fitterList) {
+        int frameType = 17;
 
-            receivedDate = new Timestamp(fitterFrame.getCreatedDate().getTime());
+        for (final String fitterFrame : payloads) {
 
-            extractAndSaveFitter(fitterFrame, receivedDate);
+            receivedDate = new Timestamp(satelliteTime.getTime());
+
+            extractAndSaveFitter(frameType, fitterFrame, receivedDate);
+
+            frameType++;
         }
 
         Iterable<SatelliteStatusEntity> satelliteStatuses = satelliteStatusDao.findAll();
@@ -79,15 +78,11 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
     }
 
 
-    private void extractAndSaveFitter(final HexFrameDTO frame, final Timestamp lastReceived) {
+    private void extractAndSaveFitter(int frameType, final String messageHex, final Timestamp lastReceived) {
 
         StringBuffer sb = new StringBuffer();
 
-        final int frameType = frame.getFrameType().intValue();
-
         final String slot = getSlotFromFrameType(frameType);
-
-        final String messageHex = frame.getHexString().substring(106, frame.getHexString().length());
 
         // we may be processing a packet after a reset so the frame may contain 000's
         if ("00".equals(messageHex.substring(6, 8))) {
@@ -95,12 +90,12 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
         }
 
         // we do not process DEBUG frames
-        if (!"FF".equals(messageHex.substring(6, 8))) {
+        if (!"FF".equals(messageHex.substring(0, 2))) {
 
-            for (int i = 6; i < messageHex.length() - 2; i += 2) {
+            for (int i = 0; i < messageHex.length() - 2; i += 2) {
                 final int value = Integer.parseInt(messageHex.substring(i, i + 2), 16);
                 if (value == 0) {
-                    if (i == 6) {
+                    if (i == 0) {
                         break;
                     }
                     else {
@@ -115,7 +110,7 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
             }
         }
         else {
-            final String messageText = messageHex.substring(8, messageHex.length());
+            final String messageText = messageHex.substring(0, messageHex.length());
             saveFitter(lastReceived, messageText, true, slot);
         }
 
@@ -161,17 +156,6 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
             fitterMessage.setSlot(slot);
         }
         else {
-            if (messageText.startsWith("ar-SA")) {
-                int start = messageText.indexOf(" ");
-                String arabicFitterHex = messageText.substring(start + 1, messageText.length());
-                LOG.debug(String.format("Arabic hex: %s", arabicFitterHex));
-                try {
-                    String arabicFitterUnicode = new String(arabicFitterHex.getBytes(), "CP1250");
-                    LOG.debug(String.format("Arabic unicode: %s", arabicFitterHex));
-                } catch (UnsupportedEncodingException e) {
-                    LOG.error("Failed to convert hex to UniCode");
-                }
-            }
             fitterMessage = new FitterMessageEntity(messageText, lastReceived,
                     11L, isDebug, slot, lastReceived);
         }

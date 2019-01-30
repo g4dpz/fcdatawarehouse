@@ -125,6 +125,12 @@ public class Receiver {
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
                         }
+                        try {
+                            processFitter(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "17,18,19,20,21,22,23");
+                        }
+                        catch (HttpClientErrorException h) {
+                            LOG.error(String.format("Could not process Fitter data for %s: %s", SATELLITE_NAME, h.getMessage()));
+                        }
                     }
                 };
 
@@ -139,6 +145,29 @@ public class Receiver {
         }
 
         latch.countDown();
+    }
+
+    private void processFitter(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
+
+        LOG.info("Processing FUNcube Fitter messages for sequence number " + sequenceNumber);
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String url = "http://localhost:8080/api/data/payload/" +
+                satelliteId + "/" +
+                sequenceNumber + "?" +
+                "frames=" + frames;
+
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<String>>(){});
+        List<String> payloads = response.getBody();
+
+        LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
+
+        fitterMessageProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
+
     }
 
     private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
