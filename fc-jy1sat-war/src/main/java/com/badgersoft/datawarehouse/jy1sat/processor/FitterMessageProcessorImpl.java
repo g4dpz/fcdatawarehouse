@@ -82,7 +82,7 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
 
         StringBuffer sb = new StringBuffer();
 
-        final String slot = getSlotFromFrameType(frameType);
+        final String slot =  "FM" + (frameType - 16);
 
         // we may be processing a packet after a reset so the frame may contain 000's
         if ("00".equals(messageHex.substring(6, 8))) {
@@ -113,32 +113,6 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
             final String messageText = messageHex.substring(0, messageHex.length());
             saveFitter(lastReceived, messageText, true, slot);
         }
-
-    }
-
-    private String getSlotFromFrameType(final int frameType) {
-
-        String slot = "FM";
-
-        switch (frameType) {
-            case 13:
-            case 14:
-            case 15:
-                slot += frameType - 12;
-                break;
-            case 17:
-            case 18:
-            case 19:
-                slot += frameType - 13;
-                break;
-            case 21:
-            case 22:
-            case 23:
-                slot += frameType - 14;
-                break;
-        }
-
-        return slot;
 
     }
 

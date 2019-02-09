@@ -2,14 +2,8 @@ package com.badgersoft.datawarehouse.rawdata.config;
 
 import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.security.ReasonablePasswordGenerator;
-import com.badgersoft.datawarehouse.rawdata.service.EmailService;
-import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
-import com.badgersoft.datawarehouse.rawdata.service.SatelliteListService;
-import com.badgersoft.datawarehouse.rawdata.service.UserRankingService;
-import com.badgersoft.datawarehouse.rawdata.service.impl.EmailServiceImpl;
-import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
-import com.badgersoft.datawarehouse.rawdata.service.impl.SatelliteListServiceImpl;
-import com.badgersoft.datawarehouse.rawdata.service.impl.UserRankingServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.*;
+import com.badgersoft.datawarehouse.rawdata.service.impl.*;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -69,5 +63,8 @@ public class AppConfig {
 
     @Bean
     UserRankingService userRankingService() { return new UserRankingServiceImpl(); }
+
+    @Bean
+    FitterMessageService fitterMessageService() { return new FitterMessageServiceImpl(); }
 
 }

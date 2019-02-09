@@ -59,7 +59,7 @@ public class WholeOrbitDataEntity extends TelemetryEntity {
         c1 = calcMcuTemp(getBitsAsULong(12, binaryString));
         // Temp @ RF board crystal
         //c2 = ((getBitsAsULong(12, binaryString) & 1023) * -0.3465) + 266.70646;
-        c2 = ((getBitsAsULong(12, binaryString) & 1023) * -0.857) + 193.672;
+        c2 = ((getBitsAsULong(12, binaryString) & 1023) * -0.245) + 234.58;
         // Temp @ Power amplifier
         badger = getBitsAsULong(12, binaryString);
         c3 = PA_TEMPS_1024[(int) (badger & 1023)];

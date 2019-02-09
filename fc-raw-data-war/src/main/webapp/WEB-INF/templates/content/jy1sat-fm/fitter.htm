@@ -11,66 +11,36 @@
 <main id="main" role="main">
     <div layout:fragment="main">
 
-
-
         <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
             <h1 class="h2">JY1Sat Fitter Messages</h1>
         </div>
 
         <div class="DashSection mt-0">
-            <p>This page shows the values of all the WOD parameters captured during the latest 96 minutes when the satellite was in range of a ground station.</p>
-
-            <h6 id="lat_long" style="text-align: left;">Satellite Latitude, Longitude: 18.77 S, 108.2 W  </h6>
-            <h6 id="created_date" style="text-align: left;">Uploaded at: 2017-01-10 15:48:40.0 UTC</h6>
+            <p>The following list shows the fitter messages received from the satellite.
+                <br>Some messages are wider than the web page, these are indicated by an ellipsis … and can be viewed by hovering the cursor over the line.
+            </p>
 
             <div class="row">
-                <div id="wod-container"></div>
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <th style="text-align: left; white-space: nowrap;">Message</th>
+                        <th style="text-align: center; white-space: nowrap;">Last received</th>
+                        <th style="text-align: center; white-space: nowrap;">Slot</th>
+                    </tr>
+                    <tr th:each="fitterMessage : ${fitterMessages}">
+                        <td th:if="${fitterMessage.min != null}" style="text-align: left; white-space: nowrap; font-size: small;"><a th:title="${fitterMessage.name}"><span th:text="${fitterMessage.min + '&hellip;'}"></span></a></td>
+                        <td th:unless="${fitterMessage.min != null}" style="text-align: left; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.name}"></span></td>
+                        <td style="text-align: center; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.value}"></span></td>
+                        <td style="text-align: center; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.max}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
 
-
-
     </div>
-    <th:block layout:fragment="script">
-        <!-- App scripts -->
-        <script th:src="@{/js/luna.js}"></script>
-        <script th:src="@{/js/highcharts.js}"></script>
-        <script th:src="@{/js/exporting.js}"></script>
-
-        <script type="text/javascript">
-            $(document).ready(function(){
-                displaygraph();
-                displaygraph(refreshDiv, 300000);
-            });
-
-
-            var options = {
-                chart: {
-                    zoomType: 'x',
-                    renderTo: 'wod-container',
-                    type: 'line'
-                },
-                xAxis: {
-                    min: -96,
-                    max: 0
-                },
-                title: {
-                    text: 'Whole Orbit Data',
-                    style: {
-                        margin: '10px 100px 0 0' // center it
-                    }
-                },
-                series: [{}]
-            };
-
-            $.getJSON('/jy1sat/data/wod/graph', function(data) {
-                options.series = data.data.series;
-                var chart = new Highcharts.Chart(options);
-            });
-
-        </script>
-    </th:block>
 </main>
 
 

@@ -23,7 +23,9 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.badgersoft.datawarehouse.rawdata.controller" })
-public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {private static final int CACHE_PERIOD = 3600; // one hour in seconds
+public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
+
+    private static final int CACHE_PERIOD = 3600; // one hour in seconds
 
     private ApplicationContext applicationContext;
 

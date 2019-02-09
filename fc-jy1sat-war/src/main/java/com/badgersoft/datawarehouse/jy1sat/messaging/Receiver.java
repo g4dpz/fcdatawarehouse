@@ -131,6 +131,12 @@ public class Receiver {
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process Fitter data for %s: %s", SATELLITE_NAME, h.getMessage()));
                         }
+                        try {
+                            processHighRes(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "12,13,14,15,16");
+                        }
+                        catch (HttpClientErrorException h) {
+                            LOG.error(String.format("Could not process High resolution data for %s: %s", SATELLITE_NAME, h.getMessage()));
+                        }
                     }
                 };
 
@@ -190,6 +196,29 @@ public class Receiver {
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
 
         wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
+
+    }
+
+    private void processHighRes(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
+
+        LOG.info("Processing FUNcube High Resolution for sequence number " + sequenceNumber);
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String url = "http://localhost:8080/api/data/payload/" +
+                satelliteId + "/" +
+                sequenceNumber + "?" +
+                "frames=" + frames;
+
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<String>>(){});
+        List<String> payloads = response.getBody();
+
+        LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube High Resolution payloads for sequence number " + sequenceNumber);
+
+        highResProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 }

@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.jy1sat.processor;
 
-import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
 import com.badgersoft.datawarehouse.jy1sat.dao.HighResolutionDAO;
 import com.badgersoft.datawarehouse.jy1sat.dao.SatelliteStatusDao;
 import com.badgersoft.datawarehouse.jy1sat.domain.HighResolutionEntity;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by davidjohnson on 23/08/2016.
@@ -28,26 +28,25 @@ public class HighResProcessorImpl extends AbstractProcessor  implements HighResP
     SatelliteStatusDao satelliteStatusDao;
 
     @Override
-    public void process(Long sequenceNumber, HexFrameDTO[] frames) {
-
-        long then = Calendar.getInstance().getTime().getTime();
+    public void process(Long sequenceNumber, Date satelliteTime, List<String> frames) {
 
         final StringBuffer sb = new StringBuffer();
+        long then = Calendar.getInstance().getTime().getTime();
 
         for (int i = 0; i < 5; i++) {
-            sb.append(StringUtils.right(frames[i].getHexString(), 400));
+            sb.append(StringUtils.right(frames.get(i), 400));
         }
 
         String binaryString = convertHexBytePairToBinary(sb.toString());
 
-        Date refTime = frames[0].getSatelliteTime();
+        Date refTime = new Date(satelliteTime.getTime() - 59000);
 
-        Date satelliteTime = new Date(then);
+        Date frameTime;
 
         for (int i = 0; i < 60; i++) {
-            satelliteTime = new Date(refTime.getTime() + (i * 1000));
+            frameTime = new Date(refTime.getTime() + (i * 1000));
             HighResolutionEntity highResolutionEntity
-                    = new HighResolutionEntity(sequenceNumber, new Timestamp(satelliteTime.getTime()), binaryString.substring(i * 132, (i * 132) + 132));
+                    = new HighResolutionEntity(sequenceNumber, new Timestamp(frameTime.getTime()), binaryString.substring(i * 132, (i * 132) + 132));
 
             try {
                 highResolutionDAO.save(highResolutionEntity);
