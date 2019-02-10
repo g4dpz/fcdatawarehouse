@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RealtimeProcessorImpl extends AbstractProcessor implements RealtimeProcessor {
 
-    public static final int MIN_MAX_VALUE_COUNT = 48;
+    public static final int MIN_MAX_VALUE_COUNT = 43;
     private static final long SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000;
     private static Logger LOG = LoggerFactory.getLogger(RealtimeProcessorImpl.class.getName());
 
@@ -153,16 +153,12 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                     minMaxDao.save(newMinMax);
                 }
                 else if (value > minMax.getMaximum()) {
-                    if (channel != 22 || (channel == 22 && realtimeEntity.getC20() == 1)) {
                         minMax.setMaximum(value);
                         minMaxDao.save(minMax);
-                    }
                 }
                 else if (value < minMax.getMinimum()) {
-                    if (channel != 22 || (channel == 22 && realtimeEntity.getC20() == 1)) {
                         minMax.setMinimum(value);
                         minMaxDao.save(minMax);
-                    }
                 }
             }
         }
