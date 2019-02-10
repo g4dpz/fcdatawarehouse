@@ -19,9 +19,9 @@ public class FitterMessageServiceImpl implements FitterMessageService {
     private final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT);
 
     @Override
-    public List<ValMinMaxDTO> getMessages() {
+    public List<ValMinMaxDTO> getMessages(String url) {
 
-        final String url = "http://localhost:8080/jy1sat/data/fitter";
+
 
         List<ValMinMaxDTO> minMaxValues  = new ArrayList<>();
 

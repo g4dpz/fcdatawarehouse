@@ -31,7 +31,7 @@ public class JY1SatController {
     @GetMapping("/ui/jy1sat-fm/fitter")
     public ModelAndView fitter() {
         ModelAndView modelAndView = new ModelAndView("content/jy1sat-fm/fitter");
-        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages());
+        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages("http://localhost:8080/jy1sat/data/fitter"));
         return modelAndView;
     }
 

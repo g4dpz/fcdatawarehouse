@@ -108,4 +108,7 @@ public class FitterMessageEntity {
         this.createdDate = createdDate;
     }
 
+    public Boolean getDisplay() {
+        return display;
+    }
 }

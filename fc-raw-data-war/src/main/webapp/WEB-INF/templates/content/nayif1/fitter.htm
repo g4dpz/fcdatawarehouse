@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/jy1sat-fm/page}">
+<head>
+    <title>Nayif-1 Fitter Messages</title>
+</head>
+<body>
+
+<main id="main" role="main">
+    <div layout:fragment="main">
+
+        <div class="d-md-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom DashPage__Title">
+            <h1 class="h2">Nayif-1 Fitter Messages</h1>
+        </div>
+
+        <div class="DashSection mt-0">
+            <p>The following list shows the fitter messages received from the satellite.
+                <br>Some messages are wider than the web page, these are indicated by an ellipsis … and can be viewed by hovering the cursor over the line.
+            </p>
+
+            <div class="row">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <th style="text-align: left; white-space: nowrap;">Message</th>
+                        <th style="text-align: center; white-space: nowrap;">Last received</th>
+                        <th style="text-align: center; white-space: nowrap;">Slot</th>
+                    </tr>
+                    <tr th:each="fitterMessage : ${fitterMessages}">
+                        <td th:if="${fitterMessage.min != null}" style="text-align: left; white-space: nowrap; font-size: small;"><a th:title="${fitterMessage.name}"><span th:text="${fitterMessage.min + '&hellip;'}"></span></a></td>
+                        <td th:unless="${fitterMessage.min != null}" style="text-align: left; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.name}"></span></td>
+                        <td style="text-align: center; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.value}"></span></td>
+                        <td style="text-align: center; white-space: nowrap; font-size: small;"><span th:text="${fitterMessage.max}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+
+
+</body>
+</html>
