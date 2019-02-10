@@ -138,12 +138,14 @@
         $("#rf_transmit_current_five_min").text(data.data.minima[31]);
         $("#rf_transmit_current_five_max").text(data.data.maxima[31]);
 
+        // Note: minmax pairs are reversed :-(
         $("#pa_forward_power_value").text(data.data.paDTO.txRevPwr);
-        $("#pa_forward_power_min").text(data.data.minima[32]);
-        $("#pa_forward_power_max").text(data.data.maxima[32]);
+        $("#pa_forward_power_min").text(data.data.minima[33]);
+        $("#pa_forward_power_max").text(data.data.maxima[33]);
         $("#pa_reverse_power_value").text(data.data.paDTO.txFwdPwr);
-        $("#pa_reverse_power_min").text(data.data.minima[33]);
-        $("#pa_reverse_power_max").text(data.data.maxima[33]);
+        $("#pa_reverse_power_min").text(data.data.minima[32]);
+        $("#pa_reverse_power_max").text(data.data.maxima[32]);
+
         $("#pa_device_temperature_value").text(data.data.paDTO.txTemp);
         $("#pa_device_temperature_min").text(data.data.minima[34]);
         $("#pa_device_temperature_max").text(data.data.maxima[34]);
