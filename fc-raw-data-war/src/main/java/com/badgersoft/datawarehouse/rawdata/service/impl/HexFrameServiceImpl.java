@@ -139,8 +139,6 @@ public class HexFrameServiceImpl implements HexFrameService {
 
                     final Date now = new Date(5000 * (clock.currentDate().getTime() / 5000));
 
-                    LOG.info(calculatedDigest + " " + hexString);
-
                     return processHexFrame(new UserHexString(user,
                             StringUtils.deleteWhitespace(hexString), now));
                 } else {
@@ -237,7 +235,7 @@ public class HexFrameServiceImpl implements HexFrameService {
                                 satelliteId);
                 LOG.warn(message);
 
-                return new ResponseEntity<String>("Already Reported", HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<String>("Already Reported", HttpStatus.OK);
             }
 
         }

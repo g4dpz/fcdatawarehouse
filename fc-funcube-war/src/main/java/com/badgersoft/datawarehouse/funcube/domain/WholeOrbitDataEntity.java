@@ -54,7 +54,7 @@ public class WholeOrbitDataEntity extends TelemetryEntity {
         blackPanel = scale(getBitsAsULong(12, binaryString), -0.024, 75.039);
         silverPanel = scale(getBitsAsULong(12, binaryString), -0.024, 75.987);
         solPanelXplus = scale(getBitsAsULong(10, binaryString), -0.2073, 158.239);
-        solPanelXminus = scale(getBitsAsULong(10, binaryString), -0.2073, 158.239);
+        solPanelXminus = scale(getBitsAsULong(10, binaryString), -0.2073, 158.227);
         solPanelYplus = scale(getBitsAsULong(10, binaryString), -0.2076, 158.656);
         solPanelYminus = scale(getBitsAsULong(10, binaryString), -0.2087, 159.045);
         solPanelXvolts = scale(getBitsAsULong(16, binaryString), 0.001, 0.0);

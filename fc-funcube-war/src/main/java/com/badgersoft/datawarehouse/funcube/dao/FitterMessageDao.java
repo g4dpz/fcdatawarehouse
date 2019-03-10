@@ -21,7 +21,7 @@ public interface FitterMessageDao extends CrudRepository<FitterMessageEntity, Lo
     @Query("select fm from FitterMessageEntity fm where lastReceived < ?1")
     List<FitterMessageEntity> getNoneDebugReceivedBefore(Date time);
 
-    @Query("select fm from FitterMessageEntity fm where lastReceived > ?1 and fm.debug = 0 and fm.display = 1 order by fm.createdDate asc")
+    @Query("select fm from FitterMessageEntity fm where lastReceived > ?1 and fm.debug = 0 and fm.display = 1 order by fm.lastReceived desc")
     List<FitterMessageEntity> getNoneDebugReceivedAfter(Timestamp time);
 
     @Query("SELECT fm FROM FitterMessageEntity fm where fm.debug = 1 order by fm.id desc")

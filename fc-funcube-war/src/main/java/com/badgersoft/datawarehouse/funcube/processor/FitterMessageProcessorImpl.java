@@ -131,7 +131,7 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
         }
         else {
             fitterMessage = new FitterMessageEntity(messageText, lastReceived,
-                    11L, isDebug, slot, lastReceived);
+                    2L, isDebug, slot, lastReceived);
         }
 
         fitterMessageDao.save(fitterMessage);

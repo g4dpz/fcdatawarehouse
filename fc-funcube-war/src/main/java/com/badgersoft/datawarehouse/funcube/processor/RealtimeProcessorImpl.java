@@ -71,6 +71,12 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
         Iterator<SatelliteStatusEntity> iterator = satelliteStatuses.iterator();
         if (iterator.hasNext()) {
             final SatelliteStatusEntity satelliteStatus = iterator.next();
+
+            long satelliteTime
+                    = satelliteStatus.getEpochReferenceTime().getTime()
+                    + ((sequenceNumber - satelliteStatus.getEpochSequenceNumber()) * 5 * 24 * 1000)
+                    + (frameType * 5 * 1000);
+
             if (satelliteStatus.getSequenceNumber() == null ||
                     (sequenceNumber.longValue() > satelliteStatus.getSequenceNumber().longValue()) ||
                     ((sequenceNumber.longValue() == satelliteStatus.getSequenceNumber().longValue()) && frameType.longValue() > satelliteStatus.getFrameType().longValue()))
@@ -83,11 +89,6 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                     satelliteStatus.setEpochSequenceNumber(sequenceNumber);
                     satelliteStatus.setEpochReferenceTime(new Date(System.currentTimeMillis()));
                 }
-
-                long satelliteTime
-                        = satelliteStatus.getEpochReferenceTime().getTime()
-                        + ((sequenceNumber - satelliteStatus.getEpochSequenceNumber()) * 5 * 24 * 1000)
-                        + (frameType * 5 * 1000);
 
                 realtimeEntity.setSatelliteTime(new Timestamp(satelliteTime));
 
@@ -103,6 +104,15 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                 LOG.debug("Saving satellite status");
                 satelliteStatusDao.save(satelliteStatus);
                 updateMinMax(realtimeEntity);
+            }
+            else {
+                // we may be back filling data during migration
+                final RealtimeEntity entity = realtimeDAO.findBySequenceNumberAndFrameType(sequenceNumber.longValue(), frameType.longValue());
+                if (entity == null) {
+                    realtimeEntity.setSatelliteTime(new Timestamp(satelliteTime));
+                    LOG.debug("Saving backfill realtime entity");
+                    realtimeDAO.save(realtimeEntity);
+                }
             }
         }
 

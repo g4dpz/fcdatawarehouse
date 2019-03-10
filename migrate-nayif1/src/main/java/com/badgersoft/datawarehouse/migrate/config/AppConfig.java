@@ -24,9 +24,8 @@ import java.util.Properties;
 @EnableJpaRepositories("com.badgersoft.datawarehouse.migrate.dao")
 @EnableTransactionManagement
 public class AppConfig {
-
     @Value("${app.datasource.driverClassName}") String driverClassName;
-    @Value("${app.datasource.url}") String url;
+    @Value("jdbc:mysql://localhost:3306/funcube") String url;
     @Value("${app.datasource.username}") String username;
     @Value("${app.datasource.password}") String password;
     @Bean(name = "dataSource")

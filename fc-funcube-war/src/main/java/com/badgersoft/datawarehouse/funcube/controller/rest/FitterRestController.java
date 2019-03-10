@@ -32,7 +32,7 @@ public class FitterRestController {
     {
         long now = Calendar.getInstance(TZ).getTimeInMillis();
 
-        Timestamp oneWeekAgo = new Timestamp(now - (14 * 24 * 60 * 60 * 1000));
+        Timestamp oneWeekAgo = new Timestamp(now - (7 * 24 * 60 * 60 * 1000));
 
         List<FitterMessageEntity> fitterMessageEntities = fitterMessageDAO.getNoneDebugReceivedAfter(oneWeekAgo);
 

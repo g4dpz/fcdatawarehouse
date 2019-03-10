@@ -1,15 +1,13 @@
 package com.badgersoft.datawarehouse.migrate;
 
 import com.badgersoft.datawarehouse.migrate.dao.HexFrameDao;
-import com.badgersoft.datawarehouse.migrate.domain.HexFrameEntity;
+import com.badgersoft.datawarehouse.migrate.domain.HexFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -40,22 +38,17 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... arg0) {
-        List<HexFrameEntity> hexFrameEntities = new ArrayList<>();
+        List<HexFrame> hexFrameEntities = new ArrayList<>();
         Pageable pageable;
-        long count = 1519800;
+        long count = 92400;
         do {
-            hexFrameEntities = getFrames(2, count, count+99);
+            hexFrameEntities = hexFrameDao.findBySatelliteIdAndIdBetweenQuery(11, count, count+99);
             count+=100;
             for (int i = 0; i < hexFrameEntities.size(); i++) {
                 sendFrame(hexFrameEntities.get(i).getHexString());
             }
             System.out.println(String.format("Count: %d, size: %d", count, hexFrameEntities.size()));
-        } while (count < 3e6) ;
-    }
-
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
-    List<HexFrameEntity> getFrames(long satelliteId, long start, long end) {
-        return hexFrameDao.findBySatelliteIdAndIdBetweenQuery(satelliteId, start, end);
+        } while (count < 2559200) ;
     }
 
     private void sendFrame(String hexString) {
@@ -64,7 +57,7 @@ public class App implements CommandLineRunner {
             String data = "data=" + hexString;
 
             //String baseUrl = "http://data2.amsat-uk.org/api/data/hex/" + id + "/?digest=" + digest;
-            String baseUrl = "http://localhost:8080/api/data/hex/" + "g4dpz" + "/?digest=" + digest;
+            String baseUrl = "http://data.badgersoft.com/api/data/hex/" + "g4dpz" + "/?digest=" + digest;
 
             URL obj = new URL(baseUrl);
             HttpURLConnection conn = (HttpURLConnection) obj.openConnection();

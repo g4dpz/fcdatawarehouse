@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HexFrameDao extends CrudRepository<HexFrameEntity, Long> {
 
-    @Query("select hfe from HexFrameEntity hfe where id between ?1 and ?2 and satelliteId = ?3 and valid = 1")
-    List<HexFrameEntity> findByIdBetweenAndSatelliteIdQuery(long startId, long endId, long satelliteId);
+    @Query("select hfe from HexFrameEntity hfe where satelliteId = ?1 and id between ?2 and ?3 and valid = 1")
+    List<HexFrameEntity> findBySatelliteIdAndIdBetweenQuery(long satelliteId, long startId, long endId);
 
 }

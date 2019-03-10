@@ -56,6 +56,8 @@ public class Receiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
+    private long sleep = 5000;
+
     private CountDownLatch latch = new CountDownLatch(1);
 
     public CountDownLatch getLatch() {
@@ -68,12 +70,10 @@ public class Receiver {
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
 
-
-
         // we do not process this immediately as we give several G/S the opportunity to 'score'
         // uploads
         try {
-            Thread.sleep(5000);
+            Thread.sleep(sleep);
         } catch (InterruptedException e) {
         }
 
@@ -93,6 +93,13 @@ public class Receiver {
 
         String frameTypeName = messageElements[0];
         String sequenceNumber = messageElements[2];
+
+        if (Long.parseLong(sequenceNumber) < 1306568) {
+            sleep = 0;
+        }
+        else {
+            sleep = 5000;
+        }
 
         if (frameTypeName.equals("rt")) {
 
@@ -122,7 +129,7 @@ public class Receiver {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
                         try {
-                            processWOD(satelliteId, sequenceNumber, "0,1,2,3,4,5,6,7,8,9,10,11");
+                            processWOD(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "0,1,2,3,4,5,6,7,8,9,10,11");
                         }
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
@@ -155,7 +162,7 @@ public class Receiver {
         latch.countDown();
     }
 
-    private void processWOD(String satelliteId, String sequenceNumber, String frames) {
+    private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
 
@@ -173,6 +180,8 @@ public class Receiver {
         List<String> payloads = response.getBody();
 
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube WOD payloads for sequence number " + sequenceNumber);
+
+        wodProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 
