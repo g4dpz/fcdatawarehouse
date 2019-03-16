@@ -2,6 +2,7 @@ package com.badgersoft.datawarehouse.funcube.messaging;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
 import com.badgersoft.datawarehouse.funcube.dao.SatelliteStatusDao;
+import com.badgersoft.datawarehouse.funcube.domain.SatelliteStatusEntity;
 import com.badgersoft.datawarehouse.funcube.processor.FitterMessageProcessor;
 import com.badgersoft.datawarehouse.funcube.processor.HighResProcessor;
 import com.badgersoft.datawarehouse.funcube.processor.RealtimeProcessor;
@@ -60,6 +61,8 @@ public class Receiver {
 
     private CountDownLatch latch = new CountDownLatch(1);
 
+    private SatelliteStatusEntity satelliteStatusEntity = null;
+
     public CountDownLatch getLatch() {
         return latch;
     }
@@ -69,6 +72,10 @@ public class Receiver {
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
+
+        if (satelliteStatusEntity == null) {
+            satelliteStatusEntity = statusDao.findAll().iterator().next();
+        }
 
         // we do not process this immediately as we give several G/S the opportunity to 'score'
         // uploads
@@ -93,13 +100,6 @@ public class Receiver {
 
         String frameTypeName = messageElements[0];
         String sequenceNumber = messageElements[2];
-
-        if (Long.parseLong(sequenceNumber) < 1306568) {
-            sleep = 0;
-        }
-        else {
-            sleep = 5000;
-        }
 
         if (frameTypeName.equals("rt")) {
 
@@ -129,7 +129,8 @@ public class Receiver {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
                         try {
-                            processWOD(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "0,1,2,3,4,5,6,7,8,9,10,11");
+                            Date refDate = calculateSatelliteTime(sequenceNumber);
+                            processWOD(satelliteId, sequenceNumber, refDate, "0,1,2,3,4,5,6,7,8,9,10,11");
                         }
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process WOD data for %s: %s", SATELLITE_NAME, h.getMessage()));
@@ -160,6 +161,12 @@ public class Receiver {
         }
 
         latch.countDown();
+    }
+
+    private Date calculateSatelliteTime(String sequenceNumber) {
+        long offset = Long.parseLong(sequenceNumber) - satelliteStatusEntity.getEpochSequenceNumber().longValue();
+        long millis = offset * 2 * 60 * 1000;
+        return new Date(satelliteStatusEntity.getEpochReferenceTime().getTime() + millis);
     }
 
     private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {

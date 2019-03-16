@@ -37,7 +37,7 @@ public class WodProcessorImpl extends AbstractProcessor implements WodProcessor 
         long then = Calendar.getInstance().getTime().getTime();
 
         final Date firstFrameTime = new Date(
-                satelliteTime.getTime() - (96 * 60 * 1000));
+                satelliteTime.getTime() - (104 * 60 * 1000));
 
         final StringBuffer sb = new StringBuffer();
 
@@ -47,16 +47,16 @@ public class WodProcessorImpl extends AbstractProcessor implements WodProcessor 
 
         String binaryString = convertHexBytePairToBinary(sb.toString());
 
-        for (long i = 0; i < 96; i++) {
+        for (long i = 0; i < 104; i++) {
 
             final long id = sequenceNumber * 2 + i;
 
             final Optional<WholeOrbitDataEntity> dataEntity = wholeOrbitDataDAO.findById(id);
 
             if (!dataEntity.isPresent()) {
-                int offset = (int) (i * 200);
+                int offset = (int) (i * 184);
                 satelliteTime = new Date(firstFrameTime.getTime() + (i * 60L * 1000L));
-                WholeOrbitDataEntity wholeOrbitDataEntity = new WholeOrbitDataEntity(id, sequenceNumber, satelliteTime, binaryString.substring(offset, offset + 200));
+                WholeOrbitDataEntity wholeOrbitDataEntity = new WholeOrbitDataEntity(id, sequenceNumber, satelliteTime, binaryString.substring(offset, offset + 184));
                 wholeOrbitDataDAO.save(wholeOrbitDataEntity);
 
                 SatelliteStatusEntity statusEntity = satelliteStatusDao.findAll().iterator().next();
