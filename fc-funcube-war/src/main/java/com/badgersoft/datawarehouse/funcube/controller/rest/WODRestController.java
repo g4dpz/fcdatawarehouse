@@ -102,6 +102,7 @@ public class WodRestController {
         DataElement channel12 = new DataElement("Tot. Photo Curr.");
         wodJson.addElement(channel12);
         DataElement channel13 = new DataElement("Battery Volts");
+        channel13.setVisible(true);
         wodJson.addElement(channel13);
         DataElement channel14 = new DataElement("Total Sys. Curr.");
         wodJson.addElement(channel14);
