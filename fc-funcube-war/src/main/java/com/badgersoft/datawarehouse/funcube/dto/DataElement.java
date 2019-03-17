@@ -5,6 +5,8 @@ import java.util.LinkedList;
 public class DataElement {
 	
 	private String name;
+
+	private boolean visible = false;
 	
 	@SuppressWarnings("rawtypes")
 	private LinkedList data = new LinkedList();
@@ -40,4 +42,11 @@ public class DataElement {
 		data.add(dataPair);
 	}
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+		return visible;
+	}
 }

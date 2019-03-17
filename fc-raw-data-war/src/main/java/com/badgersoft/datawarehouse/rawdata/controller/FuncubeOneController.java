@@ -29,4 +29,10 @@ public class FuncubeOneController {
         return modelAndView;
     }
 
+    @GetMapping("/ui/fc1-fm/wod")
+    public ModelAndView wod() {
+        ModelAndView modelAndView = new ModelAndView("content/fc1-fm/wod");
+        return modelAndView;
+    }
+
 }

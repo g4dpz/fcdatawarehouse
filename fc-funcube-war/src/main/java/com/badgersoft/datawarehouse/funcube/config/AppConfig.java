@@ -1,8 +1,6 @@
 package com.badgersoft.datawarehouse.funcube.config;
 
 import com.badgersoft.datawarehouse.funcube.processor.*;
-import com.badgersoft.datawarehouse.funcube.service.WODService;
-import com.badgersoft.datawarehouse.funcube.service.WODServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,8 +27,5 @@ public class AppConfig {
 
     @Bean
     RealtimeProcessor realtimeProcessor() { return new RealtimeProcessorImpl(); }
-
-    @Bean
-    WODService wodService() { return new WODServiceImpl(); }
 
 }
