@@ -77,13 +77,6 @@ public class Receiver {
             satelliteStatusEntity = statusDao.findAll().iterator().next();
         }
 
-        // we do not process this immediately as we give several G/S the opportunity to 'score'
-        // uploads
-        try {
-            Thread.sleep(sleep);
-        } catch (InterruptedException e) {
-        }
-
         String[] messageElements = StringUtils.split(message, ",");
         int msgLength = messageElements.length;
         if (msgLength < 3 || msgLength > 4) {
@@ -100,6 +93,15 @@ public class Receiver {
 
         String frameTypeName = messageElements[0];
         String sequenceNumber = messageElements[2];
+
+        if (Long.parseLong(sequenceNumber) >= 1306764) {
+            // we do not process this immediately as we give several G/S the opportunity to 'score'
+            // uploads
+            try {
+                Thread.sleep(sleep);
+            } catch (InterruptedException e) {
+            }
+        }
 
         if (frameTypeName.equals("rt")) {
 
@@ -128,8 +130,10 @@ public class Receiver {
                 if (frameTypeName.equals("rt")) {
                     realtimeProcessor.process(hexFrameDTO);
                     if (hexFrameDTO.getFrameType() == 23) {
+
+                        Date refDate = calculateSatelliteTime(sequenceNumber);
+
                         try {
-                            Date refDate = calculateSatelliteTime(sequenceNumber);
                             processWOD(satelliteId, sequenceNumber, refDate, "0,1,2,3,4,5,6,7,8,9,10,11");
                         }
                         catch (HttpClientErrorException h) {
@@ -142,7 +146,7 @@ public class Receiver {
                             LOG.error(String.format("Could not process Fitter data for %s: %s", SATELLITE_NAME, h.getMessage()));
                         }
                         try {
-                            processHighRes(satelliteId, sequenceNumber, hexFrameDTO.getSatelliteTime(), "12,16,20");
+                            processHighRes(satelliteId, sequenceNumber, refDate, "12,16,20");
                         }
                         catch (HttpClientErrorException h) {
                             LOG.error(String.format("Could not process High resolution data for %s: %s", SATELLITE_NAME, h.getMessage()));
@@ -211,7 +215,7 @@ public class Receiver {
 
         LOG.info("Received " + ((payloads != null) ? payloads.size() : 0) + " FUNcube High Resolution payloads for sequence number " + sequenceNumber);
 
-        //highResProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
+        highResProcessor.process(Long.valueOf(sequenceNumber), satelliteTime, payloads);
 
     }
 
