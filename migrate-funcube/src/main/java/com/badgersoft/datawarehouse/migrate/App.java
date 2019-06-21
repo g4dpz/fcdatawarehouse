@@ -42,17 +42,12 @@ public class App implements CommandLineRunner {
     public void run(String... arg0) {
         List<HexFrameEntity> hexFrameEntities = new ArrayList<>();
         Pageable pageable;
-        long count = 2421039;
+        long count = 1519800;
         do {
             hexFrameEntities = getFrames(2, count, count+99);
             count+=100;
             for (int i = 0; i < hexFrameEntities.size(); i++) {
                 sendFrame(hexFrameEntities.get(i).getHexString());
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
             System.out.println(String.format("Count: %d, size: %d", count, hexFrameEntities.size()));
         } while (count < 3e6) ;

@@ -48,8 +48,8 @@ public class GroundStation implements Runnable {
                String data = "data=" + hexFrame;
 
                //String baseUrl = "http://data2.amsat-uk.org/api/data/hex/" + id + "/?digest=" + digest;
-               String baseUrl = "http://localhost:8080/api/data/hex/" + id + "/?digest=" + digest;
-//               String baseUrl = "http://data.amsat-uk.org/api/data/hex/" + id + "/?digest=" + digest;
+               //String baseUrl = "http://localhost:8080/api/data/hex/" + id + "/?digest=" + digest;
+               String baseUrl = "http://data.amsat-uk.org/api/data/hex/" + id + "/?digest=" + digest;
 
                URL obj = new URL(baseUrl);
                HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
