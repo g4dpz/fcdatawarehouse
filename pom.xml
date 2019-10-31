@@ -12,11 +12,7 @@
         <module>fc-nayif1-war</module>
         <module>fc-eseo-war</module>
         <module>fc-jy1sat-war</module>
-        <module>raw-data-client</module>
         <module>fc-raw-data-client-jar</module>
-        <module>migrate-funcube</module>
-        <module>migrate-nayif1</module>
-        <module>load-hex-frames</module>
     </modules>
 
     <properties>

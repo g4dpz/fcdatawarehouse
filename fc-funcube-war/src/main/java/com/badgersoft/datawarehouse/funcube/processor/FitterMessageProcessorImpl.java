@@ -90,7 +90,7 @@ public class FitterMessageProcessorImpl extends AbstractProcessor implements Fit
         }
 
         // we do not process DEBUG frames
-        if (!"FF".equals(messageHex.substring(0, 2))) {
+        if (!"FF".equals(messageHex.substring(0, 2)) && !slot.equals("FM9")) {
 
             for (int i = 0; i < messageHex.length() - 2; i += 2) {
                 final int value = Integer.parseInt(messageHex.substring(i, i + 2), 16);
