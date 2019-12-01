@@ -46,7 +46,7 @@ public class HexFrameServiceImpl implements HexFrameService {
     private static final String HAD_INCORRECT_DIGEST = "] had incorrect digest";
     private static final String USER_WITH_SITE_ID = "User with site id [";
     private static final String NOT_FOUND = "] not found";
-    private static final long TWO_DAYS_SEQ_COUNT = 1440;
+    private static final long FOURTEEN_DAYS_SEQ_COUNT = 10080;
 
     public HexFrameServiceImpl() {}
 
@@ -227,15 +227,15 @@ public class HexFrameServiceImpl implements HexFrameService {
             final Long maxSequenceNumber = hexFrameDao
                     .getMaxSequenceNumber(satelliteId);
 
-            if (!user.getSiteId().equals("g4dpz") && maxSequenceNumber != null
-                    && (maxSequenceNumber - sequenceNumber) > TWO_DAYS_SEQ_COUNT) {
+            if (maxSequenceNumber != null
+                    && (maxSequenceNumber - sequenceNumber) > FOURTEEN_DAYS_SEQ_COUNT) {
                 final String message = String
                         .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
                                 user.getSiteId(), sequenceNumber,
                                 satelliteId);
                 LOG.warn(message);
 
-                return new ResponseEntity<String>("Already Reported", HttpStatus.OK);
+                return ResponseEntity.ok().build();
             }
 
         }
