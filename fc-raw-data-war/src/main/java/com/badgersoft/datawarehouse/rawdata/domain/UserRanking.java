@@ -41,19 +41,19 @@ public class UserRanking {
         this.firstUploadDate = firstUploadDate;
     }
 
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public final void setSatelliteId(Long satelliteId) {
+    public void setSatelliteId(Long satelliteId) {
         this.satelliteId = satelliteId;
     }
 
-    public final void setNumber(Long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -73,35 +73,35 @@ public class UserRanking {
         this.siteId = siteId;
     }
 
-    public final long getSatelliteId() {
+    public long getSatelliteId() {
         return satelliteId;
     }
 
-    public final void setSatelliteId(long satelliteId) {
+    public void setSatelliteId(long satelliteId) {
         this.satelliteId = satelliteId;
     }
 
-    public final Date getLatestUploadDate() {
+    public Date getLatestUploadDate() {
         return latestUploadDate;
     }
 
-    public final void setLatestUploadDate(Timestamp latestUploadDate) {
+    public void setLatestUploadDate(Timestamp latestUploadDate) {
         this.latestUploadDate = latestUploadDate;
     }
 
-    public final String getSiteAlias() {
+    public String getSiteAlias() {
         return siteAlias;
     }
 
-    public final void setSiteAlias(String siteAlias) {
+    public void setSiteAlias(String siteAlias) {
         this.siteAlias = siteAlias;
     }
 
-    public final Timestamp getFirstUploadDate() {
+    public Timestamp getFirstUploadDate() {
         return firstUploadDate;
     }
 
-    public final void setFirstUploadDate(Timestamp firstUploadDate) {
+    public void setFirstUploadDate(Timestamp firstUploadDate) {
         this.firstUploadDate = firstUploadDate;
     }
 

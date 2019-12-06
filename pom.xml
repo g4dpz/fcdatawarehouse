@@ -108,7 +108,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
-                <version>5.2.9.Final</version>
+                <version>5.3.4.Final</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -125,7 +125,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-c3p0</artifactId>
-                <version>4.1.10.Final</version>
+                <version>5.2.12.Final</version>
             </dependency>
 
             <dependency>

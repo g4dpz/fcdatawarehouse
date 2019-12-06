@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,8 @@ import java.util.*;
 
 @RestController
 public class RealtimeSummaryRestController {
+
+    private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryRestController.class.getName());
 
     @Autowired
     RealtimeDAO realtimeDAO;
@@ -45,17 +49,27 @@ public class RealtimeSummaryRestController {
         }
 
         List<MinMaxEntity> minMaxEntityList = minMaxDao.getAllEnabled();
+
         List<Double> minima = new ArrayList();
         List<Double> maxima = new ArrayList();
-        for (MinMaxEntity minMaxEntity : minMaxEntityList) {
-            minima.add(minMaxEntity.getMinimum());
-            maxima.add(minMaxEntity.getMaximum());
+
+        if (minMaxEntityList != null && minMaxEntityList.size() > 0) {
+            for (MinMaxEntity minMaxEntity : minMaxEntityList) {
+                minima.add(minMaxEntity.getMinimum());
+                maxima.add(minMaxEntity.getMaximum());
+            }
         }
+        else {
+            LOG.error("MinMax contained no data");
+        }
+
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<String, Object>();
 
-        List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
+        final String contributorString  = statusEntity.getContributors();
+
+        List<String> contributors = Arrays.asList(contributorString.split("\\s*,\\s*"));
 
         map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount()));
 

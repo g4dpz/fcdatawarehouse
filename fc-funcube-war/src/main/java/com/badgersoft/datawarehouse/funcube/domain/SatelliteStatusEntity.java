@@ -57,51 +57,51 @@ public class SatelliteStatusEntity {
     public SatelliteStatusEntity() {
     }
 
-    public final Long getSatelliteId() {
+    public Long getSatelliteId() {
         return satelliteId;
     }
 
-    public final void setSatelliteId(Long satelliteId) {
+    public void setSatelliteId(Long satelliteId) {
         this.satelliteId = satelliteId;
     }
 
-    public final Long getSequenceNumber() {
+    public Long getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public final void setSequenceNumber(Long sequenceNumber) {
+    public void setSequenceNumber(Long sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public final Boolean isEclipseModeForced() {
+    public Boolean isEclipseModeForced() {
         return eclipseModeForced;
     }
 
-    public final void setEclipseModeForced(Boolean eclipseModeForced) {
+    public void setEclipseModeForced(Boolean eclipseModeForced) {
         this.eclipseModeForced = eclipseModeForced;
     }
 
-    public final Boolean isEclipsed() {
+    public Boolean isEclipsed() {
         return eclipsed;
     }
 
-    public final void setEclipsed(Boolean eclipsed) {
+    public void setEclipsed(Boolean eclipsed) {
         this.eclipsed = eclipsed;
     }
 
-    public final Date getLastUpdated() {
+    public Date getLastUpdated() {
         return lastUpdated;
     }
 
-    public final void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
-    public final Double getEclipseDepth() {
+    public Double getEclipseDepth() {
         return eclipseDepth;
     }
 
-    public final void setEclipseDepth(Double eclipseDepth) {
+    public void setEclipseDepth(Double eclipseDepth) {
         this.eclipseDepth = eclipseDepth;
     }
 
@@ -177,27 +177,27 @@ public class SatelliteStatusEntity {
         }
     }
 
-    public final Date getLastWodDump() {
+    public Date getLastWodDump() {
         return lastWodDump;
     }
 
-    public final void setLastWodDump(Date lastWodDump) {
+    public void setLastWodDump(Date lastWodDump) {
         this.lastWodDump = lastWodDump;
     }
 
-    public final Date getLastResetNotification() {
+    public Date getLastResetNotification() {
         return lastResetNotification;
     }
 
-    public final void setLastResetNotification(Date lastResetNotification) {
+    public void setLastResetNotification(Date lastResetNotification) {
         this.lastResetNotification = lastResetNotification;
     }
 
-    public final Date getLastNoShowNotification() {
+    public Date getLastNoShowNotification() {
         return lastNoShowNotification;
     }
 
-    public final void setLastNoShowNotification(Date lastNoShowNotification) {
+    public void setLastNoShowNotification(Date lastNoShowNotification) {
         this.lastNoShowNotification = lastNoShowNotification;
     }
 

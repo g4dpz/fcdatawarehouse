@@ -75,7 +75,8 @@ public class HexFrame {
     @Column(name = "out_of_order")
     private Boolean outOfOrder = false;
 
-    @ManyToOne(targetEntity = Payload.class)
+    @ManyToOne
+    @JoinColumn(name="payload_id")
     private Payload payload;
 
     private String digest;
@@ -185,15 +186,15 @@ public class HexFrame {
         this.highPrecisionProcessed = highPrecisionProcessed;
     }
 
-    public final Timestamp getSatelliteTime() {
+    public Timestamp getSatelliteTime() {
         return satelliteTime;
     }
 
-    public final void setSatelliteTime(Timestamp satelliteTime) {
+    public void setSatelliteTime(Timestamp satelliteTime) {
         this.satelliteTime = satelliteTime;
     }
 
-    public final Boolean getEclipsed() {
+    public Boolean getEclipsed() {
         return eclipsed;
     }
 
@@ -201,7 +202,7 @@ public class HexFrame {
         this.eclipsed = eclipsed;
     }
 
-    public final String getEclipseDepth() {
+    public String getEclipseDepth() {
         return eclipseDepth;
     }
 
@@ -209,7 +210,7 @@ public class HexFrame {
         this.eclipseDepth = eclipseDepth;
     }
 
-    public final String getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
@@ -217,7 +218,7 @@ public class HexFrame {
         this.latitude = latitude;
     }
 
-    public final String getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
@@ -225,15 +226,15 @@ public class HexFrame {
         this.longitude = longitude;
     }
 
-    public final Boolean isOutOfOrder() {
+    public Boolean isOutOfOrder() {
         return outOfOrder;
     }
 
-    public final void setOutOfOrder(Boolean outOfOrder) {
+    public void setOutOfOrder(Boolean outOfOrder) {
         this.outOfOrder = outOfOrder;
     }
 
-    public final String getDigest() {
+    public String getDigest() {
         return digest;
     }
 
@@ -241,11 +242,11 @@ public class HexFrame {
         this.digest = digest;
     }
 
-    public final Boolean isRealtimeProcessed() {
+    public Boolean isRealtimeProcessed() {
         return realtimeProcessed;
     }
 
-    public final void setRealtimeProcessed(Boolean realtimeProcessed) {
+    public void setRealtimeProcessed(Boolean realtimeProcessed) {
         this.realtimeProcessed = realtimeProcessed;
     }
 

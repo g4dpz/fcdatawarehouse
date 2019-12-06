@@ -3,6 +3,7 @@ package com.badgersoft.datawarehouse.rawdata.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "payload")
@@ -18,6 +19,10 @@ public class Payload implements Serializable {
     @Column(name = "created_date")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    @OneToMany
+    @JoinColumn(name="payload_id")
+    public Set<HexFrame> hexFrames;
 
     public Payload() {}
 
@@ -43,6 +48,14 @@ public class Payload implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Set<HexFrame> getHexFrames() {
+        return hexFrames;
+    }
+
+    public void setHexFrames(Set<HexFrame> hexFrames) {
+        this.hexFrames = hexFrames;
     }
 
     @Override

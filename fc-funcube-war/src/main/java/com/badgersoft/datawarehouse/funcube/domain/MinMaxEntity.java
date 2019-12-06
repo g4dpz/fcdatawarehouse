@@ -42,51 +42,51 @@ public class MinMaxEntity {
 		this.enabled = enabled;
 	}
 
-	public final Long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public final void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public final Long getChannel() {
+	public Long getChannel() {
 		return channel;
 	}
 
-	public final void setChannel(Long channel) {
+	public void setChannel(Long channel) {
 		this.channel = channel;
 	}
 
-	public final Double getMinimum() {
+	public Double getMinimum() {
 		return minimum;
 	}
 
-	public final void setMinimum(Double minimum) {
+	public void setMinimum(Double minimum) {
 		this.minimum = minimum;
 	}
 
-	public final Double getMaximum() {
+	public Double getMaximum() {
 		return maximum;
 	}
 
-	public final void setMaximum(Double maximum) {
+	public void setMaximum(Double maximum) {
 		this.maximum = maximum;
 	}
 
-	public final Date getRefDate() {
+	public Date getRefDate() {
 		return refDate;
 	}
 
-	public final void setRefDate(Date refDate) {
+	public void setRefDate(Date refDate) {
 		this.refDate = refDate;
 	}
 
-	public final Boolean getEnabled() {
+	public Boolean getEnabled() {
 		return enabled;
 	}
 
-	public final void setEnabled(Boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
 

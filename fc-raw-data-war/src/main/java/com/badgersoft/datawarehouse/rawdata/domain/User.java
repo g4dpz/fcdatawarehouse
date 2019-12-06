@@ -90,49 +90,49 @@ public class User implements UserDetails {
     }
 
     @Override
-    public final String getUsername() {
+    public String getUsername() {
         return username;
     }
 
     @Override
-    public final String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public final String getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public final String getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public final String getSiteId() {
+    public String getSiteId() {
         return siteId;
     }
 
     @Override
-    public final boolean isEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public final boolean isAdmin() {
+    public boolean isAdmin() {
         return admin;
     }
 
-    public final boolean isExpired() {
+    public boolean isExpired() {
         return expired;
     }
 
-    public final boolean isLocked() {
+    public boolean isLocked() {
         return locked;
     }
 
-    public final boolean isCredentialsExpired() {
+    public boolean isCredentialsExpired() {
         return credentialsExpired;
     }
 
-    public final String getAuthKey() {
+    public String getAuthKey() {
         return authKey;
     }
 
@@ -178,19 +178,19 @@ public class User implements UserDetails {
         this.emailSent = emailSent;
     }
 
-    public final Date getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public final void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public final String getRegistrationCode() {
+    public String getRegistrationCode() {
         return registrationCode;
     }
 
-    public final void setRegistrationCode(String registrationCode) {
+    public void setRegistrationCode(String registrationCode) {
         this.registrationCode = registrationCode;
     }
 

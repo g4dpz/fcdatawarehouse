@@ -46,7 +46,7 @@ public class HexFrameServiceImpl implements HexFrameService {
     private static final String HAD_INCORRECT_DIGEST = "] had incorrect digest";
     private static final String USER_WITH_SITE_ID = "User with site id [";
     private static final String NOT_FOUND = "] not found";
-    private static final long FOURTEEN_DAYS_SEQ_COUNT = 10080;
+    private static final long TWO_DAY_SEQ_COUNT = 1440;
 
     public HexFrameServiceImpl() {}
 
@@ -228,7 +228,7 @@ public class HexFrameServiceImpl implements HexFrameService {
                     .getMaxSequenceNumber(satelliteId);
 
             if (maxSequenceNumber != null
-                    && (maxSequenceNumber - sequenceNumber) > FOURTEEN_DAYS_SEQ_COUNT) {
+                    && (maxSequenceNumber - sequenceNumber) > TWO_DAY_SEQ_COUNT) {
                 final String message = String
                         .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
                                 user.getSiteId(), sequenceNumber,
@@ -240,12 +240,42 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         }
 
-        List<HexFrame> hexFrameEntities = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
+        List<HexFrame> hexFrameEntities = new ArrayList<>();
+
+        String payloadText = hexString.substring(112);
+        String preamble = hexString.substring(0, 112);
+
+        try {
+            hexFrameEntities  = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
+        }
+        catch (Exception enfe) {
+            final String message = enfe.getMessage();
+            String[] msgParts = message.split(" ");
+            long payloadId = Long.parseLong(msgParts[msgParts.length - 1]);
+            if (message.contains("Unable to find") && message.contains("Payload with id")) {
+                // does it exist with another id
+                Payload payload = payloadDao.findByHexText(payloadText);
+                LOG.error("Payload " + payloadId + " not found");
+                if (payload != null) {
+                    LOG.info("Was found with ID " + payload.getId());
+                    int updated = setPayloadId(satelliteId, frameType, sequenceNumber, payload);
+                    LOG.info("Updated: " + updated);
+                    return ResponseEntity.badRequest().build();
+                }
+                else {
+                    Payload newPayload = new Payload();
+                    newPayload.setId(payloadId);
+                    newPayload.setHexText(payloadText);
+                    newPayload.setCreatedDate(new Date(System.currentTimeMillis()));
+                    newPayload = payloadDao.save(newPayload);
+                    int updated = setPayloadId(satelliteId, frameType, sequenceNumber, payload);
+                }
+
+                hexFrameEntities  = hexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(satelliteId, sequenceNumber, frameType);
+            }
+        }
 
         if (hexFrameEntities.isEmpty()) {
-
-            String payloadText = hexString.substring(112);
-            String preamble = hexString.substring(0, 112);
 
             Payload payload = payloadDao.findByHexText(payloadText);
 
@@ -313,6 +343,11 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         return ResponseEntity.ok().build();
 
+    }
+
+
+    private int setPayloadId(long satelliteId, long frameType, long sequenceNumber, Payload payload) {
+        return hexFrameDao.setPayload(payload, satelliteId, sequenceNumber, frameType);
     }
 
     private void incrementUploadRanking(long satelliteId, String siteId, Date createdDate) {

@@ -48,43 +48,43 @@ public class FitterMessageEntity {
         this.slot = slot;
     }
 
-    public final Long getId() {
+    public Long getId() {
         return id;
     }
 
-    public final void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public final String getMessageText() {
+    public String getMessageText() {
         return messageText;
     }
 
-    public final void setMessageText(String messageText) {
+    public void setMessageText(String messageText) {
         this.messageText = messageText;
     }
 
-    public final Date getLastReceived() {
+    public Date getLastReceived() {
         return lastReceived;
     }
 
-    public final void setLastReceived(Date lastReceived) {
+    public void setLastReceived(Date lastReceived) {
         this.lastReceived = lastReceived;
     }
 
-    public final Long getSatelliteId() {
+    public Long getSatelliteId() {
         return satelliteId;
     }
 
-    public final void setSatelliteId(Long satelliteId) {
+    public void setSatelliteId(Long satelliteId) {
         this.satelliteId = satelliteId;
     }
 
-    public final Boolean getDebug() {
+    public Boolean getDebug() {
         return debug;
     }
 
-    public final void setDebug(Boolean debug) {
+    public void setDebug(Boolean debug) {
         this.debug = debug;
     }
 
@@ -92,7 +92,7 @@ public class FitterMessageEntity {
         this.display = display;
     }
 
-    public final String getSlot() {
+    public String getSlot() {
         return slot;
     }
 
@@ -100,11 +100,11 @@ public class FitterMessageEntity {
         this.slot = slot;
     }
 
-    public final Date getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public final void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
