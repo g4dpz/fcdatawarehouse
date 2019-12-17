@@ -297,7 +297,20 @@ public class HexFrameServiceImpl implements HexFrameService {
             hexFrameEntity.setPayload(payload);
             incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
 
-            addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+            SatelliteStatus satelliteStatus = satelliteStatusMap.get(satelliteId);
+            if ((sequenceNumber == satelliteStatus.getSequenceNumber() && frameType > satelliteStatus.getFrameType())
+                || (sequenceNumber > satelliteStatus.getSequenceNumber()))
+            {
+                satelliteStatus.setSequenceNumber(sequenceNumber);
+                satelliteStatus.setFrameType(frameType);
+                satelliteStatusDao.save(satelliteStatus);
+
+                addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+            }
+
+            if (isAntatrtic(hexFrameEntity.getLatitude(), hexFrameEntity.getLongitude())) {
+                incrementUploadRanking(satelliteId, "test1", createdDate);
+            }
 
             hexFrameDao.save(hexFrameEntity);
 
@@ -343,6 +356,17 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         return ResponseEntity.ok().build();
 
+    }
+
+    private boolean isAntatrtic(String latitude, String longitude) {
+        try {
+            Double lat = Double.valueOf(latitude);
+            Double lon = Double.valueOf(longitude);
+            return (lat < -30.0 && (lon > 320 || lon < 60.0));
+        }
+        catch (NullPointerException npe) {
+            return false;
+        }
     }
 
 
