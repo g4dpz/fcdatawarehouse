@@ -10,6 +10,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
@@ -80,6 +82,9 @@ public class HexFrame {
     private Payload payload;
 
     private String digest;
+
+    @Column(name = "md5_hash")
+    private String md5Hash;
 
     public HexFrame() {
     }
@@ -260,5 +265,34 @@ public class HexFrame {
 
     public void setPayload(Payload payload) {
         this.payload = payload;
+        if (satelliteId == 19 && (frameType == 32 || frameType == 33)) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md5Hash = toHexString(md.digest((hexString + payload.getHexText()).getBytes()));
+            } catch (NoSuchAlgorithmException e) {
+            }
+        }
+    }
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
+    }
+
+    private static String toHexString(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+
+        return hexString.toString();
     }
 }

@@ -60,12 +60,12 @@ public class JpaConfig {
                 setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
                 setProperty("hibernate.hbm2ddl.auto", "validate");
                 setProperty("hibernate.c3p0.min_size", "5");
-                setProperty("hibernate.c3p0.max_size", "20");
+                setProperty("hibernate.c3p0.max_size", "15");
                 setProperty("hibernate.c3p0.timeout", "300");
                 setProperty("hibernate.c3p0.max_statements", "50");
                 setProperty("hibernate.c3p0.idle_test_period", "3000");
                 setProperty("hibernate.c3p0.validate", "true");
-                setProperty("hibernate.c3p0.acquire_increment", "4");
+                setProperty("hibernate.c3p0.acquire_increment", "5");
                 setProperty("connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider");
             }
         };

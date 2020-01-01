@@ -228,7 +228,7 @@ public class HexFrameServiceImpl implements HexFrameService {
                     .getMaxSequenceNumber(satelliteId);
 
             if (maxSequenceNumber != null
-                    && (maxSequenceNumber - sequenceNumber) > TWO_DAY_SEQ_COUNT) {
+                    && Math.abs(maxSequenceNumber - sequenceNumber) > TWO_DAY_SEQ_COUNT) {
                 final String message = String
                         .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
                                 user.getSiteId(), sequenceNumber,

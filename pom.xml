@@ -13,6 +13,7 @@
         <module>fc-eseo-war</module>
         <module>fc-jy1sat-war</module>
         <module>fc-raw-data-client-jar</module>
+        <module>udp-client</module>
     </modules>
 
     <properties>
