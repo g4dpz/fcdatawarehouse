@@ -1,6 +1,8 @@
 package com.badgersoft.datawarehouse.nayif1.config;
 
 import com.badgersoft.datawarehouse.nayif1.processor.*;
+import com.badgersoft.datawarehouse.nayif1.service.RealtimeSummaryService;
+import com.badgersoft.datawarehouse.nayif1.service.RealtimeSummaryServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,5 +29,8 @@ public class AppConfig {
 
     @Bean
     RealtimeProcessor realtimeProcessor() { return new RealtimeProcessorImpl(); }
+
+    @Bean
+    RealtimeSummaryService realtimeSummaryService() { return new RealtimeSummaryServiceImpl(); };
 
 }

@@ -2,6 +2,8 @@ package com.badgersoft.datawarehouse.eseo.config;
 
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessorImpl;
 import com.badgersoft.datawarehouse.eseo.processor.RealtimeProcessor;
+import com.badgersoft.datawarehouse.eseo.service.RealtimeSummaryService;
+import com.badgersoft.datawarehouse.eseo.service.RealtimeSummaryServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,5 +27,8 @@ public class AppConfig {
 
     @Bean
     RealtimeProcessor realtimeProcessor() { return new RealtimeProcessorImpl(); }
+
+    @Bean
+    RealtimeSummaryService realtimeSummaryService() { return new RealtimeSummaryServiceImpl(); }
 
 }

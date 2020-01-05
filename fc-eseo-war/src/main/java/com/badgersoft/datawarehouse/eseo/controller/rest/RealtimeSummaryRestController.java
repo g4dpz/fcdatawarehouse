@@ -1,97 +1,21 @@
 package com.badgersoft.datawarehouse.eseo.controller.rest;
 
-import com.badgersoft.datawarehouse.eseo.dao.*;
-import com.badgersoft.datawarehouse.eseo.domain.*;
-import com.badgersoft.datawarehouse.eseo.dto.RealtimeDTO;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.badgersoft.datawarehouse.eseo.service.RealtimeSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.*;
-
 @RestController
 @RequestMapping(value = "/data")
 public class RealtimeSummaryRestController {
 
     @Autowired
-    RealtimeDao realtimeDAO;
-
-    @Autowired
-    PayloadOneDao payloadOneDao;
-
-    @Autowired
-    PayloadTwoDao payloadTwoDao;
-
-    @Autowired
-    SatelliteStatusDao satelliteStatusDao;
-
-    @Autowired
-    MinMaxDao minMaxDao;
+    RealtimeSummaryService realtimeSummaryService;
 
     @RequestMapping(value = "/realtime", method = RequestMethod.GET, produces = "application/javascript")
     public String getSummary(@RequestParam(value = "callback") String callback) {
-        SatelliteStatusEntity statusEntity = (SatelliteStatusEntity) (satelliteStatusDao.findAll().iterator().next());
-        Long sequenceNumberOne = statusEntity.getSequenceNumber();
-        Long frameTypeOne = statusEntity.getFrameType();
-        Long sequenceNumberTwo = statusEntity.getSequenceNumberTwo();
-        Long frameTypeTwo = statusEntity.getFrameTypeTwo();
-
-        Long sequenceNumber;
-        Long frameType;
-
-        if (sequenceNumberOne > sequenceNumberTwo) {
-            sequenceNumber = sequenceNumberOne;
-            frameType = frameTypeOne;
-        }
-        else {
-            sequenceNumber = sequenceNumberTwo;
-            frameType = frameTypeTwo;
-        }
-
-        RealtimeEntity realtimeEntity = realtimeDAO.findBySequenceNumberAndFrameType(sequenceNumber, frameType);
-        PayloadOneEntity payloadOneEntity = payloadOneDao.findBySequenceNumberAndFrameType(sequenceNumberOne, frameTypeOne);
-        PayloadTwoEntity payloadTwoEntity = payloadTwoDao.findBySequenceNumberAndFrameType(sequenceNumberTwo, frameTypeTwo);
-
-        if (realtimeEntity == null) {
-            return callback + "([error:" + "No data found" + "]);";
-        }
-
-        List<MinMaxEntity> minMaxEntityList = minMaxDao.getAllEnabled();
-        List<Double> minima = new ArrayList();
-        List<Double> maxima = new ArrayList();
-        for (MinMaxEntity minMaxEntity : minMaxEntityList) {
-            minima.add(minMaxEntity.getMinimum());
-            maxima.add(minMaxEntity.getMaximum());
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
-
-        map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount(), payloadOneEntity, payloadTwoEntity));
-
-        try {
-            return objectMapper.writeValueAsString(new JSONPObject(callback, map));
-        }
-        catch (JsonGenerationException e) {
-            return callback + "([error:" + e.getMessage() + "]);";
-        }
-        catch (JsonMappingException e) {
-            return callback + "([error:" + e.getMessage() + "]);";
-        }
-        catch (IOException e) {
-            return callback + "([error:" + e.getMessage() + "]);";
-        }
+        return realtimeSummaryService.getSummary(callback);
     }
 }
