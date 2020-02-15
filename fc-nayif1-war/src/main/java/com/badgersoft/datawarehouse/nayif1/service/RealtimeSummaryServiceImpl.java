@@ -12,6 +12,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import java.util.*;
 
 @Service
 public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {
+
+    private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryServiceImpl.class.getName());
 
     static final SimpleDateFormat SDTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
 
@@ -56,7 +60,17 @@ public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<String, Object>();
 
-        List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
+
+        final String contributorString  = statusEntity.getContributors();
+
+        List<String> contributors = new ArrayList<>();
+
+        if (contributorString != null) {
+            contributors = Arrays.asList(contributorString.split("\\s*,\\s*"));
+        }
+        else {
+            LOG.error("No contributors found");
+        }
 
         map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount()));
 

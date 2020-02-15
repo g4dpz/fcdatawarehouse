@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.eseo.service;
 
-import com.badgersoft.datawarehouse.eseo.controller.rest.RealtimeSummaryRestController;
 import com.badgersoft.datawarehouse.eseo.dao.*;
 import com.badgersoft.datawarehouse.eseo.domain.*;
 import com.badgersoft.datawarehouse.eseo.dto.RealtimeDTO;
@@ -18,7 +17,9 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryRestController.class.getName());
+public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {
+
+    private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryServiceImpl.class.getName());
 
     @Autowired
     RealtimeDao realtimeDAO;
@@ -76,7 +77,16 @@ public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {priva
 
         Map<String, Object> map = new HashMap<String, Object>();
 
-        List<String> contributors = Arrays.asList(statusEntity.getContributors().split("\\s*,\\s*"));
+        final String contributorString  = statusEntity.getContributors();
+
+        List<String> contributors = new ArrayList<>();
+
+        if (contributorString != null) {
+            contributors = Arrays.asList(contributorString.split("\\s*,\\s*"));
+        }
+        else {
+            LOG.error("No contributors found");
+        }
 
         map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount(), payloadOneEntity, payloadTwoEntity));
 

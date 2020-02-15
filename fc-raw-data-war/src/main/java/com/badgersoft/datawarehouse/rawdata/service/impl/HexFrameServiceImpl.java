@@ -462,6 +462,11 @@ public class HexFrameServiceImpl implements HexFrameService {
             hexFrameEntity.setLatitude(satpos.getLatitude());
             hexFrameEntity.setLongitude(satpos.getLongitude());
         }
+        else {
+            LOG.error("SATPREDICT_URL not set");
+            hexFrameEntity.setLatitude("0.0");
+            hexFrameEntity.setLongitude("0.0");
+        }
 
         return;
     }

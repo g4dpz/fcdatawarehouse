@@ -1,6 +1,5 @@
 package com.badgersoft.datawarehouse.funcube.service;
 
-import com.badgersoft.datawarehouse.funcube.controller.rest.RealtimeSummaryRestController;
 import com.badgersoft.datawarehouse.funcube.dao.MinMaxDao;
 import com.badgersoft.datawarehouse.funcube.dao.RealtimeDAO;
 import com.badgersoft.datawarehouse.funcube.dao.SatelliteStatusDao;
@@ -21,7 +20,9 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryRestController.class.getName());
+public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {
+
+    private static Logger LOG = LoggerFactory.getLogger(RealtimeSummaryServiceImpl.class.getName());
 
     @Autowired
     RealtimeDAO realtimeDAO;
@@ -70,7 +71,14 @@ public class RealtimeSummaryServiceImpl implements RealtimeSummaryService {priva
 
         final String contributorString  = statusEntity.getContributors();
 
-        List<String> contributors = Arrays.asList(contributorString.split("\\s*,\\s*"));
+        List<String> contributors = new ArrayList<>();
+
+        if (contributorString != null) {
+            contributors = Arrays.asList(contributorString.split("\\s*,\\s*"));
+        }
+        else {
+            LOG.error("No contributors found");
+        }
 
         map.put("data", new RealtimeDTO(realtimeEntity, minima, maxima, contributors, statusEntity.getPacketCount()));
 
