@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.Collator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -60,12 +61,92 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
             @PathVariable(value = "sequenceNumber") final String sequenceNumber,
             @PathVariable(value = "frameType") final String frameType,
             HttpServletRequest request, HttpServletResponse response) {
+
+        long now = System.currentTimeMillis();
+
         final long seqNo = Long.parseLong(sequenceNumber);
         final long fType = Long.parseLong(frameType);
         HexFrameDTO frame = hexFrameService.getFrame(Long.parseLong(satelliteId), seqNo, fType);
+
         if (frame != null) {
+
+            // get the previous frame
+            HexFrameDTO previousFrame;
+            long previousSeqNo = 0;
+            long previousFrameType = 0;
+
+            if (fType == 0) {
+                previousSeqNo = seqNo -1;
+                previousFrameType = 23;
+            }
+            else {
+                previousSeqNo = seqNo;
+                previousFrameType = fType - 1;
+            }
+
+            previousFrame = hexFrameService.getFrame(Long.parseLong(satelliteId), previousSeqNo, previousFrameType);
+
+            if (previousFrame != null) {
+                final List<String> contributors = previousFrame.getContributors();
+                for (String contributor : contributors) {
+                    final List<String> contributors1 = frame.getContributors();
+                    if (!contributors1.contains(contributor)) {
+                        contributors1.add(contributor);
+                        java.util.Collections.sort(contributors1, Collator.getInstance());
+                        frame.setContributors(contributors1);
+                    }
+                }
+            }
+
+            // and one more
+            if (previousFrameType == 0) {
+                previousSeqNo = previousSeqNo -1;
+                previousFrameType = 23;
+            }
+            else {
+                previousFrameType = previousFrameType - 1;
+            }
+
+            previousFrame = hexFrameService.getFrame(Long.parseLong(satelliteId), previousSeqNo, previousFrameType);
+
+            if (previousFrame != null) {
+                final List<String> contributors = previousFrame.getContributors();
+                for (String contributor : contributors) {
+                    final List<String> contributors1 = frame.getContributors();
+                    if (!contributors1.contains(contributor)) {
+                        contributors1.add(contributor);
+                        java.util.Collections.sort(contributors1, Collator.getInstance());
+                        frame.setContributors(contributors1);
+                    }
+                }
+            }
+
+            // and one more
+            if (previousFrameType == 0) {
+                previousSeqNo = previousSeqNo -1;
+                previousFrameType = 23;
+            }
+            else {
+                previousFrameType = previousFrameType - 1;
+            }
+
+            previousFrame = hexFrameService.getFrame(Long.parseLong(satelliteId), previousSeqNo, previousFrameType);
+
+            if (previousFrame != null) {
+                final List<String> contributors = previousFrame.getContributors();
+                for (String contributor : contributors) {
+                    final List<String> contributors1 = frame.getContributors();
+                    if (!contributors1.contains(contributor)) {
+                        contributors1.add(contributor);
+                        java.util.Collections.sort(contributors1, Collator.getInstance());
+                        frame.setContributors(contributors1);
+                    }
+                }
+            }
+
             frame.setSequenceNumber(seqNo);
             frame.setFrameType(fType);
+            LOG.debug(String.format("Time to create realtime info: %d s", (System.currentTimeMillis() - now) / 1000));
             return frame;
         }
         else {

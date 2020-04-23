@@ -79,10 +79,10 @@ public class Receiver {
 
         // we do not process this immediately as we give several G/S the opportunity to 'score'
         // uploads
-        try {
-            Thread.sleep(sleep);
-        } catch (InterruptedException e) {
-        }
+//        try {
+//            Thread.sleep(sleep);
+//        } catch (InterruptedException e) {
+//        }
 
         String[] messageElements = StringUtils.split(message, ",");
         int msgLength = messageElements.length;

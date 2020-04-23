@@ -298,6 +298,7 @@ public class HexFrameServiceImpl implements HexFrameService {
             incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
 
             SatelliteStatus satelliteStatus = satelliteStatusMap.get(satelliteId);
+
             if ((sequenceNumber == satelliteStatus.getSequenceNumber() && frameType > satelliteStatus.getFrameType())
                 || (sequenceNumber > satelliteStatus.getSequenceNumber()))
             {
@@ -306,7 +307,18 @@ public class HexFrameServiceImpl implements HexFrameService {
                 satelliteStatusDao.save(satelliteStatus);
 
                 addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+
             }
+            else if (sequenceNumber == satelliteStatus.getSequenceNumber())
+            {
+                addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+
+            }
+            else {
+                hexFrameEntity.setLatitude("0.0");
+                hexFrameEntity.setLongitude("0.0");
+            }
+
 
             if (isAntatrtic(hexFrameEntity.getLatitude(), hexFrameEntity.getLongitude())) {
                 incrementUploadRanking(satelliteId, "test1", createdDate);
@@ -459,8 +471,11 @@ public class HexFrameServiceImpl implements HexFrameService {
         SatPosDTO satpos = satPredictClient.getPosition(catalogueNumber, 0.0,0.0,0.0);
 
         if (satpos != null) {
-            hexFrameEntity.setLatitude(satpos.getLatitude());
-            hexFrameEntity.setLongitude(satpos.getLongitude());
+            final String latitude = satpos.getLatitude();
+            final String longitude = satpos.getLongitude();
+
+            hexFrameEntity.setLatitude(latitude != null ? latitude : "0.0" );
+            hexFrameEntity.setLongitude(longitude != null ? longitude : "0.0");
         }
         else {
             LOG.error("SATPREDICT_URL not set");
