@@ -38,6 +38,8 @@ public class Receiver {
 
     private static Logger LOG = LoggerFactory.getLogger(Receiver.class.getName());
 
+    private long sleep = 5000;
+
     @Autowired
     JmsMessageSender jmsMessageSender;
 
@@ -45,7 +47,7 @@ public class Receiver {
 
     private static String SATELLITE_ID = "7";
 
-    private static String WAREHOUSE_PORT = "8080";
+    private static String WAREHOUSE_PORT = "10080";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
@@ -65,10 +67,10 @@ public class Receiver {
 
         // we do not process this immediately as we give several G/S the opportunity to 'score'
         // uploads
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//        }
+        try {
+            Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+        }
 
         String[] messageElements = StringUtils.split(message, ",");
         int msgLength = messageElements.length;
@@ -146,7 +148,7 @@ public class Receiver {
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
 
         RestTemplate restTemplate = new RestTemplate();
-        final String url = "http://localhost:8080/api/data/payload/" +
+        final String url = "http://localhost:10080/api/data/payload/" +
                 satelliteId + "/" +
                 sequenceNumber + "?" +
                 "frames=" + frames;
