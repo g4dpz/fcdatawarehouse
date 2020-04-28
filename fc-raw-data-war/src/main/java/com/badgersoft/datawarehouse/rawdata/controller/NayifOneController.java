@@ -31,7 +31,7 @@ public class NayifOneController {
     @GetMapping("/ui/nayif1/fitter")
     public ModelAndView fitter() {
         ModelAndView modelAndView = new ModelAndView("content/nayif1/fitter");
-        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages("http://localhost:8080/nayif1/data/fitter"));
+        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages("http://localhost:10080/nayif1/data/fitter"));
         return modelAndView;
     }
 

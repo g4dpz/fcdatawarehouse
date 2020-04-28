@@ -25,7 +25,7 @@ public class FuncubeOneController {
     @GetMapping("/ui/fc1-fm/fitter")
     public ModelAndView fitter() {
         ModelAndView modelAndView = new ModelAndView("content/fc1-fm/fitter");
-        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages("http://localhost:8080/funcube/data/fitter"));
+        modelAndView.addObject("fitterMessages", fitterMessageService.getMessages("http://localhost:10080/funcube/data/fitter"));
         return modelAndView;
     }
 
