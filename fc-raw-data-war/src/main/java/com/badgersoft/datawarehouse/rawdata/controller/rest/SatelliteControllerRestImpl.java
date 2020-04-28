@@ -37,7 +37,6 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
     }
 
     @PostMapping(value = "/api/data/hex/{site_id}")
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ResponseEntity processFrame(@PathVariable(value = "site_id") String siteId,
                                        @RequestParam(value = "digest") String digest,
                                        @RequestBody String body) {
@@ -47,7 +46,7 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         lock.lock();
 
         try {
-            return hexFrameService.processHexFrame(siteId, digest, body);
+            return hexFrameService.processFrame(siteId, digest, body);
         }
         finally {
             lock.unlock();

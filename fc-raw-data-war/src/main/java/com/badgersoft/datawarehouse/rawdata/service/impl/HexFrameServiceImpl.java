@@ -95,21 +95,64 @@ public class HexFrameServiceImpl implements HexFrameService {
         return "Hello";
     }
 
-    public ResponseEntity processHexFrame(String siteId, String digest, String body) {
+    public ResponseEntity processFrame(String siteId, String digest, String body) {
+
+        long satelliteId = 0;
+        long sequenceNumber = 0;
+        long frameType = 0;
+
+        String hexString;
+
+        if (body.contains("&")) {
+            hexString = StringUtils.substringBetween(body, "=", "&");
+        } else {
+            hexString = body.substring(body.indexOf("=") + 1);
+        }
+
+        hexString = hexString.replace("+", " ");
+
+
+        String binary = convertHexBytePairToBinary(hexString);
+        int firstByte = Integer.parseInt(binary.substring(0, 8), 2);
+        int secondByte = Integer.parseInt(binary.substring(8, 16), 2);
+
+        satelliteId = ((firstByte & 192) >> 6);
+
+        if (satelliteId == 3) {
+            satelliteId += ((secondByte & 252));
+        }
+
+        frameType = (firstByte & 63);
+
+        sequenceNumber = getSequenceNumber(satelliteId, hexString);
+
+        final ResponseEntity responseEntity = processHexFrame(
+                satelliteId,
+                sequenceNumber,
+                frameType, siteId, digest, hexString);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+
+            String queueName = "satellite_" + satelliteId + "_frame_available";
+
+            ActiveMQQueue queue = new ActiveMQQueue(queueName);
+            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+                    satelliteId,
+                    sequenceNumber,
+                    frameType));
+        }
+
+        return responseEntity;
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    private ResponseEntity processHexFrame(long satelliteId, long sequenceNumber, long frameType, String siteId, String digest, String hexString) {
 
         final User user = userDao.findBySiteId(siteId);
 
         String authKey;
 
         if (user != null) {
-            String hexString;
-            if (body.contains("&")) {
-                hexString = StringUtils.substringBetween(body, "=", "&");
-            } else {
-                hexString = body.substring(body.indexOf("=") + 1);
-            }
-
-            hexString = hexString.replace("+", " ");
 
             authKey = USER_AUTH_KEYS.get(siteId);
 
@@ -139,7 +182,11 @@ public class HexFrameServiceImpl implements HexFrameService {
 
                     final Date now = new Date(5000 * (clock.currentDate().getTime() / 5000));
 
-                    return processHexFrame(new UserHexString(user,
+                    return processUserHexFrame(
+                            satelliteId,
+                            sequenceNumber,
+                            frameType,
+                            new UserHexString(user,
                             StringUtils.deleteWhitespace(hexString), now));
                 } else {
                     LOG.error(USER_WITH_SITE_ID + siteId + HAD_INCORRECT_DIGEST
@@ -162,7 +209,7 @@ public class HexFrameServiceImpl implements HexFrameService {
         }
     }
 
-    private ResponseEntity processHexFrame(UserHexString userHexString) {
+    private ResponseEntity processUserHexFrame(Long satelliteId, long sequenceNumber, long frameType, UserHexString userHexString) {
 
         final Map<Long, SatelliteStatus> satelliteStatusMap = new HashMap<Long, SatelliteStatus>();
 
@@ -176,29 +223,14 @@ public class HexFrameServiceImpl implements HexFrameService {
             LOG.error("--- NO Satellite Statuses Found ---");
         }
         else {
-            for(Long satelliteId : satelliteStatusMap.keySet()) {
-                LOG.debug("Found satellite status for sateliteId: " + satelliteId);
+            for(Long satId : satelliteStatusMap.keySet()) {
+                LOG.debug("Found satellite status for sateliteId: " + satId);
             }
         }
 
         final String hexString = userHexString.getHexString();
         final User user = userHexString.getUser();
         final Date createdDate = userHexString.getCreatedDate();
-
-
-        String binary = convertHexBytePairToBinary(hexString);
-        int firstByte = Integer.parseInt(binary.substring(0, 8), 2);
-        int secondByte = Integer.parseInt(binary.substring(8, 16), 2);
-
-        long satelliteId = ((firstByte & 192) >> 6);
-
-        if (satelliteId == 3) {
-            satelliteId += ((secondByte & 252));
-        }
-
-        long frameType = (firstByte & 63);
-
-        final long sequenceNumber = getSequenceNumber(satelliteId, hexString);
 
         LOG.info(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
 
@@ -326,18 +358,10 @@ public class HexFrameServiceImpl implements HexFrameService {
 
             hexFrameDao.save(hexFrameEntity);
 
-            if (satelliteId == 0 && sequenceNumber == 0 && firstByte == 0) {
+            if (satelliteId == 0 && sequenceNumber == 0) {
                 LOG.warn("--- RESET ---");
                 return new ResponseEntity<String>("Satellite RESET", HttpStatus.BAD_REQUEST);
             }
-
-            String queueName = "satellite_" + satelliteId + "_frame_available";
-
-            ActiveMQQueue queue = new ActiveMQQueue(queueName);
-            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
-                    hexFrameEntity.getSatelliteId(),
-                    hexFrameEntity.getSequenceNumber(),
-                    hexFrameEntity.getFrameType()));
         }
         else {
             HexFrame hexFrameEntity = hexFrameEntities.get(0);
