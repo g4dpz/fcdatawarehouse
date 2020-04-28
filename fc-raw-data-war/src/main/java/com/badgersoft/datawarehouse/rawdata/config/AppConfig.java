@@ -42,7 +42,7 @@ public class AppConfig {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(465);
+        mailSender.setPort(587);
 
         mailSender.setUsername("operations@funcube.org.uk");
         mailSender.setPassword("H4les0wen1234!");
@@ -50,9 +50,9 @@ public class AppConfig {
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.required","true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         return mailSender; }
 
