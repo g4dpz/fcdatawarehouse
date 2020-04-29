@@ -227,15 +227,19 @@ public class HexFrameServiceImpl implements HexFrameService {
             final Long maxSequenceNumber = hexFrameDao
                     .getMaxSequenceNumber(satelliteId);
 
-            if (maxSequenceNumber != null
-                    && Math.abs(maxSequenceNumber - sequenceNumber) > TWO_DAY_SEQ_COUNT) {
-                final String message = String
-                        .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
-                                user.getSiteId(), sequenceNumber,
-                                satelliteId);
-                LOG.warn(message);
+            if (maxSequenceNumber != null ) {
+                final long diff = Math.abs(maxSequenceNumber - sequenceNumber);
 
-                return ResponseEntity.ok().build();
+                if ((maxSequenceNumber > sequenceNumber) && (diff > TWO_DAY_SEQ_COUNT)) {
+
+                    final String message = String
+                            .format("User %s loading sequence number %d is out of bounds for satelliteId %d",
+                                    user.getSiteId(), sequenceNumber,
+                                    satelliteId);
+                    LOG.warn(message);
+
+                    return ResponseEntity.ok().build();
+                }
             }
 
         }
