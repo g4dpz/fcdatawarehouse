@@ -57,7 +57,7 @@ public class Receiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
-    private long sleep = 5000;
+    private long sleep = 0;
 
     private CountDownLatch latch = new CountDownLatch(1);
 

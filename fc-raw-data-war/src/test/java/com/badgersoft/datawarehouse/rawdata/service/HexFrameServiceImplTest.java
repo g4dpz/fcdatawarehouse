@@ -7,15 +7,14 @@ import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.config.TestJpaConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.*;
-import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.service.impl.HexFrameServiceImpl;
+import com.badgersoft.datawarehouse.rawdata.service.impl.PacketResponseEntity;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -43,7 +42,6 @@ public class HexFrameServiceImplTest {
     private SatelliteStatusDao mockSatelliteStatusDao;
     private UserRankingDao mockUserRankingDao;
     private EnvConfig mockEnvConfig;
-    private JmsMessageSender mockJmsMessageSender;
     private PayloadDao mockPayloadDao;
 
     private static String SITE_ID_1 = "g4dpz";
@@ -79,10 +77,9 @@ public class HexFrameServiceImplTest {
         mockSatelliteStatusDao = Mockito.mock(SatelliteStatusDao.class);
         mockUserRankingDao = Mockito.mock(UserRankingDao.class);
         mockEnvConfig = Mockito.mock(EnvConfig.class);
-        mockJmsMessageSender = Mockito.mock(JmsMessageSender.class);
         mockPayloadDao = Mockito.mock(PayloadDao.class);
         hexFrameService = new HexFrameServiceImpl(mockHexFrameDao, mockUserDao, mockClock, mockSatelliteStatusDao,
-                mockUserRankingDao, mockEnvConfig, mockJmsMessageSender, mockPayloadDao);
+                mockUserRankingDao, mockEnvConfig, mockPayloadDao);
 
         user1 = new User();
         user1.setSiteId(SITE_ID_1);
@@ -127,23 +124,23 @@ public class HexFrameServiceImplTest {
     @Test
     public void userNotFound() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(null);
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
     public void userWithBadDigest() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, "nonsense");
-        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, "nonsense");
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
     public void userWithBadDigestUsingCache() {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         hexFrameService.processHexFrame(SITE_ID_1, "DIGEST", HEX_FRAME_FC1);
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, "nonsense");
-        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, "nonsense");
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -151,8 +148,8 @@ public class HexFrameServiceImplTest {
         when(mockUserDao.findBySiteId(SITE_ID_1)).thenReturn(user1);
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
         when(mockSatelliteStatusDao.findAll()).thenReturn(Collections.EMPTY_LIST);
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals((HttpStatus.BAD_REQUEST.value()), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        assertEquals((HttpStatus.BAD_REQUEST.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -161,8 +158,8 @@ public class HexFrameServiceImplTest {
         when(mockClock.currentDate()).thenReturn(Calendar.getInstance().getTime());
         when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.getMaxSequenceNumber(2L)).thenReturn(new Long(1131283 + 1441));
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals((HttpStatus.ALREADY_REPORTED.value()), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        assertEquals((HttpStatus.ALREADY_REPORTED.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -174,10 +171,9 @@ public class HexFrameServiceImplTest {
                 .thenReturn(Collections.EMPTY_LIST);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user1.getSiteId())).thenReturn(Collections.EMPTY_LIST);
         when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        verify(mockJmsMessageSender).send(queue,"rt,2,1131283,0");
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
         verify(mockPayloadDao).findByHexText(PAYLOAD);
-        assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
+        assertEquals((HttpStatus.OK.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -187,10 +183,10 @@ public class HexFrameServiceImplTest {
         when(mockSatelliteStatusDao.findAll()).thenReturn(satelliteStatuses);
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumberAndFrameType(2L, 1131283L, 0L))
                 .thenReturn(hexFrames1);
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_2, DIGEST_2, HEX_FRAME_FC1);
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_2, DIGEST_2, HEX_FRAME_FC1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(Collections.EMPTY_LIST);
         when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
-        assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
+        assertEquals((HttpStatus.OK.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -203,8 +199,8 @@ public class HexFrameServiceImplTest {
         when(mockHexFrameDao.findBySatelliteIdAndSequenceNumber(2L, 1131283L)).thenReturn(hexFrames2);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
         when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        assertEquals((HttpStatus.OK.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 
     @Test
@@ -216,7 +212,7 @@ public class HexFrameServiceImplTest {
                 .thenReturn(hexFrames1);
         when(mockUserRankingDao.findBySatelliteIdAndSiteId(2L, user2.getSiteId())).thenReturn(rankings);
         when(mockEnvConfig.satpredictURL()).thenReturn("https://satpredict.badgersoft.com");
-        final ResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
-        assertEquals((HttpStatus.OK.value()), responseEntity.getStatusCode().value());
+        final PacketResponseEntity responseEntity = hexFrameService.processHexFrame(SITE_ID_1, DIGEST_1, HEX_FRAME_FC1);
+        assertEquals((HttpStatus.OK.value()), responseEntity.getResponseEntity().getStatusCode().value());
     }
 }

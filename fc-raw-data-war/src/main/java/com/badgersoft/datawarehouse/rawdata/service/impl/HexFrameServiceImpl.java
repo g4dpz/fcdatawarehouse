@@ -7,14 +7,12 @@ import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.*;
-import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.service.UserHexString;
 import com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility;
 import com.badgersoft.satpredict.client.SatPredictClient;
 import com.badgersoft.satpredict.client.dto.SatPosDTO;
 import com.badgersoft.satpredict.client.impl.SatPredictClientImpl;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,16 +67,13 @@ public class HexFrameServiceImpl implements HexFrameService {
     private UserRankingDao userRankingDao;
 
     @Autowired
-    JmsMessageSender jmsMessageSender;
-
-    @Autowired
     private PayloadDao payloadDao;
 
     private SatPredictClient satPredictClient = null;
 
     public HexFrameServiceImpl(HexFrameDao hexFrameDao, UserDao userDao, Clock clock,
                                SatelliteStatusDao satelliteStatusDao, UserRankingDao userRankingDao,
-                               EnvConfig envConfig, JmsMessageSender jmsMessageSender,
+                               EnvConfig envConfig,
                                PayloadDao payloadDao) {
         this.hexFrameDao = hexFrameDao;
         this.userDao = userDao;
@@ -86,7 +81,6 @@ public class HexFrameServiceImpl implements HexFrameService {
         this.satelliteStatusDao = satelliteStatusDao;
         this.userRankingDao = userRankingDao;
         this.envConfig = envConfig;
-        this.jmsMessageSender = jmsMessageSender;
         this.payloadDao = payloadDao;
     }
 
@@ -95,7 +89,8 @@ public class HexFrameServiceImpl implements HexFrameService {
         return "Hello";
     }
 
-    public ResponseEntity processHexFrame(String siteId, String digest, String body) {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public PacketResponseEntity processHexFrame(String siteId, String digest, String body) {
 
         final User user = userDao.findBySiteId(siteId);
 
@@ -145,24 +140,27 @@ public class HexFrameServiceImpl implements HexFrameService {
                     LOG.error(USER_WITH_SITE_ID + siteId + HAD_INCORRECT_DIGEST
                             + ", received: " + digest + ", calculated: "
                             + calculatedDigest);
-                    return new ResponseEntity<String>("UNAUTHORIZED",
+                    final ResponseEntity<String> responseEntity = new ResponseEntity<>("UNAUTHORIZED",
                             HttpStatus.UNAUTHORIZED);
+                    return new PacketResponseEntity(responseEntity);
                 }
 
             } catch (final Exception e) {
                 LOG.error(e.getMessage());
-                return new ResponseEntity<String>(e.getMessage(),
+                final ResponseEntity<String> responseEntity = new ResponseEntity<>(e.getMessage(),
                         HttpStatus.BAD_REQUEST);
+                return new PacketResponseEntity(responseEntity);
             }
 
         } else {
             LOG.error("Site id: " + siteId + " not found in database");
-            return new ResponseEntity<String>("UNAUTHORIZED",
+            final ResponseEntity<String> responseEntity = new ResponseEntity<>("UNAUTHORIZED",
                     HttpStatus.UNAUTHORIZED);
+            return new PacketResponseEntity(responseEntity);
         }
     }
 
-    private ResponseEntity processHexFrame(UserHexString userHexString) {
+    private PacketResponseEntity processHexFrame(UserHexString userHexString) {
 
         final Map<Long, SatelliteStatus> satelliteStatusMap = new HashMap<Long, SatelliteStatus>();
 
@@ -205,7 +203,8 @@ public class HexFrameServiceImpl implements HexFrameService {
         if (!satelliteStatusMap.containsKey(satelliteId)) {
             final String noSatelliteStatusFound = String.format("No satelliteStatus found for satellite %d", satelliteId);
             LOG.error(noSatelliteStatusFound);
-            return new ResponseEntity<String>(noSatelliteStatusFound, HttpStatus.BAD_REQUEST);
+            final ResponseEntity<String> responseEntity = new ResponseEntity<>(noSatelliteStatusFound, HttpStatus.BAD_REQUEST);
+            return new PacketResponseEntity(responseEntity);
         }
 
         /* ----------------------------------------
@@ -238,7 +237,7 @@ public class HexFrameServiceImpl implements HexFrameService {
                                     satelliteId);
                     LOG.warn(message);
 
-                    return ResponseEntity.ok().build();
+                    return new PacketResponseEntity(ResponseEntity.ok().build());
                 }
             }
 
@@ -264,7 +263,7 @@ public class HexFrameServiceImpl implements HexFrameService {
                     LOG.info("Was found with ID " + payload.getId());
                     int updated = setPayloadId(satelliteId, frameType, sequenceNumber, payload);
                     LOG.info("Updated: " + updated);
-                    return ResponseEntity.badRequest().build();
+                    return new PacketResponseEntity(ResponseEntity.badRequest().build());
                 }
                 else {
                     Payload newPayload = new Payload();
@@ -332,16 +331,9 @@ public class HexFrameServiceImpl implements HexFrameService {
 
             if (satelliteId == 0 && sequenceNumber == 0 && firstByte == 0) {
                 LOG.warn("--- RESET ---");
-                return new ResponseEntity<String>("Satellite RESET", HttpStatus.BAD_REQUEST);
+                final ResponseEntity<String> responseEntity = new ResponseEntity<>("Satellite RESET", HttpStatus.BAD_REQUEST);
+                return new PacketResponseEntity(responseEntity);
             }
-
-            String queueName = "satellite_" + satelliteId + "_frame_available";
-
-            ActiveMQQueue queue = new ActiveMQQueue(queueName);
-            jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
-                    hexFrameEntity.getSatelliteId(),
-                    hexFrameEntity.getSequenceNumber(),
-                    hexFrameEntity.getFrameType()));
         }
         else {
             HexFrame hexFrameEntity = hexFrameEntities.get(0);
@@ -359,7 +351,8 @@ public class HexFrameServiceImpl implements HexFrameService {
 
             if (userFound) {
                 LOG.info(String.format("User %s has already saved %d %d %d", user.getSiteId(), satelliteId, sequenceNumber, frameType));
-                return new ResponseEntity<String>("Already Reported", HttpStatus.OK);
+                final ResponseEntity<String> responseEntity = new ResponseEntity<>("Already Reported", HttpStatus.OK);
+                return new PacketResponseEntity(responseEntity);
             }
             else {
                 String siteId = user.getSiteId();
@@ -370,7 +363,11 @@ public class HexFrameServiceImpl implements HexFrameService {
             }
         }
 
-        return ResponseEntity.ok().build();
+        final PacketResponseEntity packetResponseEntity = new PacketResponseEntity(ResponseEntity.ok().build());
+        packetResponseEntity.setSatelliteId(satelliteId);
+        packetResponseEntity.setSequenceNumber(sequenceNumber);
+        packetResponseEntity.setFrameType(frameType);
+        return packetResponseEntity;
 
     }
 

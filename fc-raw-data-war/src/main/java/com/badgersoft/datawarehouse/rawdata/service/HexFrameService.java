@@ -1,7 +1,7 @@
 package com.badgersoft.datawarehouse.rawdata.service;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
-import org.springframework.http.ResponseEntity;
+import com.badgersoft.datawarehouse.rawdata.service.impl.PacketResponseEntity;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface HexFrameService {
 
     String ping();
 
-    ResponseEntity processHexFrame(String site_id, String digest, String hex_frame);
+    PacketResponseEntity processHexFrame(String site_id, String digest, String hex_frame);
 
     void handleMessage(String message);
 

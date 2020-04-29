@@ -45,7 +45,7 @@ public class Receiver {
 
     private static Logger LOG = LoggerFactory.getLogger(Receiver.class.getName());
 
-    private long sleep = 5000;
+    private long sleep = 0;
 
     @Autowired
     JmsMessageSender jmsMessageSender;

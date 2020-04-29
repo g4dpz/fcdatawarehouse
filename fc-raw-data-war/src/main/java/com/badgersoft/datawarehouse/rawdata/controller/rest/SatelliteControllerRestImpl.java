@@ -2,12 +2,16 @@ package com.badgersoft.datawarehouse.rawdata.controller.rest;
 
 import com.badgersoft.datawarehouse.common.controller.SatelliteControllerRest;
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
+import com.badgersoft.datawarehouse.rawdata.messaging.JmsMessageSender;
 import com.badgersoft.datawarehouse.rawdata.service.HexFrameService;
 import com.badgersoft.datawarehouse.rawdata.service.UserRankingService;
+import com.badgersoft.datawarehouse.rawdata.service.impl.PacketResponseEntity;
 import com.badgersoft.datawarehouse.rawdata.shared.Ranking;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +35,15 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
     private UserRankingService userRankingService;
 
     @Autowired
+    JmsMessageSender jmsMessageSender;
+
+    @Autowired
     public SatelliteControllerRestImpl(HexFrameService hexFrameService, UserRankingService userRankingService) {
         this.hexFrameService = hexFrameService;
         this.userRankingService = userRankingService;
     }
 
     @PostMapping(value = "/api/data/hex/{site_id}")
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ResponseEntity processFrame(@PathVariable(value = "site_id") String siteId,
                                        @RequestParam(value = "digest") String digest,
                                        @RequestBody String body) {
@@ -47,7 +53,30 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
         lock.lock();
 
         try {
-            return hexFrameService.processHexFrame(siteId, digest, body);
+            final PacketResponseEntity packetResponseEntity = hexFrameService.processHexFrame(siteId, digest, body);
+
+            final ResponseEntity responseEntity = packetResponseEntity.getResponseEntity();
+
+            final long satelliteId = packetResponseEntity.getSatelliteId();
+            final long sequenceNumber = packetResponseEntity.getSequenceNumber();
+            final long frameType = packetResponseEntity.getFrameType();
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK
+                && satelliteId != 0
+                && sequenceNumber != 0
+                && frameType != 0) {
+
+                String queueName = "satellite_" + satelliteId + "_frame_available";
+
+                ActiveMQQueue queue = new ActiveMQQueue(queueName);
+                jmsMessageSender.send(queue, String.format("rt,%d,%d,%d",
+                        satelliteId,
+                        sequenceNumber,
+                        frameType));
+
+            }
+
+            return responseEntity;
         }
         finally {
             lock.unlock();
