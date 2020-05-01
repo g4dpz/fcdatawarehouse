@@ -95,7 +95,7 @@ public class RealtimeProcessorImpl extends AbstractProcessor implements Realtime
                 satelliteStatus.setLastRealtimeTime(new Timestamp(satelliteTime));
                 satelliteStatus.setLastUpdated(new Timestamp(System.currentTimeMillis()));
                 satelliteStatus.setContributors(StringUtils.join(hexFrameDTO.getContributors().toArray(), ","));
-                satelliteStatus.setPacketCount(realtimeDAO.count());
+                satelliteStatus.setPacketCount(satelliteStatus.getPacketCount() + 1);
                 satelliteStatus.setEclipsed(realtimeEntity.getC58());
 
                 LOG.debug("Saving realtime entity");
