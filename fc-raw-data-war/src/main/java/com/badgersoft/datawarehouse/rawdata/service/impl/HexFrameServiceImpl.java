@@ -196,7 +196,7 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         long frameType = (firstByte & 63);
 
-        final long sequenceNumber = getSequenceNumber(satelliteId, hexString);
+        long sequenceNumber = getSequenceNumber(satelliteId, hexString);
 
         LOG.info(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
 
@@ -360,6 +360,11 @@ public class HexFrameServiceImpl implements HexFrameService {
                 hexFrameEntity.addUser(user);
                 incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
                 hexFrameEntity = hexFrameDao.save(hexFrameEntity);
+
+                // we do not want the controller to send the JMS message
+                satelliteId = 0;
+                sequenceNumber = 0;
+                frameType = 0;
             }
         }
 
