@@ -1,6 +1,8 @@
 package com.badgersoft.datawarehouse.funcube.config;
 
 import com.badgersoft.datawarehouse.funcube.processor.*;
+import com.badgersoft.datawarehouse.funcube.service.BackfillRealtimeService;
+import com.badgersoft.datawarehouse.funcube.service.BackfillRealtimeServiceImpl;
 import com.badgersoft.datawarehouse.funcube.service.RealtimeSummaryService;
 import com.badgersoft.datawarehouse.funcube.service.RealtimeSummaryServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,5 +34,8 @@ public class AppConfig {
 
     @Bean
     RealtimeSummaryService realtimeSummaryService() { return new RealtimeSummaryServiceImpl(); }
+
+    @Bean
+    BackfillRealtimeService backfillRealtimeService() { return new BackfillRealtimeServiceImpl(); }
 
 }
