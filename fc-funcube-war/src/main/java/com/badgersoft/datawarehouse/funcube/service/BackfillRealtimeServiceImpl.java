@@ -12,13 +12,13 @@ public class BackfillRealtimeServiceImpl implements BackfillRealtimeService {
     public void backfill() throws Exception {
 
         // Get the file
-        File f = new File("/tmp/backfill-funcube.txt");
+        File f = new File("/tmp/missing-fc1.txt");
 
         // Check if the specified file
         // Exists or not
         if (f.exists()) {
             Receiver receiver = new Receiver();
-            System.out.println("/tmp/backfill-funcube.txt Exists");
+            System.out.println("/tmp/missing-fc1.txt Exists");
             FileReader fileReader = new FileReader(f);
             BufferedReader br = new BufferedReader(fileReader);
             boolean line;
@@ -28,7 +28,7 @@ public class BackfillRealtimeServiceImpl implements BackfillRealtimeService {
             f.delete();
         }
         else
-            System.out.println("/tmp/backfill-funcube.txt Does not Exists");
+            System.out.println("/tmp/missing-fc1.txt Does not Exist");
 
     }
 }

@@ -33,7 +33,7 @@ public class ScheduleConfig {
     BackfillRealtimeService backfillRealtimeService;
 
     @Scheduled(initialDelay = 30000, fixedRate = 86400000)
-    public void backfillRealtimeTask() {
+    public void backfillRealtimeTask() throws Exception {
         backfillRealtimeService.backfill();
     }
 
