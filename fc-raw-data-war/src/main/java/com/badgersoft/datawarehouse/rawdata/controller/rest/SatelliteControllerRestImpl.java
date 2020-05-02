@@ -62,9 +62,7 @@ public class SatelliteControllerRestImpl implements SatelliteControllerRest {
             final long frameType = packetResponseEntity.getFrameType();
 
             if (responseEntity.getStatusCode() == HttpStatus.OK
-                && satelliteId != 0
-                && sequenceNumber != 0
-                && frameType != 0) {
+                && !(satelliteId == 0 && sequenceNumber == 0 && frameType == 0)) {
 
                 String queueName = "satellite_" + satelliteId + "_frame_available";
 
