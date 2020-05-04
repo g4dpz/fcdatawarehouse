@@ -14,6 +14,7 @@
         <module>fc-jy1sat-war</module>
         <module>fc-raw-data-client-jar</module>
         <module>udp-client</module>
+        <module>backfill-realtime</module>
     </modules>
 
     <properties>
