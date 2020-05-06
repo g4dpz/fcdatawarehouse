@@ -1,5 +1,6 @@
 package com.badgersoft.datawarehouse.eseo.config;
 
+import com.badgersoft.datawarehouse.eseo.messaging.DefaultErrorHandler;
 import com.badgersoft.datawarehouse.eseo.messaging.Receiver;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ public class ReceiverConfig {
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(activeMQConnectionFactory());
+        factory.setErrorHandler(new DefaultErrorHandler());
         factory.setConcurrency("3-10");
 
         return factory;
