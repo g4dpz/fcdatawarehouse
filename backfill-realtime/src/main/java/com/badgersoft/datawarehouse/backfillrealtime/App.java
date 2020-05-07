@@ -34,7 +34,7 @@ public class App
                 TextMessage message = session.createTextMessage();
                 message.setText("rt," + args[0] + "," + line);
                 producer.send(message);
-                Thread.sleep(10000);
+                Thread.sleep(3000);
             }
         } finally {
             producer.close();

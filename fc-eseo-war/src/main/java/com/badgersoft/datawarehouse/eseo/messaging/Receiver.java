@@ -59,7 +59,6 @@ public class Receiver {
 
     @JmsListener(destination = "satellite_7_frame_available")
     @SendTo(value = "frame_processed")
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
 
@@ -143,6 +142,7 @@ public class Receiver {
         latch.countDown();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = false)
     private void processWOD(String satelliteId, String sequenceNumber, String frames) {
 
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);

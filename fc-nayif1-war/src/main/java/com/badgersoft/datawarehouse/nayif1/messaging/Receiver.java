@@ -66,7 +66,6 @@ public class Receiver {
 
     @JmsListener(destination = "satellite_11_frame_available")
     @SendTo(value = "frame_processed")
-    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     public void receive(String message) {
         LOGGER.info("received message='{}'", message);
 
@@ -159,6 +158,7 @@ public class Receiver {
 
 
 
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     private void processWOD(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube WOD for sequence number " + sequenceNumber);
@@ -182,6 +182,7 @@ public class Receiver {
 
     }
 
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     private void processFitter(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube Fitter messages for sequence number " + sequenceNumber);
@@ -205,6 +206,7 @@ public class Receiver {
 
     }
 
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     private void processHighRes(String satelliteId, String sequenceNumber, Date satelliteTime, String frames) {
 
         LOG.info("Processing FUNcube High Resolution for sequence number " + sequenceNumber);
