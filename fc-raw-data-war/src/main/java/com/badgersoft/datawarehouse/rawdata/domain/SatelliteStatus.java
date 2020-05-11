@@ -5,6 +5,7 @@ package com.badgersoft.datawarehouse.rawdata.domain;
  */
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "satellite_status")
@@ -278,6 +279,40 @@ public class SatelliteStatus {
 
     public void setCatalogueNumber(Long catelogueNumber) {
         this.catalogueNumber = catelogueNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SatelliteStatus)) return false;
+        SatelliteStatus that = (SatelliteStatus) o;
+        return getSatelliteId().equals(that.getSatelliteId()) &&
+                getSequenceNumber().equals(that.getSequenceNumber()) &&
+                getEclipseModeForced().equals(that.getEclipseModeForced()) &&
+                getEclipsed().equals(that.getEclipsed()) &&
+                getLastUpdated().equals(that.getLastUpdated()) &&
+                getEclipseDepth().equals(that.getEclipseDepth()) &&
+                eclipseSwitch.equals(that.eclipseSwitch) &&
+                getLastWodDump().equals(that.getLastWodDump()) &&
+                getLastResetNotification().equals(that.getLastResetNotification()) &&
+                getLastNoShowNotification().equals(that.getLastNoShowNotification()) &&
+                getEpochSequenceNumber().equals(that.getEpochSequenceNumber()) &&
+                getEpochReferenceTime().equals(that.getEpochReferenceTime()) &&
+                getPacketCount().equals(that.getPacketCount()) &&
+                getLatitude().equals(that.getLatitude()) &&
+                getLongitude().equals(that.getLongitude()) &&
+                getContributors().equals(that.getContributors()) &&
+                getLastWodTime().equals(that.getLastWodTime()) &&
+                getLastHighresTime().equals(that.getLastHighresTime()) &&
+                getLastRealtimeTime().equals(that.getLastRealtimeTime()) &&
+                getLastFitterTime().equals(that.getLastFitterTime()) &&
+                getFrameType().equals(that.getFrameType()) &&
+                getCatalogueNumber().equals(that.getCatalogueNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSatelliteId(), getSequenceNumber(), getEclipseModeForced(), getEclipsed(), getLastUpdated(), getEclipseDepth(), eclipseSwitch, getLastWodDump(), getLastResetNotification(), getLastNoShowNotification(), getEpochSequenceNumber(), getEpochReferenceTime(), getPacketCount(), getLatitude(), getLongitude(), getContributors(), getLastWodTime(), getLastHighresTime(), getLastRealtimeTime(), getLastFitterTime(), getFrameType(), getCatalogueNumber());
     }
 
     @Override

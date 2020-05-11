@@ -1,9 +1,7 @@
 package com.badgersoft.datawarehouse.rawdata.service.impl;
 
 import com.badgersoft.datawarehouse.common.dto.HexFrameDTO;
-import com.badgersoft.datawarehouse.common.utils.Cache;
 import com.badgersoft.datawarehouse.common.utils.Clock;
-import com.badgersoft.datawarehouse.common.utils.UTCClock;
 import com.badgersoft.datawarehouse.rawdata.config.EnvConfig;
 import com.badgersoft.datawarehouse.rawdata.dao.*;
 import com.badgersoft.datawarehouse.rawdata.domain.*;
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,16 +34,15 @@ import static com.badgersoft.datawarehouse.rawdata.utils.ServiceUtility.convertH
 public class HexFrameServiceImpl implements HexFrameService {
 
 
-
     private static final Logger LOG = LoggerFactory.getLogger(HexFrameServiceImpl.class);
 
-    private static final Cache<String, String> USER_AUTH_KEYS = new Cache<String, String>(
-            new UTCClock(), 50, 10);
+    private static final Map<String, String> USER_AUTH_KEYS = new ConcurrentHashMap<>();
 
     private static final String HAD_INCORRECT_DIGEST = "] had incorrect digest";
     private static final String USER_WITH_SITE_ID = "User with site id [";
     private static final String NOT_FOUND = "] not found";
     private static final long TWO_DAY_SEQ_COUNT = 1440;
+    private static final Map<Long, SatelliteStatus> SATELLITE_STATUS_MAP = new ConcurrentHashMap<Long, SatelliteStatus>();
 
     public HexFrameServiceImpl() {}
 
@@ -162,21 +160,10 @@ public class HexFrameServiceImpl implements HexFrameService {
 
     private PacketResponseEntity processHexFrame(UserHexString userHexString) {
 
-        final Map<Long, SatelliteStatus> satelliteStatusMap = new HashMap<Long, SatelliteStatus>();
-
         final List<SatelliteStatus> satelliteStatuses = satelliteStatusDao.findAll();
 
         for(SatelliteStatus satelliteStatus : satelliteStatuses) {
-            satelliteStatusMap.put(satelliteStatus.getSatelliteId(), satelliteStatus);
-        }
-
-        if (satelliteStatusMap.size() == 0) {
-            LOG.error("--- NO Satellite Statuses Found ---");
-        }
-        else {
-            for(Long satelliteId : satelliteStatusMap.keySet()) {
-                LOG.debug("Found satellite status for sateliteId: " + satelliteId);
-            }
+            SATELLITE_STATUS_MAP.put(satelliteStatus.getSatelliteId(), satelliteStatus);
         }
 
         final String hexString = userHexString.getHexString();
@@ -200,7 +187,7 @@ public class HexFrameServiceImpl implements HexFrameService {
 
         LOG.info(String.format("Processing %d %d %d", satelliteId, sequenceNumber, frameType));
 
-        if (!satelliteStatusMap.containsKey(satelliteId)) {
+        if (!SATELLITE_STATUS_MAP.containsKey(satelliteId)) {
             final String noSatelliteStatusFound = String.format("No satelliteStatus found for satellite %d", satelliteId);
             LOG.error(noSatelliteStatusFound);
             final ResponseEntity<String> responseEntity = new ResponseEntity<>(noSatelliteStatusFound, HttpStatus.BAD_REQUEST);
@@ -300,7 +287,7 @@ public class HexFrameServiceImpl implements HexFrameService {
             hexFrameEntity.setPayload(payload);
             incrementUploadRanking(satelliteId, user.getSiteId(), createdDate);
 
-            SatelliteStatus satelliteStatus = satelliteStatusMap.get(satelliteId);
+            SatelliteStatus satelliteStatus = SATELLITE_STATUS_MAP.get(satelliteId);
 
             if ((sequenceNumber == satelliteStatus.getSequenceNumber() && frameType > satelliteStatus.getFrameType())
                 || (sequenceNumber > satelliteStatus.getSequenceNumber()))
@@ -309,12 +296,12 @@ public class HexFrameServiceImpl implements HexFrameService {
                 satelliteStatus.setFrameType(frameType);
                 satelliteStatusDao.save(satelliteStatus);
 
-                addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+                addSatellitePosition(hexFrameEntity, SATELLITE_STATUS_MAP.get(satelliteId).getCatalogueNumber());
 
             }
             else if (sequenceNumber == satelliteStatus.getSequenceNumber())
             {
-                addSatellitePosition(hexFrameEntity, satelliteStatusMap.get(satelliteId).getCatalogueNumber());
+                addSatellitePosition(hexFrameEntity, SATELLITE_STATUS_MAP.get(satelliteId).getCatalogueNumber());
 
             }
             else {

@@ -16,6 +16,8 @@ import java.util.*;
 @Service
 public class UserRankingServiceImpl implements UserRankingService {
 
+    private static final Table<String, Long, Long> RANKINGS = HashBasedTable.create();
+
     @Autowired
     UserRankingDao userRankingDao;
 
@@ -35,7 +37,6 @@ public class UserRankingServiceImpl implements UserRankingService {
             userRankings = userRankingDao.findAll();
         }
 
-        Table<String, Long, Long> rankings = HashBasedTable.create();
         Set<String> sites = new HashSet<>();
         List<Data> data = new ArrayList<>();
 
@@ -46,11 +47,11 @@ public class UserRankingServiceImpl implements UserRankingService {
                 siteId = siteAlias;
             }
             sites.add(siteId);
-            rankings.put(siteId, userRanking.getSatelliteId(), userRanking.getNumber());
+            RANKINGS.put(siteId, userRanking.getSatelliteId(), userRanking.getNumber());
         }
 
         for (String site : sites) {
-            Data datum = getDatum(site, rankings);
+            Data datum = getDatum(site);
             data.add(datum);
         }
 
@@ -82,25 +83,25 @@ public class UserRankingServiceImpl implements UserRankingService {
         7               19         00010011   13      JY1SAT FM
          */
 
-    private Data getDatum(String site, Table<String,Long,Long> rankings) {
+    private Data getDatum(String site) {
 
         Data data = new Data();
         data.setSiteId(site);
 
         // FUNcube-1
-        Long score = rankings.get(site, 2L);
+        Long score = RANKINGS.get(site, 2L);
         data.setSatellite1((score != null) ? score : 0L);
         // UKube-1
-        score = rankings.get(site, 1L);
+        score = RANKINGS.get(site, 1L);
         data.setSatellite2((score != null) ? score : 0L);
         // Nayif-1
-        score = rankings.get(site, 11L);
+        score = RANKINGS.get(site, 11L);
         data.setSatellite3((score != null) ? score : 0L);
         // JY1Sat
-        score = rankings.get(site, 19L);
+        score = RANKINGS.get(site, 19L);
         data.setSatellite4((score != null) ? score : 0L);
         // ESEO
-        score = rankings.get(site, 7L);
+        score = RANKINGS.get(site, 7L);
         data.setSatellite5((score != null) ? score : 0L);
 
         data.setTotal(
