@@ -166,7 +166,7 @@
 
 
     <parent>
-        <groupId>com.badgersoft</groupId>
+        <groupId>uk.me.g4dpz</groupId>
         <artifactId>build-parent</artifactId>
         <version>1.0</version>
     </parent>
