@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: s4u/maven-settings-action@v2.1.1
+      with:
+        servers: '[{"id": "nexus.g4dpz.me.uk", "username": "g4dpz", "password": "785aa51a24b1f8a362c5d7c8ed5ecc1a1ffdedde"}]'
     - uses: actions/checkout@v1
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
