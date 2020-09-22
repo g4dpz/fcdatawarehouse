@@ -178,13 +178,13 @@
 
     <repositories>
         <repository>
-            <id>g4dpz-release</id>
+            <id>g4dpz-releases</id>
             <name>g4dpz Release Repo</name>
             <url>http://nexus.g4dpz.me.uk/repository/g4dpz-releases/</url>
             <releases/>
         </repository>
         <repository>
-            <id>g4dpz-snapshot</id>
+            <id>g4dpz-snapshots</id>
             <name>g4dpz Snapshot Repo</name>
             <url>http://nexus.g4dpz.me.uk/repository/g4dpz-snapshots/</url>
             <snapshots/>
