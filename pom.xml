@@ -178,15 +178,15 @@
 
     <repositories>
         <repository>
-            <id>badgersoft-release</id>
-            <name>Badgersoft Release Repo</name>
-            <url>https://nexus.badgersoft.com/repository/badgersoft-release/</url>
+            <id>g4dpz-release</id>
+            <name>g4dpz Release Repo</name>
+            <url>http://nexus.g4dpz.me.uk/repository/g4dpz-releases/</url>
             <releases/>
         </repository>
         <repository>
-            <id>badgersoft-snapshot</id>
-            <name>Badgersoft Snapshot Repo</name>
-            <url>https://nexus.badgersoft.com/repository/badgersoft-snapshot/</url>
+            <id>g4dpz-snapshot</id>
+            <name>g4dpz Snapshot Repo</name>
+            <url>http://nexus.g4dpz.me.uk/repository/g4dpz-snapshots/</url>
             <snapshots/>
         </repository>
     </repositories>
